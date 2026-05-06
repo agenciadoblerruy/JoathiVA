@@ -3,6 +3,7 @@ package com.joathiva.transportista.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joathiva.transportista.core.model.ExecutionStatus
+import com.joathiva.transportista.core.model.TransportEvent
 import com.joathiva.transportista.core.model.TransportOperationDetailDto
 import com.joathiva.transportista.data.repository.TransportRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ data class TransportUiState(
     val detail: TransportOperationDetailDto? = null,
     val gpsEnabled: Boolean = false,
     val message: String? = null,
-    val history: List<String> = emptyList()
+    val history: List<String> = emptyList(),
+    val events: List<TransportEvent> = emptyList()
 )
 
 class TransportViewModel(private val repo: TransportRepository = TransportRepository()) : ViewModel() {
@@ -24,7 +26,15 @@ class TransportViewModel(private val repo: TransportRepository = TransportReposi
 
     fun login(user: String, pass: String) = viewModelScope.launch {
         if (repo.login(user, pass)) {
-            _uiState.value = _uiState.value.copy(loggedIn = true, detail = repo.operationDetail("op-1"), history = repo.history())
+            _uiState.value = _uiState.value.copy(
+                loggedIn = true,
+                detail = repo.operationDetail("OP-JVA-2026-041"),
+                history = repo.history(),
+                events = repo.events(),
+                message = "Sesión iniciada"
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(message = "Ingresa usuario y clave")
         }
     }
 
@@ -49,7 +59,11 @@ class TransportViewModel(private val repo: TransportRepository = TransportReposi
     }
 
     private suspend fun refresh(message: String) {
-        _uiState.value = _uiState.value.copy(detail = repo.operationDetail("op-1"), message = message)
+        _uiState.value = _uiState.value.copy(
+            detail = repo.operationDetail("OP-JVA-2026-041"),
+            events = repo.events(),
+            message = message
+        )
     }
 
     fun currentStatus(): ExecutionStatus? = _uiState.value.detail?.execution?.executionStatus
