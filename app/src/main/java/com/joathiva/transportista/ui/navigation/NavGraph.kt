@@ -21,6 +21,7 @@ fun AppNavGraph(vm: TransportViewModel) {
         composable("tracking") { TrackingScreen(vm, nav) }
         composable("incident") { IncidentScreen(vm, nav) }
         composable("evidence") { EvidenceScreen(vm, nav) }
+        composable("events") { EventsScreen(vm) }
         composable("history") { HistoryScreen(vm) }
         composable("profile") { ProfileScreen(vm) }
     }
