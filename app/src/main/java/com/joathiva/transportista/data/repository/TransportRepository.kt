@@ -12,12 +12,12 @@ class TransportRepository {
     suspend fun login(username: String, password: String): Boolean { delay(250); return username.isNotBlank() && password.isNotBlank() }
     suspend fun assignments() = listOf(detail.assignment)
     suspend fun operationDetail(operationId: String) = detail
-    suspend fun history() = listOf("OP-2026-001 completada", "OP-2026-000 completada")
+    suspend fun history() = listOf("OP-JVA-2026-039 completada · Entrega sin incidencias", "OP-JVA-2026-038 completada · Evidencia validada")
     fun events() = events.toList()
 
     suspend fun startOperation(gpsEnabled: Boolean): Result<Unit> {
         if (!gpsEnabled) return Result.failure(IllegalStateException("GPS requerido"))
-        detail = detail.copy(execution = detail.execution.copy(executionStatus = ExecutionStatus.OPERATION_STARTED, activeTrackingSessionId = "trk-1"))
+        detail = detail.copy(execution = detail.execution.copy(executionStatus = ExecutionStatus.OPERATION_STARTED, activeTrackingSessionId = "TRK-JVA-041"))
         addEvent("operation_started", "Operación iniciada")
         addEvent("gps_tracking_started", "Tracking GPS iniciado")
         return Result.success(Unit)
@@ -32,11 +32,13 @@ class TransportRepository {
     suspend fun finishOperation() = transition(ExecutionStatus.UNLOADED, ExecutionStatus.COMPLETED, "operation_finished", "Operación finalizada")
 
     suspend fun reportIncident(type: String, comment: String) {
-        addEvent("issue_reported", "Incidencia: $type")
+        val suffix = comment.takeIf { it.isNotBlank() }?.let { " · $it" } ?: ""
+        addEvent("issue_reported", "Incidencia: $type$suffix")
     }
 
     suspend fun uploadEvidence(type: String, comment: String) {
-        addEvent("evidence_uploaded", "Evidencia subida: $type")
+        val suffix = comment.takeIf { it.isNotBlank() }?.let { " · $it" } ?: ""
+        addEvent("evidence_uploaded", "Evidencia subida: $type$suffix")
     }
 
     private fun addEvent(code: String, title: String) {
@@ -51,9 +53,36 @@ class TransportRepository {
     }
 
     private fun fakeDetail(): TransportOperationDetailDto {
-        val assignment = TransportOperationAssignment("asg-1", "op-1", "provider-1", "driver-1", "truck-42", "assigned")
-        val execution = TransportExecution("exe-1", "op-1", "asg-1", ExecutionStatus.NOT_STARTED, null)
-        val route = RoutePlan("route-1", "op-1", "exe-1", "Centro de distribución Norte", 42.0, 80, "2026-04-30T17:00:00Z")
-        return TransportOperationDetailDto("op-1", assignment, execution, route, listOf(TransportChecklistItem("ck-1", "op-1", "exe-1", "task", "Verificar precintos", "pending")), listOf(TransportDocumentAccess("doc-1", "op-1", "remito", "Remito digital", true)))
+        val operationId = "OP-JVA-2026-041"
+        val assignmentId = "ASG-JVA-041"
+        val executionId = "EXE-JVA-041"
+        val assignment = TransportOperationAssignment(
+            id = assignmentId,
+            operationId = operationId,
+            providerId = "PROV-ANDES-LOG",
+            driverId = "DRV-RODRIGO-H",
+            vehicleId = "TRACTO-VA-247",
+            assignmentStatus = "assigned"
+        )
+        val execution = TransportExecution(executionId, operationId, assignmentId, ExecutionStatus.NOT_STARTED, null)
+        val route = RoutePlan(
+            id = "RTE-JVA-041",
+            operationId = operationId,
+            executionId = executionId,
+            destinationLabel = "Centro de Distribución Norte · Andén 4",
+            distanceKmEstimated = 42.7,
+            durationMinEstimated = 78,
+            etaEstimatedAt = "2026-05-07T16:30:00Z"
+        )
+        val checklist = listOf(
+            TransportChecklistItem("CK-JVA-041-1", operationId, executionId, "task", "Verificar precintos", "pending"),
+            TransportChecklistItem("CK-JVA-041-2", operationId, executionId, "document", "Confirmar remito digital", "pending"),
+            TransportChecklistItem("CK-JVA-041-3", operationId, executionId, "safety", "Validar EPP y estado de unidad", "pending")
+        )
+        val documents = listOf(
+            TransportDocumentAccess("DOC-JVA-041-1", operationId, "remito", "Remito digital", true),
+            TransportDocumentAccess("DOC-JVA-041-2", operationId, "orden", "Orden de transporte", true)
+        )
+        return TransportOperationDetailDto(operationId, assignment, execution, route, checklist, documents)
     }
 }
