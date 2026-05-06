@@ -1,0 +1,31 @@
+name: Android Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - codex/develop-joathi-transportista-android-app
+
+jobs:
+  assemble-debug:
+    name: Assemble debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Assemble debug
+        run: gradle :app:assembleDebug --stacktrace
