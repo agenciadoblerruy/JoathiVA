@@ -1,0 +1,225 @@
+{
+  "scenarioId": "paraguay-corpus-rules-smoke",
+  "signals": {
+    "usage": "controlled-corpus-derived-fixture",
+    "sourceMailbox": "rhernandez@joathilogistica.com",
+    "customerFixture": "ulglogistics.com.uy / rfmcapital.net.py / tradex.com.uy / rhernand14@gmail.com"
+  },
+  "customers": [
+    {
+      "nombre": "Sergio Perez",
+      "empresa": "ULG Logistics Uruguay",
+      "contactoPrincipal": "Sergio Perez",
+      "telefono": "+598 91 000 111",
+      "email": "sperez@ulglogistics.com.uy",
+      "contactos": [
+        {
+          "nombre": "Sergio Perez",
+          "email": "sperez@ulglogistics.com.uy",
+          "rol": "cliente-fixture"
+        }
+      ],
+      "pais": "Uruguay",
+      "ciudad": "Montevideo",
+      "tipoCliente": "Cliente",
+      "etapa": "Prospecto",
+      "origenLead": "Fixture corpus Paraguay",
+      "ejecutivoResponsable": "Joathi",
+      "fechaSeguimiento": "2026-04-24",
+      "notas": "Cliente ULG usado para corpus real Paraguay"
+    },
+    {
+      "nombre": "Operaciones RFM",
+      "empresa": "RFM Capital",
+      "contactoPrincipal": "Operaciones RFM",
+      "telefono": "+595 21 000 333",
+      "email": "operaciones3@rfmcapital.net.py",
+      "contactos": [
+        {
+          "nombre": "Operaciones RFM",
+          "email": "operaciones3@rfmcapital.net.py",
+          "rol": "despachante-py-fixture"
+        }
+      ],
+      "pais": "Paraguay",
+      "ciudad": "Asuncion",
+      "tipoCliente": "Cliente",
+      "etapa": "Prospecto",
+      "origenLead": "Fixture corpus Paraguay",
+      "ejecutivoResponsable": "Joathi",
+      "fechaSeguimiento": "2026-04-24",
+      "notas": "Despachante PY usado para corpus real Paraguay"
+    },
+    {
+      "nombre": "Operaciones Tradex",
+      "empresa": "Tradex",
+      "contactoPrincipal": "Operaciones Tradex",
+      "telefono": "+598 91 000 444",
+      "email": "operaciones2@tradex.com.uy",
+      "contactos": [
+        {
+          "nombre": "Operaciones Tradex",
+          "email": "operaciones2@tradex.com.uy",
+          "rol": "proveedor-fixture"
+        }
+      ],
+      "pais": "Uruguay",
+      "ciudad": "Montevideo",
+      "tipoCliente": "Proveedor",
+      "etapa": "Prospecto",
+      "origenLead": "Fixture corpus Paraguay",
+      "ejecutivoResponsable": "Joathi",
+      "fechaSeguimiento": "2026-04-24",
+      "notas": "Proveedor Tradex usado para corpus real Paraguay"
+    },
+    {
+      "nombre": "Proveedor de prueba",
+      "empresa": "Proveedor de prueba SA",
+      "contactoPrincipal": "Proveedor de prueba",
+      "telefono": "+598 92 000 222",
+      "email": "rhernand14@gmail.com",
+      "contactos": [
+        {
+          "nombre": "Proveedor de prueba",
+          "email": "rhernand14@gmail.com",
+          "rol": "fixture-control"
+        }
+      ],
+      "pais": "Uruguay",
+      "ciudad": "Montevideo",
+      "tipoCliente": "Cliente",
+      "etapa": "Prospecto",
+      "origenLead": "Fixture",
+      "ejecutivoResponsable": "Joathi",
+      "fechaSeguimiento": "2026-04-24",
+      "notas": "Fixture de control para caso informativo"
+    }
+  ],
+  "cases": [
+    {
+      "id": "ulg-arribo",
+      "customerIndex": 0,
+      "message": {
+        "externalId": "paraguay-corpus-001",
+        "from": "Sergio Perez <sperez@ulglogistics.com.uy>",
+        "subject": "PY26000008 - CT 4480 // 324PAR - Terrestre",
+        "date": "2026-04-21T14:00:00Z",
+        "bodyText": "Aviso de salida. HBL y ETA Asuncion. Booking BOGG01693400. Origen Montevideo destino Asuncion."
+      },
+      "expected": {
+        "actorRole": "cliente",
+        "workflowStage": "aviso de arribo",
+        "caseType": "caso de operacion Paraguay",
+        "requiresOperation": true,
+        "planAction": "create",
+        "taskAction": "create",
+        "draftEligible": true,
+        "draftContains": "arribo"
+      }
+    },
+    {
+      "id": "ulg-dua",
+      "customerIndex": 0,
+      "message": {
+        "externalId": "paraguay-corpus-002",
+        "from": "Sergio Perez <sperez@ulglogistics.com.uy>",
+        "subject": "DUA 776551 - entrega documental",
+        "date": "2026-04-21T16:00:00Z",
+        "bodyText": "Adjunto DUA 776551 y CRT definitivo. Seguimos con la entrega documental. Ruta Montevideo a Asuncion."
+      },
+      "expected": {
+        "actorRole": "despachante_uy",
+        "workflowStage": "MIC / CRT definitivo",
+        "caseType": "caso de operacion Paraguay",
+        "requiresOperation": true,
+        "planAction": "create",
+        "taskAction": "create",
+        "draftEligible": true,
+        "draftContains": "circuito documental"
+      }
+    },
+    {
+      "id": "rfm-factura-crt",
+      "customerIndex": 1,
+      "message": {
+        "externalId": "paraguay-corpus-003",
+        "from": "Operaciones RFM <operaciones3@rfmcapital.net.py>",
+        "subject": "Factura CRT para PY26000008",
+        "date": "2026-04-21T17:00:00Z",
+        "bodyText": "Por favor enviarnos la factura CRT con el valor de seguro para continuar. Ruta Montevideo a Asuncion."
+      },
+      "expected": {
+        "actorRole": "despachante_py",
+        "workflowStage": "factura CRT",
+        "caseType": "caso de operacion Paraguay",
+        "requiresOperation": true,
+        "planAction": "create",
+        "taskAction": "create",
+        "draftEligible": true,
+        "draftContains": "factura para crt"
+      }
+    },
+    {
+      "id": "rfm-ncm-seguro",
+      "customerIndex": 1,
+      "message": {
+        "externalId": "paraguay-corpus-004",
+        "from": "Operaciones RFM <operaciones3@rfmcapital.net.py>",
+        "subject": "PY26000008 - Aguardamos NCM y seguro para CRT",
+        "date": "2026-04-21T17:30:00Z",
+        "bodyText": "Quedamos a la espera del NCM y del seguro para continuar con la gestión. Ruta Montevideo a Asuncion."
+      },
+      "expected": {
+        "actorRole": "despachante_py",
+        "workflowStage": "espera NCM / seguro",
+        "caseType": "caso de operacion Paraguay",
+        "requiresOperation": true,
+        "planAction": "create",
+        "taskAction": "create",
+        "draftEligible": true,
+        "draftContains": "ncm y del seguro"
+      }
+    },
+    {
+      "id": "tradex-borrador-crt",
+      "customerIndex": 2,
+      "message": {
+        "externalId": "paraguay-corpus-005",
+        "from": "Operaciones Tradex <operaciones2@tradex.com.uy>",
+        "subject": "EPUET2268 - Borrador CRT",
+        "date": "2026-04-21T18:00:00Z",
+        "bodyText": "Adjunto borrador CRT para revision. Quedamos atentos a confirmacion para avanzar."
+      },
+      "expected": {
+        "actorRole": "proveedor",
+        "workflowStage": "borrador CRT",
+        "caseType": "caso de operacion Paraguay",
+        "requiresOperation": true,
+        "planAction": "review",
+        "taskAction": "create",
+        "draftEligible": true,
+        "draftContains": "borrador crt"
+      }
+    },
+    {
+      "id": "informative-no-op",
+      "customerIndex": 2,
+      "message": {
+        "externalId": "paraguay-corpus-006",
+        "from": "Operaciones Tradex <operaciones2@tradex.com.uy>",
+        "subject": "Documento para archivo interno",
+        "date": "2026-04-21T19:00:00Z",
+        "bodyText": "Documento para archivo interno."
+      },
+      "expected": {
+        "actorRole": "proveedor",
+        "workflowStage": "informativo",
+        "caseType": "informativo",
+        "requiresOperation": false,
+        "planAction": "skip",
+        "taskAction": "skip",
+        "draftEligible": false
+      }
+    }
+  ]
+}

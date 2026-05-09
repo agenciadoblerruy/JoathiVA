@@ -1,0 +1,44 @@
+﻿[
+    {
+        "id":  "rodrigo-canva",
+        "owner":  "rodrigo",
+        "label":  "Canva",
+        "toolKey":  "canva",
+        "target":  "https://www.canva.com/login",
+        "username":  "agencia.doblerruy@gmail.com",
+        "authMode":  "email",
+        "usernameLabel":  "Correo",
+        "passwordLabel":  "Clave",
+        "note":  "Acceso de produccion visual para montar posts, carruseles y variantes.",
+        "passwordSecretRef":  "tool-profile:rodrigo-canva:password",
+        "password":  ""
+    },
+    {
+        "id":  "rodrigo-linkedin",
+        "owner":  "rodrigo",
+        "label":  "LinkedIn",
+        "toolKey":  "linkedin",
+        "target":  "https://www.linkedin.com/login",
+        "username":  "rhernand14@gmail.com",
+        "authMode":  "email",
+        "usernameLabel":  "Correo",
+        "passwordLabel":  "Clave",
+        "note":  "Cuenta operativa para publicar, revisar comentarios y seguimiento B2B.",
+        "passwordSecretRef":  "tool-profile:rodrigo-linkedin:password",
+        "password":  ""
+    },
+    {
+        "id":  "rodrigo-meta",
+        "owner":  "rodrigo",
+        "label":  "Meta Business Suite",
+        "toolKey":  "meta-business-suite",
+        "target":  "https://business.facebook.com/latest/home",
+        "username":  "joathilogistica",
+        "authMode":  "instagram",
+        "usernameLabel":  "Usuario Instagram",
+        "passwordLabel":  "Clave",
+        "note":  "Ingreso por Instagram para revisar Facebook e Instagram desde Business Suite.",
+        "passwordSecretRef":  "tool-profile:rodrigo-meta:password",
+        "password":  ""
+    }
+]

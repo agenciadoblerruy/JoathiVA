@@ -1,0 +1,50 @@
+{
+  "scenarioId": "reconcile-provisional-to-real",
+  "signals": {
+    "customerMailbox": "agencia.doblerruy@gmail.com",
+    "providerMailbox": "rhernand14@gmail.com",
+    "usage": "controlled-test-fixtures-only"
+  },
+  "customer": {
+    "nombre": "Agencia Doblerruy",
+    "empresa": "Agencia Doblerruy",
+    "contactoPrincipal": "Agencia Doblerruy",
+    "telefono": "+598 91 000 111",
+    "email": "agencia.doblerruy@gmail.com",
+    "contactos": [
+      {
+        "nombre": "Agencia Doblerruy",
+        "email": "agencia.doblerruy@gmail.com",
+        "rol": "cliente-fixture"
+      }
+    ],
+    "pais": "Uruguay",
+    "ciudad": "Montevideo",
+    "tipoCliente": "Cliente",
+    "etapa": "Prospecto",
+    "origenLead": "Fixture",
+    "ejecutivoResponsable": "Joathi",
+    "fechaSeguimiento": "2026-04-24",
+    "notas": "Fixture limpio para validar reconciliacion provisional a real"
+  },
+  "messages": [
+    {
+      "externalId": "fixture-py-001",
+      "from": "Agencia Doblerruy <agencia.doblerruy@gmail.com>",
+      "subject": "PY26000006 - arribo y documentacion pendiente",
+      "date": "2026-04-21T14:00:00Z",
+      "bodyText": "Cliente Agencia Doblerruy. Operacion Paraguay PY26000006. Arribo detectado. Contenedor pendiente de identificar. Booking pendiente. Origen Montevideo destino Asuncion. Favor revisar y confirmar camion, NCM y DUA."
+    },
+    {
+      "externalId": "fixture-py-002",
+      "from": "Agencia Doblerruy <agencia.doblerruy@gmail.com>",
+      "subject": "Re: PY26000006 - contenedor confirmado",
+      "date": "2026-04-21T16:00:00Z",
+      "bodyText": "Seguimiento del mismo caso PY26000006. Contenedor FFAU6465461 confirmado. Ruta Montevideo a Asuncion. Mantener seguimiento documental."
+    }
+  ],
+  "expected": {
+    "sameOperation": true,
+    "container": "FFAU6465461"
+  }
+}
