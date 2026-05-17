@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotizador interno | JoathiVA</title>
+  <meta name="description" content="Cotizador interno estático de JoathiVA.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/joathiva/styles.css">
+</head>
+<body>
+  <header class="portal-topbar">
+    <nav class="portal-nav portal-shell" aria-label="Navegación JoathiVA">
+      <a class="portal-brand" href="/joathiva/"><span class="portal-mark">JVA</span><span>JoathiVA</span></a>
+      <div class="portal-menu">
+        <a href="/joathiva/">Acceso</a><a href="/joathiva/cliente.html">Cliente</a><a href="/joathiva/comercial.html">Comercial</a><a href="/joathiva/operaciones.html">Operaciones</a><a href="/joathiva/despachante.html">Despachante</a><a href="/joathiva/administracion.html">Administración</a><a href="/joathiva/direccion.html">Dirección</a><a class="active" href="/joathiva/cotizador.html">Cotizador</a><a class="public-link" href="/">Sitio público</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="dashboard-main portal-shell">
+    <section class="dashboard-hero">
+      <div>
+        <p class="profile-chip">Herramienta interna</p>
+        <h1>Cotizador interno JoathiVA</h1>
+        <p>Formulario estático inicial para estimar operaciones antes de conectar reglas comerciales, tarifas y generación real de documentos.</p>
+      </div>
+      <a class="btn btn-gold" href="/joathiva/comercial.html">Volver a Comercial</a>
+    </section>
+
+    <section class="quote-layout">
+      <form class="quote-panel internal-quote-form" action="#" method="post">
+        <div class="form-grid">
+          <label>Origen<input name="origen" type="text" placeholder="País / ciudad / dirección"></label>
+          <label>Destino<input name="destino" type="text" placeholder="País / ciudad / dirección"></label>
+          <label>Tipo de carga<select name="tipo"><option>General</option><option>IMO</option><option>Refrigerada</option><option>Proyecto especial</option></select></label>
+          <label>Peso<input name="peso" type="text" placeholder="Ej: 1200 kg"></label>
+          <label>Volumen<input name="volumen" type="text" placeholder="Ej: 8 m³"></label>
+        </div>
+        <button class="btn-green" type="button">Calcular cotización</button>
+      </form>
+
+      <aside class="quote-panel">
+        <h2>Resultado estimado</h2>
+        <div class="result-box">
+          <span>Estimación preliminar</span>
+          <strong>USD 0,00</strong>
+          <p>El resultado real dependerá de tarifas, proveedor, disponibilidad, documentación y condiciones de la operación.</p>
+        </div>
+        <div class="action-row">
+          <button class="btn-green" type="button">Enviar cotización</button>
+          <button class="btn-gold" type="button">Guardar borrador</button>
+          <button class="btn-green" type="button">Generar PDF</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>
