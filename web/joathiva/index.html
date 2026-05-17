@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso al Portal JoathiVA</title>
+  <meta name="description" content="Pantalla estática de acceso al portal JoathiVA.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/joathiva/styles.css">
+</head>
+<body class="login-page">
+  <main class="portal-shell">
+    <section class="login-layout" aria-label="Acceso al portal JoathiVA">
+      <div class="login-card">
+        <a class="portal-brand" href="/joathiva/"><span class="portal-mark">JVA</span><span>JoathiVA</span></a>
+        <h1>Acceso al Portal JoathiVA</h1>
+        <p>Ingreso estático de presentación. La autenticación real se conectará en una etapa posterior.</p>
+        <form class="login-form" action="#" method="post">
+          <label>Usuario / Email<input type="email" name="usuario" autocomplete="username" placeholder="usuario@empresa.com"></label>
+          <label>Contraseña<input type="password" name="password" autocomplete="current-password" placeholder="••••••••"></label>
+          <label>Perfil de acceso
+            <select name="perfil">
+              <option>Cliente</option>
+              <option>Comercial</option>
+              <option>Operaciones</option>
+              <option>Despachante</option>
+              <option>Administración / Facturación</option>
+              <option>Dirección</option>
+            </select>
+          </label>
+          <button class="btn-green" type="button">Iniciar sesión</button>
+          <a class="btn btn-gold" href="/">Ir al sitio Joathi Logística</a>
+        </form>
+      </div>
+
+      <aside class="welcome-card">
+        <div>
+          <p class="profile-chip">Portal operativo</p>
+          <h2>Bienvenido a JoathiVA</h2>
+          <p>Un entorno separado de la web pública para centralizar seguimiento, cotizaciones internas, documentación, tareas y estados de cada operación logística.</p>
+        </div>
+        <a class="btn btn-ghost" href="/joathiva/operaciones.html">Ver tablero de operaciones</a>
+      </aside>
+    </section>
+
+    <section class="quick-grid" aria-label="Tarjetas rápidas JoathiVA">
+      <article class="quick-card"><span>🟢</span><h3>Portal JoathiVA</h3><p>Acceso por perfiles para ordenar el trabajo interno.</p></article>
+      <article class="quick-card"><span>📍</span><h3>Seguimiento en vivo</h3><p>Base visual para eventos, cargas y alertas operativas.</p></article>
+      <article class="quick-card"><span>🛟</span><h3>Centro de ayuda</h3><p>Soporte, mensajes y comunicación centralizada.</p></article>
+      <article class="quick-card"><span>📄</span><h3>Documentos compartidos</h3><p>Documentación clave asociada a clientes y operaciones.</p></article>
+    </section>
+  </main>
+</body>
+</html>

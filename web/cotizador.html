@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotizador | Joathi Logística</title>
+  <meta name="description" content="Solicitá una cotización logística a Joathi Logística.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Navegación principal">
+      <a class="brand" href="/"><span class="brand-mark">JL</span><span class="brand-name">Joathi <strong>Logística</strong></span></a>
+      <div class="menu-actions">
+        <a href="/quienes-somos.html">Quiénes somos</a>
+        <a href="/servicios.html">Nuestros servicios</a>
+        <a href="/contacto.html">Contactanos</a>
+        <a class="active menu-gold" href="/cotizador.html">Cotizar operación</a>
+        <a class="menu-green" href="/joathiva.html">JoathiVA</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page-shell content-page">
+    <section class="page-hero quote-heading">
+      <p class="eyebrow">Cotizador</p>
+      <h1>Solicitá una cotización logística.</h1>
+      <p>Completá los datos principales de tu operación. Si no hay endpoint conectado, el formulario enviará la solicitud por correo a comercial@joathilogistica.com.</p>
+    </section>
+
+    <form class="quote-form" action="mailto:comercial@joathilogistica.com" method="post" enctype="text/plain">
+      <div class="form-grid">
+        <label>Nombre y apellido<input name="Nombre y apellido" type="text" autocomplete="name" required></label>
+        <label>Empresa<input name="Empresa" type="text" autocomplete="organization" required></label>
+        <label>Correo electrónico<input name="Correo electrónico" type="email" autocomplete="email" required></label>
+        <label>Teléfono<input name="Teléfono" type="tel" autocomplete="tel" required></label>
+        <label>País de origen<input name="País de origen" type="text" required></label>
+        <label>País de destino<input name="País de destino" type="text" required></label>
+        <label>Dirección de origen<input name="Dirección de origen" type="text" required></label>
+        <label>Dirección de destino<input name="Dirección de destino" type="text" required></label>
+        <label>Tipo de carga<select name="Tipo de carga" required><option value="">Seleccionar</option><option>IMO</option><option>General</option></select></label>
+        <label>Condición de carga<select name="Condición de carga" required><option value="">Seleccionar</option><option>Frío</option><option>Seco</option></select></label>
+        <label>Peso / dimensiones<input name="Peso / dimensiones" type="text" placeholder="Ej: 1200 kg / 2 pallets" required></label>
+        <label>Valor estimado<input name="Valor estimado" type="text" placeholder="Ej: USD 15.000"></label>
+      </div>
+      <label class="full-field">Detalle de la solicitud<textarea name="Detalle de la solicitud" rows="6" required></textarea></label>
+      <label class="terms-check"><input type="checkbox" name="Acepta términos" required> Acepto los <a href="/terms.html">términos de uso</a>.</label>
+      <button class="btn btn-green" type="submit">Solicitar cotización</button>
+    </form>
+  </main>
+</body>
+</html>
