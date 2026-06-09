@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Despachante</title>
+  <link rel="stylesheet" href="prototipos.css">
+</head>
+<body class="proto-page proto-theme-despachante">
+  <div class="proto-shell">
+    <header class="proto-topbar">
+      <a class="proto-brand" href="index.html">
+        <img src="../logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Despachante JoathiVA</span>
+        </div>
+      </a>
+      <div class="proto-toolbar">
+        <span class="proto-chip"><strong>Bienvenido,</strong> Despachante</span>
+        <a class="proto-button ghost" href="index.html">Cerrar sesión</a>
+      </div>
+    </header>
+
+    <section class="proto-section proto-dashboard">
+      <aside class="proto-panel proto-sidebar">
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">MO</span><strong>Mis Operaciones</strong></div>
+        <div class="proto-sidebar-item active"><span class="proto-sidebar-icon">OA</span><strong>Operaciones Asignadas</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">CP</span><strong>Confirmaciones Pendiente</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">DA</span><strong>Documentación aduanera</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">RP</span><strong>Reportes</strong></div>
+      </aside>
+
+      <div class="proto-dashboard-main">
+        <section class="proto-panel">
+          <div class="proto-section-title">
+            <div>
+              <p class="proto-eyebrow">Operaciones Asignadas</p>
+              <h2>Operaciones Asignadas</h2>
+            </div>
+          </div>
+          <div class="proto-toolbar" style="padding:0 20px 18px;">
+            <span class="proto-chip">Filtro: Estado</span>
+            <span class="proto-chip">País/Región</span>
+            <span class="proto-chip">Tipo de Servicio</span>
+            <span class="proto-chip">Fecha</span>
+            <button class="proto-button primary" type="button">Buscar</button>
+          </div>
+          <div class="proto-table-wrap">
+            <table class="proto-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Tipo de Servicio</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>TRM-008</td><td>Empresa ABC</td><td>Transporte Internacional</td><td>Pendiente</td><td>Ver Detalle | Actualizar</td></tr>
+                <tr><td>D-0528</td><td>Global Freight</td><td>Logística Aduanera</td><td>En Proceso</td><td>Ver Detalle | Subir Documentación</td></tr>
+                <tr><td>TRM-003</td><td>Ramirez Exports</td><td>Almacenaje</td><td>Completada</td><td>Ver Detalle | Historial</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="proto-grid-2">
+          <article class="proto-panel">
+            <div class="proto-section-title">
+              <div>
+                <p class="proto-eyebrow">Confirmaciones Aduaneras</p>
+                <h2>Confirmaciones Aduaneras</h2>
+              </div>
+            </div>
+            <div class="proto-role-list" style="padding:0 20px 20px;">
+              <div class="proto-row">
+                <div>
+                  <strong>Declaración Aduana TRM-008</strong>
+                  <span>En trámite</span>
+                </div>
+                <div class="proto-toolbar">
+                  <span class="proto-status progress">En Trámite</span>
+                  <button class="proto-button primary" type="button">Validar</button>
+                </div>
+              </div>
+              <div class="proto-row">
+                <div>
+                  <strong>TRM-0038</strong>
+                  <span>Corrección requerida</span>
+                </div>
+                <div class="proto-toolbar">
+                  <span class="proto-status pending">Pendiente</span>
+                  <button class="proto-button primary" type="button">Pendiente</button>
+                </div>
+              </div>
+              <div class="proto-toolbar" style="justify-content:flex-end;">
+                <a class="proto-button ghost" href="#">Validar</a>
+                <a class="proto-button ghost" href="#">Subir Documento</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="proto-panel">
+            <div class="proto-section-title">
+              <div>
+                <p class="proto-eyebrow">Documentación Asociada</p>
+                <h2>Documentación Asociada</h2>
+              </div>
+            </div>
+            <div class="proto-account-grid" style="padding:0 20px 20px;">
+              <div class="proto-account-card">
+                <div>
+                  <strong>BL_TRM-008.pdf</strong>
+                  <p>Documentación principal del trámite</p>
+                </div>
+                <div class="proto-toolbar">
+                  <button class="proto-button soft" type="button">Subir Nuevo</button>
+                  <button class="proto-button primary" type="button">Subir Doc</button>
+                </div>
+              </div>
+              <div class="proto-account-card">
+                <div>
+                  <strong>CDR_TRM-008.pdf</strong>
+                  <p>Documento complementario</p>
+                </div>
+                <button class="proto-button soft" type="button">Subir Doc</button>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="proto-panel">
+          <div class="proto-section-title">
+            <div>
+              <p class="proto-eyebrow">Reportes</p>
+              <h2>Reportes</h2>
+            </div>
+          </div>
+          <div class="proto-report-grid" style="padding:0 20px 20px;">
+            <article class="proto-report-card">
+              <strong>22 Operaciones en Curso</strong>
+              <p>Operaciones con seguimiento activo.</p>
+            </article>
+            <article class="proto-report-card">
+              <strong>17 Trámites Completados</strong>
+              <p>Casos cerrados y validados.</p>
+            </article>
+            <article class="proto-report-card">
+              <strong>126 Documentos Validados</strong>
+              <p>Documentación cargada y aprobada.</p>
+            </article>
+          </div>
+          <div class="proto-toolbar" style="justify-content:center; padding:0 20px 20px;">
+            <button class="proto-button primary" type="button">Exportar PDF</button>
+            <button class="proto-button soft" type="button">Exportar Excel</button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

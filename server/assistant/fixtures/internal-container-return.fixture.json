@@ -1,0 +1,54 @@
+{
+  "scenarioId": "internal-container-return-regression",
+  "signals": {
+    "usage": "controlled-corpus-derived-fixture",
+    "sourceMailbox": "rhernandez@joathilogistica.com",
+    "customerFixture": "ulglogistics.com.uy"
+  },
+  "customer": {
+    "nombre": "Sergio Perez",
+    "empresa": "ULG Logistics Uruguay",
+    "contactoPrincipal": "Sergio Perez",
+    "telefono": "+598 91 000 111",
+    "email": "sperez@ulglogistics.com.uy",
+    "contactos": [
+      {
+        "nombre": "Sergio Perez",
+        "email": "sperez@ulglogistics.com.uy",
+        "rol": "cliente-fixture"
+      }
+    ],
+    "pais": "Uruguay",
+    "ciudad": "Montevideo",
+    "tipoCliente": "Cliente",
+    "etapa": "Prospecto",
+    "origenLead": "Fixture corpus Paraguay",
+    "ejecutivoResponsable": "Joathi",
+    "fechaSeguimiento": "2026-04-24",
+    "notas": "Cliente ULG usado para cierre operativo interno"
+  },
+  "messages": [
+    {
+      "externalId": "internal-return-001",
+      "from": "Sergio Perez <sperez@ulglogistics.com.uy>",
+      "subject": "PY26000008 - CT 4480 // 324PAR - Terrestre",
+      "date": "2026-04-21T14:00:00Z",
+      "bodyText": "Aviso de arribo. Booking BOGG01693400. HBL y ETA Asuncion. Origen Montevideo destino Asuncion. Contenedor FFAU6465461."
+    },
+    {
+      "externalId": "internal-return-002",
+      "from": "Rodrigo Hernandez <rhernandez@joathilogistica.com>",
+      "subject": "PY26000008 - contenedor devuelto",
+      "date": "2026-04-21T20:00:00Z",
+      "bodyText": "El contenedor FFAU6465461 fue devuelto. Damos por finalizada la operativa."
+    }
+  ],
+  "expected": {
+    "sameOperation": true,
+    "operationCount": 1,
+    "finalState": "Cerrado",
+    "finalWorkflowStage": "cierre operativo",
+    "finalWorkflowCategory": "cierre operativo",
+    "finalContainer": "FFAU6465461"
+  }
+}

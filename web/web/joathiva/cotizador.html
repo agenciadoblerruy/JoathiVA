@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotizador público | JoathiVA</title>
+  <meta name="description" content="Formulario público de cotización para Joathi Logística.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="">
+  <header class="portal-header portal-header--single">
+    <a class="btn btn-light back-link" href="../">Regresar a Joathi Logística</a>
+  </header>
+  <main>
+    <section class="page-hero page-hero-layout">
+      <div class="page-hero-copy">
+      <span class="eyebrow">Cotizador público</span>
+      <h1>Solicita tu cotización</h1>
+      <p>Completa el formulario y nuestro equipo te responderá a <a href="mailto:comercial@joathilogistica.com">comercial@joathilogistica.com</a>.</p>
+      </div>
+      <figure class="page-hero-media">
+        <img src="assets/brand/bg_banner_cotizacion.jpg" alt="Camiones y trazabilidad para cotización logística">
+        <figcaption>
+          <strong>Cotización acompañada</strong>
+          <span>La nota comercial se apoya en una pieza visual realista.</span>
+        </figcaption>
+      </figure>
+    </section>
+    <section class="quote-panel">
+      <form class="quote-form" action="mailto:comercial@joathilogistica.com" method="post" enctype="text/plain">
+        <label>Nombre y apellido<input name="Nombre y apellido" type="text" required></label>
+        <label>Empresa<input name="Empresa" type="text" required></label>
+        <label>Correo electrónico<input name="Correo electrónico" type="email" required></label>
+        <label>Teléfono<input name="Teléfono" type="tel" required></label>
+        <label>País de origen<input name="País de origen" type="text" required></label>
+        <label>País de destino<input name="País de destino" type="text" required></label>
+        <label class="full">Dirección de origen<input name="Dirección de origen" type="text" required></label>
+        <label class="full">Dirección de destino<input name="Dirección de destino" type="text" required></label>
+        <label>Tipo de carga
+          <select name="Tipo de carga" required>
+            <option value="">Seleccionar</option>
+            <option>IMO</option>
+            <option>General</option>
+          </select>
+        </label>
+        <label>Condición de carga
+          <select name="Condición de carga" required>
+            <option value="">Seleccionar</option>
+            <option>Frío</option>
+            <option>Seco</option>
+          </select>
+        </label>
+        <label>Peso / dimensiones<input name="Peso / dimensiones" type="text" required></label>
+        <label>Valor estimado<input name="Valor estimado" type="text"></label>
+        <label class="full">Detalle de la solicitud<textarea name="Detalle de la solicitud" rows="6" required></textarea></label>
+        <div class="form-footer full">
+          <label class="terms-check">
+            <input type="checkbox" required>
+            <span>Acepto los <a href="/terms.html">términos de uso</a> y entiendo que la cotización queda sujeta a validación comercial.</span>
+          </label>
+          <button class="btn btn-primary btn-large" type="submit">Solicitar cotización</button>
+        </div>
+      </form>
+      <aside class="result-card">
+        <span class="eyebrow">Contacto comercial</span>
+        <strong>Envío por correo</strong>
+        <p>El envío abrirá tu cliente de correo para contactar a comercial@joathilogistica.com.</p>
+        <div class="actions">
+          <a class="btn btn-secondary" href="mailto:comercial@joathilogistica.com">comercial@joathilogistica.com</a>
+          <a class="btn btn-ghost" href="/terms.html">Ver términos de uso</a>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

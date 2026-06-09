@@ -1,0 +1,13 @@
+[
+  {
+    "id": "rodrigo",
+    "username": "rhernandez@joathilogistica.com",
+    "password": "1899.CBolso",
+    "host": "mail.joathilogistica.com",
+    "port": "993",
+    "folder": "INBOX",
+    "supportsDrafts": true,
+    "draftFolder": "INBOX.Drafts",
+    "protocol": "imap"
+  }
+]

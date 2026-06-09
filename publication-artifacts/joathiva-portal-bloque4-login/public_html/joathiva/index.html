@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso al Portal JoathiVA | JoathiVA</title>
+  <meta name="description" content="Pantalla de acceso demo al portal JoathiVA por perfil operativo.">
+  <link rel="stylesheet" href="/joathiva/styles.css">
+</head>
+<body class="login-page">
+  <header class="portal-header login-header">
+    <div class="login-brand">
+      <img class="login-logo" src="/joathiva/assets/logo_joathiva.png" alt="Logo oficial de JoathiVA">
+      <div class="login-brand-copy">
+        <strong>JoathiVA</strong>
+        <small>Portal operativo</small>
+      </div>
+    </div>
+    <a class="btn btn-light back-link" href="/">Ir al sitio Joathi Logística</a>
+  </header>
+
+  <main class="login-main">
+    <section class="login-hero">
+      <div class="login-copy">
+        <span class="eyebrow">Acceso demo</span>
+        <h1>Acceso al Portal JoathiVA</h1>
+        <p>Selecciona un perfil para entrar al espacio de trabajo correspondiente. La experiencia es estática y no usa backend real.</p>
+
+        <div class="quick-grid login-quick-grid" aria-label="Accesos rápidos">
+          <article>
+            <strong>Seguimiento operativo</strong>
+            <span>Visibilidad de trabajo y estado general.</span>
+          </article>
+          <article>
+            <strong>Documentos compartidos</strong>
+            <span>Trazabilidad documental y soporte.</span>
+          </article>
+          <article>
+            <strong>Cotizaciones</strong>
+            <span>Acceso rápido al flujo comercial.</span>
+          </article>
+          <article>
+            <strong>Centro de ayuda</strong>
+            <span>Contacto y soporte del portal.</span>
+          </article>
+        </div>
+      </div>
+
+      <form class="login-card" id="demo-login" novalidate>
+        <h2>Iniciar sesión</h2>
+        <label>Usuario / Email
+          <input name="usuario" type="email" placeholder="usuario@empresa.com" required>
+        </label>
+        <label>Contraseña
+          <input name="password" type="password" placeholder="••••••••" required>
+        </label>
+        <label>Perfil de acceso
+          <select id="profile" name="profile" required>
+            <option value="" selected>Seleccionar perfil</option>
+            <option value="cliente">Cliente</option>
+            <option value="comercial">Comercial</option>
+            <option value="operaciones">Operaciones</option>
+            <option value="despachante">Despachante</option>
+            <option value="administracion">Administración</option>
+            <option value="direccion">Dirección</option>
+            <option value="cotizador">Cotizador</option>
+          </select>
+        </label>
+        <button class="btn btn-primary btn-large" type="submit">Iniciar Sesión</button>
+        <a class="forgot-link" href="mailto:comercial@joathilogistica.com?subject=Recuperaci%C3%B3n%20de%20acceso%20JoathiVA">¿Olvidaste tu contraseña?</a>
+        <p class="note">Demo sin backend real. La redirección depende del perfil seleccionado.</p>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const routes = {
+      cliente: '/joathiva/cliente.html',
+      comercial: '/joathiva/comercial.html',
+      operaciones: '/joathiva/operaciones.html',
+      despachante: '/joathiva/despachante.html',
+      administracion: '/joathiva/administracion.html',
+      direccion: '/joathiva/direccion.html',
+      cotizador: '/joathiva/cotizador.html',
+    };
+
+    const form = document.getElementById('demo-login');
+    const profile = document.getElementById('profile');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const destination = routes[profile.value];
+      if (!destination) {
+        return;
+      }
+      window.location.href = destination;
+    });
+  </script>
+</body>
+</html>

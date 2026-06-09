@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Choferes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="drivers">
+  <div class="portal-shell">
+    <header class="topbar">
+      <a href="index.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Control operacional y trazabilidad</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="choferes.html" data-nav="drivers">Choferes</a>
+        <a href="transportes.html" data-nav="vehicles">Transportes</a>
+        <a href="viajes.html" data-nav="trips">Viajes</a>
+      </nav>
+      <div class="session-box">
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="dashboard-banner dashboard-banner-ops">
+        <div class="dashboard-banner-copy">
+          <p class="eyebrow">Alta de chofer</p>
+          <h1>Registro de choferes</h1>
+          <p>Captura identidad, experiencia y documentacion con una vista mas clara para altas rapidas y control interno.</p>
+        </div>
+        <aside class="dashboard-banner-side">
+          <div class="dashboard-mini-grid">
+            <article class="dashboard-mini-card">
+              <span>Paso 1</span>
+              <strong>Identidad completa</strong>
+              <p>Nombre, empresa, contacto y ciudad base.</p>
+            </article>
+            <article class="dashboard-mini-card">
+              <span>Paso 2</span>
+              <strong>Respaldo documental</strong>
+              <p>Libreta cargada para validar operacion y seguimiento.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <form id="driverForm" class="form-grid">
+            <label>
+              Nombre completo
+              <input name="name" type="text" placeholder="Juan Perez" required>
+            </label>
+            <label>
+              Empresa
+              <input name="company" type="text" placeholder="JoathiVA" required>
+            </label>
+            <label>
+              Telefono
+              <input name="phone" type="text" placeholder="+598 99 000 000" required>
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" placeholder="chofer@empresa.com" required>
+            </label>
+            <label>
+              Ciudad base
+              <input name="originCity" type="text" placeholder="Montevideo" required>
+            </label>
+            <label>
+              Pais base
+              <input name="originCountry" type="text" placeholder="Uruguay" required>
+            </label>
+            <label>
+              Numero de libreta
+              <input name="licenseNumber" type="text" placeholder="UY-558841" required>
+            </label>
+            <label>
+              Experiencia
+              <input name="experience" type="text" placeholder="8 anos en internacional" required>
+            </label>
+            <label class="full-width upload-field">
+              <span>Imagen de libreta de conducir</span>
+              <input id="driverLicenseFile" name="licenseImage" type="file" accept="image/*,.pdf" capture="environment" required>
+              <label for="driverLicenseFile" class="button button-secondary upload-button">Adjuntar libreta de conducir</label>
+              <small data-file-name>Sin archivo seleccionado</small>
+            </label>
+            <button type="submit" class="button button-accent">Guardar chofer</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Plantel actual</p>
+            <h2>Choferes registrados</h2>
+          </div>
+          <div id="driversList" class="stack-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <article class="panel empty-state">
+      <strong>No hay registros disponibles.</strong>
+      <span>Completa las altas del portal para empezar a publicar retornos.</span>
+    </article>
+  </template>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

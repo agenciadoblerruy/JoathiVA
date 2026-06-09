@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Shapes -->
+    <style name="ShapeAppearanceOverlay.JoathiVA.Small" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/surface_radius_small</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.JoathiVA.Medium" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/surface_radius_medium</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.JoathiVA.Large" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/surface_radius_large</item>
+    </style>
+
+    <!-- Typography -->
+    <style name="TextAppearance.JoathiVA.Headline" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.JoathiVA.Title" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.JoathiVA.Body" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextAppearance.JoathiVA.Toolbar.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.JoathiVA.Toolbar.Subtitle" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Widget.JoathiVA.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="titleTextAppearance">@style/TextAppearance.JoathiVA.Toolbar.Title</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.JoathiVA.Toolbar.Subtitle</item>
+        <item name="titleMarginStart">0dp</item>
+        <item name="titleMarginEnd">0dp</item>
+        <item name="titleMarginTop">0dp</item>
+        <item name="titleMarginBottom">0dp</item>
+        <item name="navigationIconTint">@color/toolbar_icon_tint</item>
+    </style>
+
+    <!-- Cards -->
+    <style name="Widget.JoathiVA.SurfaceCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/surface_panel</item>
+        <item name="cardCornerRadius">@dimen/surface_radius_large</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/line_soft</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.JoathiVA.Large</item>
+    </style>
+
+    <style name="Widget.JoathiVA.HeroCard" parent="Widget.JoathiVA.SurfaceCard">
+        <item name="cardBackgroundColor">@color/surface_soft_alt</item>
+        <item name="strokeColor">@color/line_soft</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Widget.JoathiVA.Button.Base" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">50dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">@dimen/surface_radius_medium</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="rippleColor">@color/surface_soft</item>
+        <item name="iconGravity">textStart</item>
+    </style>
+
+    <style name="Widget.JoathiVA.Button.Primary" parent="Widget.JoathiVA.Button.Base">
+        <item name="android:textColor">@color/text_inverse</item>
+        <item name="backgroundTint">@color/brand_secondary</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.JoathiVA.Button.Secondary" parent="Widget.JoathiVA.Button.Base">
+        <item name="android:textColor">@color/brand_primary</item>
+        <item name="backgroundTint">@color/surface_panel</item>
+        <item name="strokeColor">@color/line_soft</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Widget.JoathiVA.Button.Accent" parent="Widget.JoathiVA.Button.Base">
+        <item name="android:textColor">@color/cta_text</item>
+        <item name="backgroundTint">@color/cta_background</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <!-- Bottom navigation buttons -->
+    <style name="Widget.JoathiVA.BottomNavButton" parent="Widget.JoathiVA.Button.Secondary">
+        <item name="android:minHeight">@dimen/bottom_nav_button_height</item>
+        <item name="android:textColor">@color/bottom_nav_text_selector</item>
+        <item name="backgroundTint">@color/bottom_nav_bg_selector</item>
+        <item name="strokeColor">@color/line_soft</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="Widget.JoathiVA.BottomNavActionButton" parent="Widget.JoathiVA.Button.Accent">
+        <item name="android:minHeight">@dimen/bottom_nav_button_height</item>
+    </style>
+
+    <style name="Widget.JoathiVA.BottomNavToggle" parent="Widget.JoathiVA.BottomNavButton">
+        <item name="android:checkable">true</item>
+    </style>
+
+    <!-- Inputs -->
+    <style name="Widget.JoathiVA.TextInputLayout.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/input_fill</item>
+        <item name="boxStrokeColor">@color/input_stroke_focused</item>
+        <item name="boxCornerRadiusTopStart">@dimen/surface_radius_medium</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/surface_radius_medium</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/surface_radius_medium</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/surface_radius_medium</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="helperTextTextColor">@color/text_secondary</item>
+    </style>
+
+    <style name="Widget.JoathiVA.TextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Progress -->
+    <style name="Widget.JoathiVA.LinearProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="indicatorColor">@color/brand_secondary</item>
+        <item name="trackColor">@color/progress_track</item>
+        <item name="trackThickness">@dimen/progress_height</item>
+        <item name="trackCornerRadius">4dp</item>
+    </style>
+
+</resources>

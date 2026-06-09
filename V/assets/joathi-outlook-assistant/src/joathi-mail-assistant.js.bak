@@ -1,0 +1,550 @@
+#!/usr/bin/env node
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const DEFAULT_RULES = path.resolve(__dirname, '..', 'config', 'assistant.rules.json');
+
+function parseArgs(argv) {
+  const args = {
+    mode: 'files',
+    input: path.resolve(process.cwd(), 'input', 'emails'),
+    output: path.resolve(process.cwd(), 'output'),
+    rules: DEFAULT_RULES,
+    limit: 25,
+    minConfidence: 0
+  };
+
+  for (let i = 2; i < argv.length; i += 1) {
+    const key = argv[i];
+    const next = argv[i + 1];
+    if (key === '--mode') { args.mode = next; i += 1; }
+    else if (key === '--input') { args.input = path.resolve(process.cwd(), next); i += 1; }
+    else if (key === '--output') { args.output = path.resolve(process.cwd(), next); i += 1; }
+    else if (key === '--rules') { args.rules = path.resolve(process.cwd(), next); i += 1; }
+    else if (key === '--limit') { args.limit = Number.parseInt(next, 10); i += 1; }
+    else if (key === '--min-confidence') { args.minConfidence = Number.parseFloat(next); i += 1; }
+    else if (key === '--help' || key === '-h') { printHelpAndExit(); }
+    else throw new Error(`Argumento no reconocido: ${key}`);
+  }
+
+  if (!['files', 'graph-json'].includes(args.mode)) {
+    throw new Error('Modo invalido. Usar --mode files o --mode graph-json.');
+  }
+  if (!Number.isFinite(args.limit) || args.limit < 1) args.limit = 25;
+  if (!Number.isFinite(args.minConfidence) || args.minConfidence < 0) args.minConfidence = 0;
+  return args;
+}
+
+function printHelpAndExit() {
+  console.log(`Joathi Outlook Assistant\n\nUso:\n  node src/joathi-mail-assistant.js --mode files --input ./input/emails --output ./output\n  node src/joathi-mail-assistant.js --mode graph-json --input ./output/graph_messages.json --output ./output\n\nModos:\n  files       Lee .eml, .txt o .json desde una carpeta local.\n  graph-json  Lee JSON exportado desde Microsoft Graph por el script PowerShell.\n\nOpciones:\n  --rules <archivo>          Reglas de clasificacion.\n  --limit <numero>           Maximo de correos a procesar.\n  --min-confidence <numero>  Filtro minimo de confianza para la salida clasificada.\n`);
+  process.exit(0);
+}
+
+function ensureDir(dir) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+function loadJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function normalizeText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+function cleanLine(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function stableId(seed) {
+  return crypto.createHash('sha1').update(seed).digest('hex').slice(0, 16);
+}
+
+function parseHeader(raw, name) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`^${escaped}:\\s*(.+(?:\\r?\\n[ \\t].+)*)`, 'im');
+  const match = raw.match(regex);
+  if (!match) return '';
+  return cleanLine(match[1].replace(/\r?\n[ \t]/g, ' '));
+}
+
+function decodeMimeHeader(value) {
+  // Implementacion conservadora. Mantiene texto original si no puede decodificar.
+  return String(value || '').replace(/=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g, (_, charset, enc, body) => {
+    try {
+      if (enc.toUpperCase() === 'B') return Buffer.from(body, 'base64').toString('utf8');
+      return body.replace(/_/g, ' ').replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    } catch {
+      return body;
+    }
+  });
+}
+
+function stripHtml(value) {
+  return String(value || '')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseEml(raw, filePath) {
+  const subject = decodeMimeHeader(parseHeader(raw, 'Subject'));
+  const from = decodeMimeHeader(parseHeader(raw, 'From'));
+  const date = parseHeader(raw, 'Date');
+  const internetMessageId = parseHeader(raw, 'Message-ID') || parseHeader(raw, 'Message-Id');
+  const boundaryMatch = raw.match(/boundary="?([^";\r\n]+)"?/i);
+  let body = '';
+
+  if (boundaryMatch) {
+    const chunks = raw.split(`--${boundaryMatch[1]}`);
+    const plain = chunks.find((chunk) => /Content-Type:\s*text\/plain/i.test(chunk));
+    const html = chunks.find((chunk) => /Content-Type:\s*text\/html/i.test(chunk));
+    body = extractPartBody(plain || html || chunks[chunks.length - 1]);
+    if (html && !plain) body = stripHtml(body);
+  } else {
+    const split = raw.split(/\r?\n\r?\n/);
+    body = split.slice(1).join('\n\n');
+  }
+
+  body = cleanLine(stripQuotedPrintable(body));
+  const seed = `${internetMessageId}|${subject}|${from}|${date}|${filePath}`;
+  return {
+    id: stableId(seed),
+    source: 'outlook-export',
+    sourceId: internetMessageId || path.basename(filePath),
+    fileName: path.basename(filePath),
+    receivedAt: date || null,
+    from,
+    subject,
+    bodyPreview: body.slice(0, 800),
+    bodyText: body,
+    hasAttachments: /Content-Disposition:\s*attachment/i.test(raw),
+    attachmentCount: (raw.match(/Content-Disposition:\s*attachment/gi) || []).length
+  };
+}
+
+function extractPartBody(part) {
+  if (!part) return '';
+  return String(part).split(/\r?\n\r?\n/).slice(1).join('\n\n');
+}
+
+function stripQuotedPrintable(value) {
+  return String(value || '')
+    .replace(/=\r?\n/g, '')
+    .replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
+function graphMessageToRecord(message) {
+  const from = message.from && message.from.emailAddress
+    ? `${message.from.emailAddress.name || ''} <${message.from.emailAddress.address || ''}>`.trim()
+    : '';
+  const bodyText = message.body && message.body.content ? stripHtml(message.body.content) : (message.bodyPreview || '');
+  const seed = `${message.id}|${message.internetMessageId || ''}|${message.subject || ''}`;
+  return {
+    id: stableId(seed),
+    source: 'microsoft-graph',
+    sourceId: message.id,
+    internetMessageId: message.internetMessageId || null,
+    receivedAt: message.receivedDateTime || null,
+    from,
+    subject: message.subject || '',
+    bodyPreview: message.bodyPreview || bodyText.slice(0, 800),
+    bodyText,
+    hasAttachments: Boolean(message.hasAttachments),
+    attachmentCount: Array.isArray(message.attachments) ? message.attachments.length : null,
+    existingOutlookCategories: Array.isArray(message.categories) ? message.categories : []
+  };
+}
+
+function readRecordsFromFiles(inputDir, limit) {
+  if (!fs.existsSync(inputDir)) {
+    throw new Error(`No existe la carpeta de entrada: ${inputDir}`);
+  }
+  const files = fs.readdirSync(inputDir)
+    .filter((name) => /\.(eml|txt|json)$/i.test(name))
+    .sort()
+    .slice(0, limit);
+
+  const records = [];
+  for (const name of files) {
+    const filePath = path.join(inputDir, name);
+    const raw = fs.readFileSync(filePath, 'utf8');
+    if (/\.json$/i.test(name)) {
+      const parsed = JSON.parse(raw);
+      const arr = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.value) ? parsed.value : [parsed]);
+      for (const item of arr) {
+        records.push(item.id && item.from && item.subject !== undefined ? graphMessageToRecord(item) : normalizeLooseRecord(item, filePath));
+        if (records.length >= limit) break;
+      }
+    } else {
+      records.push(parseEml(raw, filePath));
+    }
+    if (records.length >= limit) break;
+  }
+  return records;
+}
+
+function readRecordsFromGraphJson(inputFile, limit) {
+  const payload = loadJson(inputFile);
+  const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.value) ? payload.value : []);
+  return arr.slice(0, limit).map(graphMessageToRecord);
+}
+
+function normalizeLooseRecord(item, filePath) {
+  const subject = item.subject || item.asunto || '';
+  const from = item.from || item.de || '';
+  const bodyText = item.bodyText || item.body || item.texto || item.bodyPreview || '';
+  return {
+    id: item.id || stableId(`${subject}|${from}|${bodyText}|${filePath}`),
+    source: item.source || 'local-json',
+    sourceId: item.sourceId || item.id || path.basename(filePath),
+    receivedAt: item.receivedAt || item.date || null,
+    from,
+    subject,
+    bodyPreview: cleanLine(bodyText).slice(0, 800),
+    bodyText: cleanLine(bodyText),
+    hasAttachments: Boolean(item.hasAttachments),
+    attachmentCount: item.attachmentCount || 0
+  };
+}
+
+function findMatches(text, keywords) {
+  const norm = normalizeText(text);
+  return keywords.filter((keyword) => norm.includes(normalizeText(keyword)));
+}
+
+function extractRefs(text, patterns) {
+  const refs = {};
+  for (const [name, pattern] of Object.entries(patterns || {})) {
+    const regex = new RegExp(pattern, 'gi');
+    refs[name] = Array.from(new Set((String(text).match(regex) || []).map(cleanLine)));
+  }
+  return refs;
+}
+
+function extractCustomerCandidate(record) {
+  const from = record.from || '';
+  const emailMatch = from.match(/[A-Z0-9._%+-]+@([A-Z0-9.-]+\.[A-Z]{2,})/i);
+  if (!emailMatch) return null;
+  const domain = emailMatch[1].toLowerCase();
+  if (['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'].includes(domain)) return null;
+  return domain.split('.')[0].replace(/[-_]/g, ' ');
+}
+
+
+function extractEmailDomain(value) {
+  const match = String(value || '').match(/[A-Z0-9._%+-]+@([A-Z0-9.-]+\.[A-Z]{2,})/i);
+  return match ? match[1].toLowerCase() : '';
+}
+
+function hasAnyText(text, keywords) {
+  const norm = normalizeText(text);
+  return (keywords || []).some((keyword) => norm.includes(normalizeText(keyword)));
+}
+
+function makeFolderRoute(key, pathValue, reason) {
+  return {
+    key,
+    path: pathValue || '',
+    reason
+  };
+}
+
+function selectTargetFolder(record, flags, refs, rulesConfig, fullText) {
+  const folders = rulesConfig.outlookFolders || {};
+  const hints = rulesConfig.routingHints || {};
+  const text = `${fullText || ''}\n${record.from || ''}`;
+  const domain = extractEmailDomain(record.from);
+  const refsFlat = Object.values(refs || {}).flat().join(' ');
+  const textWithRefs = `${text}\n${refsFlat}`;
+
+  // Orden de prioridad segun la vista real de Outlook:
+  // criticos > documentacion especifica > facturas/pagos > comercial > cliente > operaciones > proveedores > interno > triage.
+  if (flags.urgent && folders.pendientesCriticos) {
+    return makeFolderRoute('pendientesCriticos', folders.pendientesCriticos, 'Urgencia/riesgo detectado; se prioriza sobre cualquier otra carpeta.');
+  }
+
+  if ((hasAnyText(textWithRefs, ['dua']) || ((refs.dua || []).length > 0)) && folders.dua) {
+    return makeFolderRoute('dua', folders.dua, 'Referencia DUA detectada.');
+  }
+
+  if (hasAnyText(textWithRefs, ['crt', 'mic', 'mic/dta', 'crt/mic', 'crt mic']) && folders.crtMic) {
+    return makeFolderRoute('crtMic', folders.crtMic, 'Referencia CRT/MIC detectada.');
+  }
+
+  if ((flags.payment || hasAnyText(textWithRefs, ['factura', 'facturas', 'invoice', 'invoices', 'comprobante', 'recibo'])) && folders.facturas) {
+    return makeFolderRoute('facturas', folders.facturas, 'Factura, pago, cobro o comprobante detectado.');
+  }
+
+  if (flags.quote && flags.followUp && folders.comercialSeguimiento) {
+    return makeFolderRoute('comercialSeguimiento', folders.comercialSeguimiento, 'Cotizacion ya en seguimiento comercial.');
+  }
+
+  if (flags.quote && folders.cotizacionesNuevas) {
+    return makeFolderRoute('cotizacionesNuevas', folders.cotizacionesNuevas, 'Nueva solicitud comercial/cotizacion detectada.');
+  }
+
+  const clientKeywords = (hints.clientKeywords && hints.clientKeywords.clienteUlg) || [];
+  if (hasAnyText(textWithRefs, clientKeywords) && folders.clienteUlg) {
+    return makeFolderRoute('clienteUlg', folders.clienteUlg, 'Cliente ULG Logistics detectado.');
+  }
+
+  if ((flags.followUp || hasAnyText(textWithRefs, ['eta', 'arribo', 'liberacion', 'liberación', 'despacho', 'operacion', 'operación'])) && folders.operacionesAbiertas) {
+    return makeFolderRoute('operacionesAbiertas', folders.operacionesAbiertas, 'Seguimiento o estado operativo detectado.');
+  }
+
+  if (hasAnyText(textWithRefs, hints.supplierKeywords || []) && folders.proveedoresDespachantes) {
+    return makeFolderRoute('proveedoresDespachantes', folders.proveedoresDespachantes, 'Proveedor, despachante o tercero operativo detectado.');
+  }
+
+  if ((hints.internalDomains || []).includes(domain) && folders.internoJoathi) {
+    return makeFolderRoute('internoJoathi', folders.internoJoathi, 'Correo interno Joathi detectado.');
+  }
+
+  return makeFolderRoute('triage', folders.triage || '', 'No alcanzo regla especifica; queda en triage para revision.');
+}
+
+function buildSummary(record, flags, refs) {
+  const pieces = [];
+  if (flags.quote) pieces.push('posible solicitud de cotizacion');
+  if (flags.requiresResponse) pieces.push('requiere respuesta');
+  if (flags.followUp) pieces.push('requiere seguimiento operativo');
+  if (flags.document) pieces.push('involucra documentacion');
+  if (flags.payment) pieces.push('involucra pago/cobro');
+  if (flags.urgent) pieces.push('tiene senales de urgencia o riesgo');
+  const refText = Object.entries(refs).flatMap(([kind, values]) => values.map((v) => `${kind}: ${v}`)).join(', ');
+  const base = pieces.length ? pieces.join(', ') : 'correo informativo o de baja prioridad';
+  return `${record.subject || '(sin asunto)'}: ${base}${refText ? `. Referencias detectadas: ${refText}` : ''}.`;
+}
+
+function buildSuggestedTask(record, flags, refs) {
+  const subject = record.subject || '(sin asunto)';
+  const ref = Object.values(refs).flat().find(Boolean);
+  const suffix = ref ? ` (${ref})` : '';
+  if (flags.quote) return `Preparar o validar cotizacion solicitada: ${subject}${suffix}`;
+  if (flags.document) return `Revisar documentacion y confirmar faltantes: ${subject}${suffix}`;
+  if (flags.payment) return `Revisar pago/cobro y responder estado: ${subject}${suffix}`;
+  if (flags.followUp) return `Dar seguimiento operativo y actualizar estado: ${subject}${suffix}`;
+  if (flags.requiresResponse) return `Responder correo pendiente: ${subject}${suffix}`;
+  return `Revisar correo clasificado como informativo: ${subject}${suffix}`;
+}
+
+function buildNextAction(flags) {
+  if (flags.urgent && flags.requiresResponse) return 'Responder hoy y registrar actividad en JoathiVA.';
+  if (flags.urgent) return 'Revisar hoy y crear tarea prioritaria en JoathiVA.';
+  if (flags.quote) return 'Crear cotizacion o tarea comercial vinculada al cliente.';
+  if (flags.document) return 'Validar documentos recibidos/faltantes y crear checklist de seguimiento.';
+  if (flags.payment) return 'Derivar a administracion o registrar tarea de cobro/pago.';
+  if (flags.followUp) return 'Crear tarea de seguimiento con responsable y fecha.';
+  if (flags.requiresResponse) return 'Preparar borrador de respuesta antes de cerrar el correo.';
+  return 'Archivar o dejar como informativo si no requiere accion.';
+}
+
+function buildDraftReply(record, flags) {
+  const greeting = 'Hola,';
+  const closing = 'Saludos,\nJoathi Logistica';
+  if (flags.quote) {
+    return `${greeting}\n\nRecibimos tu solicitud. Vamos a revisar los datos de origen, destino, tipo de carga y condiciones para preparar la cotizacion correspondiente. Si falta algun dato operativo o documental, te lo confirmamos por este medio.\n\n${closing}`;
+  }
+  if (flags.document) {
+    return `${greeting}\n\nRecibimos la informacion/documentacion. La vamos a validar contra el expediente y te confirmamos si queda algun pendiente para avanzar sin demoras.\n\n${closing}`;
+  }
+  if (flags.payment) {
+    return `${greeting}\n\nRecibimos tu mensaje. Vamos a revisar el estado de pago/cobro y te confirmamos la situacion actual a la brevedad.\n\n${closing}`;
+  }
+  if (flags.followUp) {
+    return `${greeting}\n\nGracias por el seguimiento. Vamos a verificar el estado operativo del caso y te respondemos con la novedad o proximo paso correspondiente.\n\n${closing}`;
+  }
+  if (flags.requiresResponse) {
+    return `${greeting}\n\nRecibimos tu mensaje. Lo revisamos y te respondemos con la informacion correspondiente.\n\n${closing}`;
+  }
+  return '';
+}
+
+function classify(record, rulesConfig) {
+  const text = `${record.subject || ''}\n${record.from || ''}\n${record.bodyPreview || ''}\n${record.bodyText || ''}`;
+  const rules = rulesConfig.rules || {};
+  const signals = {};
+  const flags = {};
+  for (const [name, keywords] of Object.entries(rules)) {
+    const matches = findMatches(text, keywords || []);
+    signals[name] = matches;
+    flags[name] = matches.length > 0;
+  }
+
+  if (record.hasAttachments) {
+    flags.document = true;
+    signals.document = Array.from(new Set([...(signals.document || []), 'adjunto']));
+  }
+
+  const score = Object.values(signals).reduce((sum, matches) => sum + Math.min(matches.length, 4), 0);
+  const confidence = Math.max(0.15, Math.min(0.98, score / 14));
+  const refs = extractRefs(text, rulesConfig.referencePatterns);
+  const folderRoute = selectTargetFolder(record, flags, refs, rulesConfig, text);
+  const categories = [];
+  const categoryMap = rulesConfig.outlookCategories || {};
+  if (flags.requiresResponse && categoryMap.requiresResponse) categories.push(categoryMap.requiresResponse);
+  if (flags.followUp && categoryMap.followUp) categories.push(categoryMap.followUp);
+  if (flags.quote && categoryMap.quote) categories.push(categoryMap.quote);
+  if (flags.task && categoryMap.task) categories.push(categoryMap.task);
+  if (flags.document && categoryMap.document) categories.push(categoryMap.document);
+  if (flags.urgent && categoryMap.urgent) categories.push(categoryMap.urgent);
+  if (flags.payment && categoryMap.payment) categories.push(categoryMap.payment);
+
+  const needsAction = flags.requiresResponse || flags.followUp || flags.quote || flags.task || flags.document || flags.urgent || flags.payment;
+  return {
+    ...record,
+    emailRecordType: 'EmailRecord',
+    customerCandidate: extractCustomerCandidate(record),
+    operationRefs: refs,
+    classification: {
+      requiresResponse: Boolean(flags.requiresResponse),
+      needsFollowUp: Boolean(flags.followUp),
+      needsQuote: Boolean(flags.quote),
+      createsTask: Boolean(flags.task || needsAction),
+      hasDocuments: Boolean(flags.document),
+      isUrgent: Boolean(flags.urgent),
+      paymentRelated: Boolean(flags.payment),
+      priority: flags.urgent ? 'alta' : (needsAction ? 'media' : 'baja'),
+      confidence: Number(confidence.toFixed(2)),
+      signals
+    },
+    outlookCategories: Array.from(new Set(categories)),
+    targetFolderKey: folderRoute.key,
+    targetFolderPath: folderRoute.path,
+    targetFolderReason: folderRoute.reason,
+    folderMoveRecommended: Boolean(folderRoute.path),
+    summary: buildSummary(record, flags, refs),
+    suggestedTask: needsAction ? buildSuggestedTask(record, flags, refs) : '',
+    draftReply: buildDraftReply(record, flags),
+    nextAction: buildNextAction(flags),
+    joathiva: {
+      activity: {
+        type: 'email_classified',
+        title: record.subject || '(sin asunto)',
+        description: buildSummary(record, flags, refs),
+        source: record.source,
+        sourceId: record.sourceId,
+        targetFolderPath: folderRoute.path,
+        createdAt: new Date().toISOString()
+      },
+      task: needsAction ? {
+        title: buildSuggestedTask(record, flags, refs),
+        priority: flags.urgent ? 'alta' : 'media',
+        status: 'pendiente',
+        sourceEmailId: record.sourceId,
+        dueHint: flags.urgent ? 'hoy' : 'proximo seguimiento'
+      } : null
+    }
+  };
+}
+
+function csvEscape(value) {
+  const text = String(value || '');
+  if (/[",\n;]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
+  return text;
+}
+
+function writeOutputs(records, args) {
+  ensureDir(args.output);
+  const classified = records.filter((r) => r.classification.confidence >= args.minConfidence);
+  fs.writeFileSync(path.join(args.output, 'email_records.json'), JSON.stringify(records, null, 2), 'utf8');
+  fs.writeFileSync(path.join(args.output, 'classified_messages.json'), JSON.stringify(classified, null, 2), 'utf8');
+
+  const csvRows = [
+    ['priority', 'category', 'targetFolderPath', 'from', 'subject', 'suggestedTask', 'nextAction', 'sourceId'].join(';')
+  ];
+  for (const r of classified.filter((item) => item.joathiva.task)) {
+    csvRows.push([
+      r.classification.priority,
+      r.outlookCategories.join(', '),
+      r.targetFolderPath,
+      r.from,
+      r.subject,
+      r.suggestedTask,
+      r.nextAction,
+      r.sourceId
+    ].map(csvEscape).join(';'));
+  }
+  fs.writeFileSync(path.join(args.output, 'tasks_suggested.csv'), `${csvRows.join('\n')}\n`, 'utf8');
+
+
+  const moveRows = [
+    ['priority', 'targetFolderPath', 'targetFolderReason', 'from', 'subject', 'sourceId'].join(';')
+  ];
+  for (const r of classified.filter((item) => item.targetFolderPath)) {
+    moveRows.push([
+      r.classification.priority,
+      r.targetFolderPath,
+      r.targetFolderReason,
+      r.from,
+      r.subject,
+      r.sourceId
+    ].map(csvEscape).join(';'));
+  }
+  fs.writeFileSync(path.join(args.output, 'folder_moves_suggested.csv'), `${moveRows.join('\n')}\n`, 'utf8');
+
+  const drafts = classified
+    .filter((r) => r.draftReply)
+    .map((r, idx) => `## Borrador ${idx + 1}: ${r.subject || '(sin asunto)'}\n\n**Para:** ${r.from || '(revisar destinatario)'}\n\n**Categorias:** ${r.outlookCategories.join(', ') || 'Sin categoria'}\n\n**Carpeta sugerida:** ${r.targetFolderPath || 'Sin movimiento'}\n\n${r.draftReply}\n`)
+    .join('\n---\n\n');
+  fs.writeFileSync(path.join(args.output, 'drafts_suggested.md'), drafts || '# Sin borradores sugeridos\n', 'utf8');
+
+  const byPriority = classified.reduce((acc, item) => {
+    acc[item.classification.priority] = (acc[item.classification.priority] || 0) + 1;
+    return acc;
+  }, {});
+  const byFolder = classified.reduce((acc, item) => {
+    const key = item.targetFolderPath || '(sin carpeta sugerida)';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+  const summaryLines = [
+    '# Resumen Joathi Outlook Assistant',
+    '',
+    `Procesados: ${records.length}`,
+    `Clasificados: ${classified.length}`,
+    `Alta: ${byPriority.alta || 0}`,
+    `Media: ${byPriority.media || 0}`,
+    `Baja: ${byPriority.baja || 0}`,
+    '',
+    '## Carpetas sugeridas',
+    ...Object.entries(byFolder).map(([folder, count]) => `- ${folder}: ${count}`),
+    '',
+    '## Acciones sugeridas',
+    ...classified.map((r) => `- [${r.classification.priority}] ${r.nextAction} → ${r.targetFolderPath || 'sin movimiento'} — ${r.subject || '(sin asunto)'}`)
+  ];
+  fs.writeFileSync(path.join(args.output, 'summary.md'), `${summaryLines.join('\n')}\n`, 'utf8');
+
+  return { processed: records.length, classified: classified.length, output: args.output };
+}
+
+function main() {
+  const args = parseArgs(process.argv);
+  const rulesConfig = loadJson(args.rules);
+  const rawRecords = args.mode === 'files'
+    ? readRecordsFromFiles(args.input, args.limit)
+    : readRecordsFromGraphJson(args.input, args.limit);
+  const records = rawRecords.map((record) => classify(record, rulesConfig));
+  const result = writeOutputs(records, args);
+  console.log(JSON.stringify(result, null, 2));
+}
+
+try {
+  main();
+} catch (error) {
+  console.error(`[Joathi Outlook Assistant] ${error.message}`);
+  process.exit(1);
+}

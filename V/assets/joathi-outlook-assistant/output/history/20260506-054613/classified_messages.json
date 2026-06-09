@@ -1,0 +1,153 @@
+[
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100B01E00000000",
+        "subject":  "Re: PY26000008 - CT 4480 // 324PAR - Terrestre",
+        "from":  "Admin ULG \u003cadministracion@ulglogistics.com.uy\u003e",
+        "receivedDateTime":  "2026-04-27T10:43:10.0000000",
+        "bodyPreview":  "Buenos dias,\r\n\r\nEspero se encuentren bien\r\n\r\nadjunto factura por flete y gastos\r\n\r\nQuedo atento\r\nsaludos!\r\n\r\n \u003chttps://ci3.googleusercontent.com/mail-sig/AIorK4yeYKL8FGZ2FDs9qPfhC4ZR-0Z4k8y56ih3Ciw0etERQFjpbvF6ACUsYdJDGSFsh0jmYLRetxh9g21Y\u003e \r\n\r\n\r\nMartin Tay\r\nAdministración/Finanzas\r\nT: +59826009320\r\nE: administracion@ulglogistics.com.uy \u003cmailto:administracion@ulglogistics.com.uy\u003e \r\nwww.ulglogistics.com.uy \u003chttp://www.ulglogistics.com.uy\u003e \r\n\r\n\r\n\r\nEl vie, 24 abr 2026 a las 16:32, \u003cvaleria@joathilogistica.com \u003cmailto:valeria@joathilogistica.com\u003e \u003e escribió:\r\n\r\n\r\n\tEstimados\r\n\r\n\tcomo están ??\r\n\r\n\t\r\n\t\r\n\r\n\t\r\n\t\r\n\r\n\tNecesitamos  la factura con los pesos correctos de la carga así como también la factur",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones",
+                                      "Joathi - Cliente ULG"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100AF1E00000000",
+        "subject":  "Are You Testing Your Emails the Right Way? 🤔",
+        "from":  "WP Mail SMTP \u003csupport@wpmailsmtp.com\u003e",
+        "receivedDateTime":  "2026-04-27T10:10:48.0000000",
+        "bodyPreview":  "Why testing your emails is important  ☑️ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ \r\n \u003chttps://t.dripemail2.com/c/eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZXRvdXIiLCJpc3MiOiJtb25vbGl0aCIsInN1YiI6ImRldG91cl9saW5rIiwiaWF0IjoxNzc3Mjg2Mzk4LCJuYmYiOjE3NzcyODYzOTgsImFjY291bnRfaWQiOiI1OTY0ODY3IiwiZGVsaXZlcnlfaWQiOiIzaDJiNGpmMGVmZnpzaTBscGFibSIsInRva2VuIjoiM2gyYjRqZjBlZmZ6c2kwbHBhYm0iLCJzZW5kX2F0IjoxNzc3Mjk1NDAwLCJlbWFpbF9pZCI6ODA2NzI5NCwiZW1haWxhYmxlX3R5cGUiOiJDYW1wYWlnbiIsImVtYWlsYWJsZV9pZCI6NDg2MDczLCJ1cmwiOiJodHRwczovL3dwbWFpbHNtdHAuY29tP3V",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+                                      "Joathi - No Joathi"
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Correo no operativo. Revisar si corresponde archivar o crear carpeta 99_NO_JOATHI."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100AE1E00000000",
+        "subject":  "Resumen semanal de actualizaciones de productos",
+        "from":  "HubSpot \u003cnoreply@notifications.hubspot.com\u003e",
+        "receivedDateTime":  "2026-04-27T10:08:47.0000000",
+        "bodyPreview":  " \t\r\n \u003chttps://static.hsappstatic.net/EmailNotificationSharedAssets/ex/hubspot-logo-standard.png\u003e \t\r\n________________________________\r\n\r\n \t\r\n \t\r\n\r\nActualizaciones semanales de productos\r\n\r\n \t\r\n\r\nMantente al día con las actualizaciones de productos de HubSpot de esta semana!\r\n\r\n \t\r\n________________________________\r\n\r\n \t\r\n\r\nBetas que son tendencia \r\n\r\n\r\nPrueba las betas más populares que aún no has explorado \r\n\r\n \u003chttps://static.hsappstatic.net/EmailNotificationSharedAssets/ex/beta.png\u003e \t\r\n1\t\t\r\nBandeja de Entrada de Conversaciones móvil: migración \u003chttps://app-na2.hubspot.com/product-updates/49211048/in-beta?rolloutId=298895\u0026update=14088871\u0026email=bb4cdad74053fdfafde45f8f8248d533\u003e \r\n\r\n\r\nHubSpot ",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+                                      "Joathi - No Joathi"
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Correo no operativo. Revisar si corresponde archivar o crear carpeta 99_NO_JOATHI."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100AD1E00000000",
+        "subject":  "Tu resumen semanal de WPForms para joathilogistica.com",
+        "from":  "JOATHI LOGISTICA \u003crhernandez@joathilogistica.com\u003e",
+        "receivedDateTime":  "2026-04-27T00:00:44.0000000",
+        "bodyPreview":  "\t \u003chttps://joathilogistica.com/wp-content/plugins/wpforms-lite/assets/images/logo-negative.png\u003e \r\n \u003chttps://joathilogistica.com/wp-content/plugins/wpforms-lite/assets/images/logo.png\u003e \r\n\t\r\n¡Hola!\r\n\r\n\r\nVeamos cómo han funcionado tus formularios la semana pasada.\r\n\r\nA continuación se muestra el número total de envíos de cada formulario. Sin embargo, los envíos de los formularios no son almacenadas por WPForms Lite. \r\n\r\nNota: Las copias de seguridad de los envíos no están activadas.\r\nTe recomendamos que actives las copias de seguridad de los envíos para evitar que se pierdan. \r\n\r\nLas copias de seguridad son completamente gratuitas, 100% seguras, y puedes activarlas con unos pocos clics Activa l",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100AC1E00000000",
+        "subject":  "Re: EPUET2268 || **TRANSPORTE** xpd global Uruguay || COTMVD2290 || CLIENTE: NOROSEBE",
+        "from":  "Valeria \u003cvaleria@joathilogistica.com\u003e",
+        "receivedDateTime":  "2026-04-26T15:14:18.0000000",
+        "bodyPreview":  "Buenas tardes como estan? \r\n\r\nLamentablemente no dieron los tiempos para la liberacion en frontera del lado argentino por lo que la unidad iniciará su viaje a Paraguay el dia lunes llegando a Aduana py el dia martes\r\n\r\n\r\nSaludos y gracias. \r\n\r\nValeria Zugasti\r\nCel. ±59892498378\r\n\r\n________________________________\r\n\r\nDe: Rodrigo Hernández \u003crhernandez@joathilogistica.com\u003e\r\nEnviado: viernes, abril 24, 2026 10:03:15 p.m.\r\nPara: daniel@consultor360.com.py \u003cdaniel@consultor360.com.py\u003e; abggloria@consultor360.com.py \u003cabggloria@consultor360.com.py\u003e; nicolasmora@consultor360.com.py \u003cnicolasmora@consultor360.com.py\u003e; roberto@consultor360.com.py \u003croberto@consultor360.com.py\u003e; gina.fogliati@xpdglobal.co",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100AB1E00000000",
+        "subject":  "NEWS Transporte Carretero |  Nº 186 - Especial Mes de la Mujer - 3era. Parte, y muchas más!",
+        "from":  "Revista Transporte Carretero \u003cinfo@transportecarretero.com.uy\u003e",
+        "receivedDateTime":  "2026-04-26T12:01:21.0000000",
+        "bodyPreview":  "Hola, Rodrigo, gracias por recibir en tu mail todas las novedades de transporte\r\n\r\n\t \t \t \t \t \t \t \t \t \t \t \t \t \t \r\n\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \r\n\r\n \u003chttp://url3656.transportecarretero.com.uy/ls/click?upn=u001.BPgiGX6PcSVH88m-2BFSVhSWMt-2Bc-2F3Yl-2BiwmnKFafjZ04yQXKD8PL2rIQIajnOJr1xtVytCXdWO26PD27Vv-2B-2FlVUl0L3yPmfN2jxeJ7lYkApZUdEvYPSadtM2Eqj-2FpzR5-2BACMgfY0KxDutbf-2F7PGlfoX35-2F6kL0jea5ETxJeZEPXQ-3D-Fws_Y93ul-2FtxQksNRJyUA0ZhOrb1qZ2RJw2KLhaZfBloIwnbWMhSMXtwFj-2BkURzz0DzlQK6Lr6rHv0FjQxwtyuPyACbB8kFXlpaCNAA4oSN4ODydSp8YbuxI9ugMZsIyJT7ATOsbWxm9idFJ3Njq4MjeEkkJskt-2FLOlSuvJWGw-2F9eQLn-2B2tTQwrPN6DocRLeza9PvBhYL3LC22CgPtyiqCjRrce81eHTjHDkuasgPf-2FDo9o-3D\u003e \r\n\r\n \r\n\r\n \r\n",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+                                      "Joathi - No Joathi"
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Correo no operativo. Revisar si corresponde archivar o crear carpeta 99_NO_JOATHI."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100AA1E00000000",
+        "subject":  "Token de acceso vencido",
+        "from":  "HubSpot \u003cnoreply@notifications.hubspot.com\u003e",
+        "receivedDateTime":  "2026-04-26T06:17:10.0000000",
+        "bodyPreview":  " \t\r\n \u003chttps://static.hsappstatic.net/EmailNotificationSharedAssets/ex/hubspot-logo-standard.png\u003e \t\r\n________________________________\r\n\r\n \t\r\n \t\r\n\r\nToken de acceso vencido\r\n\r\n \t\r\n________________________________\r\n\r\n \t\r\n\r\nHola, Rodrigo:\r\n\r\nFue rotado el token de acceso de la aplicación privada \"Joathi Cotizador HubSpot\", y tu token de acceso anterior venció y ya no funciona. Para que tu aplicación privada siga funcionando sin problemas, asegúrate de actualizarla lo antes posible para que haga referencia al nuevo token. \r\n\r\n \t\r\nVer ficha de acceso \u003chttps://app-na2.hubspot.com/api/notification-station/general/v1/notifications/cta/c7f457de-d1b0-4670-b555-cda4a306b244?notificationPortalId=49211048\u0026",
+        "joathi":  {
+                       "priority":  "alta",
+                       "labels":  [
+                                      "Joathi - Urgente"
+                                  ],
+                       "suggestedFolder":  "08_PENDIENTES_CRITICOS",
+                       "suggestedAction":  "Revisar primero y definir respuesta inmediata."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100A91E00000000",
+        "subject":  "Tu token de acceso está a punto de vencer",
+        "from":  "HubSpot \u003cnoreply@notifications.hubspot.com\u003e",
+        "receivedDateTime":  "2026-04-25T05:42:17.0000000",
+        "bodyPreview":  " \t\r\n \u003chttps://static.hsappstatic.net/EmailNotificationSharedAssets/ex/hubspot-logo-standard.png\u003e \t\r\n________________________________\r\n\r\n \t\r\n \t\r\n\r\nTu token de acceso está a punto de vencer\r\n\r\n \t\r\n________________________________\r\n\r\n \t\r\n\r\nHola, Rodrigo:\r\n\r\nRecientemente fue rotado el token de acceso de la aplicación privada \"Joathi Cotizador HubSpot\", y tu token de acceso anterior vencerá en 24 horas. Para que tu aplicación privada siga funcionando sin problemas, asegúrate de actualizarla lo antes posible para que haga referencia al nuevo token. \r\n\r\n \t\r\nVer ficha de acceso \u003chttps://app-na2.hubspot.com/api/notification-station/general/v1/notifications/cta/347c3924-7a86-4aea-83b5-4756d82b9de7?no",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Revisar y clasificar manualmente."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100A21E00000000",
+        "subject":  "Re: PY26000008 - CT 4480 // 324PAR - Terrestre",
+        "from":  "valeria@joathilogistica.com \u003cvaleria@joathilogistica.com\u003e",
+        "receivedDateTime":  "2026-04-24T16:32:17.0000000",
+        "bodyPreview":  "Estimados\r\n\r\ncomo están ??\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nNecesitamos  la factura con los pesos correctos de la carga así como también la facturas de flete de parte de Pines Log\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nNos envían por favor? \r\n\r\n\r\n\r\n\r\nGracias\r\n\r\n\r\n\r\n\r\n \u003chttps://ci3.googleusercontent.com/meips/ADKq_NbNlms64eeWh9ndzmJIrl4al4J1kZNihL2DueuwkD64DM8LfugRIR_NPSZpNr_lq4RGPTYC58xZwx_U8ZmHHKqAcoee4O5Hy05T90-Mvc5cldtLQxlg64UKqWD5WVb5kyZnCcZP8f7W=s0-d-e1-ft#https://49211048.fs1.hubspotusercontent-na2.net/hubfs/49211048/logo-multicolor.png\u003e \tValeria Zugasti\t \r\nCEO \t \r\njoathilogistica.com \u003chttps://mysig.io/BM4pAy0M\u003e \t \r\nvaleria@joathilogistica.com \u003cmailto:valeria@joathilogistica.com\u003e \t \r\n+598 92498378 \u003ctel:+598%2092498378%20style=",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100A11E00000000",
+        "subject":  "rhernandez1, your slow site is costing you (literally)! 😶",
+        "from":  "Sujay from Astra \u003chello@news.bsf.io\u003e",
+        "receivedDateTime":  "2026-04-24T09:56:49.0000000",
+        "bodyPreview":  "53% of people abandon slow sites. Here is how to fix yours fast.͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ ͏ ‌ \r\n‌\r\n \u003chttps://surecontact.s3.us-west-2.amazonaws.com/workspaces/b7f2c7a0-6f8b-45f1-9434-9a0db6a89562/media/f921584b-da96-46bf-901c-34ad14a7f7ed.png\u003e \t\r\nHey rhernandez1,\r\n \r\nLet’s talk about the \"brutal truth\"!\r\n\r\n53% of people will abandon a page if it takes more than 3 seconds to load.\r\n\r\nThink about that.\r\n\r\nYou do the work. You ge",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Revisar y clasificar manualmente."
+                   }
+    }
+]

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JoathiVA</string>
+    <string name="app_subtitle">Operación móvil para carga y retornos</string>
+    <string name="portal_load_error">No se pudo cargar el portal.</string>
+    <string name="file_picker_unavailable">No hay selector de archivos disponible.</string>
+    <string name="external_app_unavailable">No se encontró una aplicación para abrir ese enlace.</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_trips">Viajes</string>
+    <string name="nav_admin">Maestro</string>
+    <string name="nav_reload">Actualizar</string>
+    <string name="location_permission_denied">Sin permiso de ubicación, el tracking GPS no podrá activarse.</string>
+    <string name="tagline">Control logístico en tiempo real</string>
+    <string name="hero_kicker">JOATHI LOGÍSTICA</string>
+    <string name="hero_title">Operación ágil, confiable y visible</string>
+    <string name="hero_body">Acceso rápido a viajes, administración y actualización del portal operativo.</string>
+    <string name="status_live">Portal activo</string>
+    <string name="brand_monogram">JV</string>
+</resources>

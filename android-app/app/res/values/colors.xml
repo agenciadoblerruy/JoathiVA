@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_primary">#0D3B66</color>
+    <color name="brand_primary_dark">#0A2F52</color>
+    <color name="brand_secondary">#1D70F7</color>
+    <color name="brand_accent">#FF7A00</color>
+    <color name="brand_dark">#2F3542</color>
+    <color name="brand_light">#EDEFF2</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="surface_app">#F5F7FB</color>
+    <color name="surface_panel">#FFFFFF</color>
+    <color name="surface_panel_alt">#F8FBFF</color>
+    <color name="surface_soft">#EDF4FF</color>
+    <color name="surface_soft_alt">#F2F6FC</color>
+    <color name="webview_background">#F7FAFE</color>
+    <color name="system_bar_light">#F5F7FB</color>
+
+    <color name="line_soft">#D8E2EF</color>
+    <color name="line_strong">#B8C9DD</color>
+
+    <color name="text_primary">#1E2837</color>
+    <color name="text_secondary">#66768A</color>
+    <color name="text_muted">#8795A8</color>
+    <color name="text_inverse">#FFFFFF</color>
+
+    <color name="success_soft">#E8F6EF</color>
+    <color name="success_text">#1C8C5E</color>
+    <color name="warning_soft">#FFF1E5</color>
+    <color name="warning_text">#D96A00</color>
+
+    <color name="progress_track">#DCE7F7</color>
+    <color name="toolbar_icon_tint">#0D3B66</color>
+
+    <color name="bottom_nav_button_text">#506174</color>
+    <color name="bottom_nav_button_background">#F7F9FC</color>
+    <color name="bottom_nav_button_active_text">#FFFFFF</color>
+    <color name="bottom_nav_button_active_background">#0D3B66</color>
+
+    <color name="cta_text">#FFFFFF</color>
+    <color name="cta_background">#FF7A00</color>
+
+    <color name="input_fill">#F8FAFD</color>
+    <color name="input_stroke">#D8E2EF</color>
+    <color name="input_stroke_focused">#1D70F7</color>
+
+    <color name="shadow_soft">#140D3B66</color>
+</resources>

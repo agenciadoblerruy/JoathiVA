@@ -1,0 +1,8 @@
+config/assistant.local.env
+output/*.json
+output/*.csv
+output/*.md
+!output/.gitkeep
+node_modules/
+*.log
+.env

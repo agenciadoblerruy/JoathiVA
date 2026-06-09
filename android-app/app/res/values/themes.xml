@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.JoathiPortal" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryVariant">@color/brand_primary_dark</item>
+        <item name="colorSecondary">@color/brand_secondary</item>
+        <item name="colorSecondaryVariant">@color/brand_secondary</item>
+
+        <item name="colorSurface">@color/surface_panel</item>
+        <item name="colorBackground">@color/surface_app</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearanceOverlay.JoathiVA.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearanceOverlay.JoathiVA.Medium</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearanceOverlay.JoathiVA.Large</item>
+
+        <item name="materialButtonStyle">@style/Widget.JoathiVA.Button.Secondary</item>
+        <item name="materialCardViewStyle">@style/Widget.JoathiVA.SurfaceCard</item>
+        <item name="toolbarStyle">@style/Widget.JoathiVA.Toolbar</item>
+        <item name="textInputStyle">@style/Widget.JoathiVA.TextInputLayout.Outlined</item>
+
+        <item name="android:windowBackground">@color/surface_app</item>
+        <item name="android:statusBarColor">@color/system_bar_light</item>
+        <item name="android:navigationBarColor">@color/system_bar_light</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="colorControlHighlight">@color/surface_soft</item>
+    </style>
+</resources>

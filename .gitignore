@@ -1,0 +1,66 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+server/logs/
+
+# Temp
+*.tmp
+*.temp
+
+# PowerShell / local env artifacts
+*.user
+*.cache
+
+# Node / frontend
+node_modules/
+dist/
+build/
+
+# Android / Gradle
+.gradle/
+**/.gradle/
+.idea/
+**/.idea/
+local.properties
+**/local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+build/
+**/build/
+
+# Android signing / secrets
+*.jks
+*.keystore
+keystore.properties
+**/*.jks
+**/*.keystore
+
+# Generated APK / AAB
+*.apk
+*.aab
+
+# Sensitive config and data
+openai-settings.json
+*.env
+.env
+.env.*
+secrets.json
+credentials.json
+**/tool-secrets.protected.json
+**/tool-secrets.local.json
+**/lucia-secrets.protected.json
+**/lucia-settings.json
+
+# Derived Android web assets if you decide not to version them
+# Si quieres mantenerlos fuera del repo, descomenta esta línea:
+# version-24/android-app/app/src/main/assets/www/
+
+# Optional: version snapshots or backups
+*.zip
+backup/
+.venv-logo/

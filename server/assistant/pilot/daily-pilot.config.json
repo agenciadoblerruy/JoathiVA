@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "baseUrl": "http://127.0.0.1:8787",
+  "mailboxProfileId": "rodrigo",
+  "mailboxFolder": "INBOX.PILOTO",
+  "limit": 10,
+  "execute": true,
+  "force": true,
+  "allowedCaseTypes": [
+    "caso de operacion Paraguay",
+    "solicitud documental",
+    "seguimiento comercial"
+  ],
+  "pauseFile": "PAUSE"
+}

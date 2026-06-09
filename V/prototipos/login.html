@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Login</title>
+  <link rel="stylesheet" href="prototipos.css">
+</head>
+<body class="proto-page">
+  <div class="proto-shell">
+    <header class="proto-topbar">
+      <a class="proto-brand" href="index.html">
+        <img src="../logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Acceso privado</span>
+        </div>
+      </a>
+      <nav class="proto-nav">
+        <a href="index.html">Indice</a>
+        <a class="active" href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <main class="proto-login-layout">
+      <section class="proto-panel proto-login-card">
+        <h1>Acceso al Portal de JoathiVA</h1>
+        <p class="proto-subtitle">
+          Ingresa para gestionar viajes, seguimiento GPS, documentacion y control operativo
+          desde una sola plataforma.
+        </p>
+
+        <form class="proto-form proto-login-form">
+          <div class="field">
+            <label for="login-user">Usuario / Correo</label>
+            <input id="login-user" type="text" placeholder="correo@empresa.com o usuario">
+          </div>
+          <div class="field">
+            <label for="login-pass">Contrasena</label>
+            <input id="login-pass" type="password" placeholder="Contrasena">
+          </div>
+          <button class="proto-button primary" type="button">Iniciar sesion</button>
+          <a class="proto-link" href="#">¿Olvidaste tu contrasena?</a>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

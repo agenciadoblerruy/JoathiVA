@@ -1,0 +1,69 @@
+﻿{
+    "version":  2,
+    "generatedAt":  "2026-04-21T15:04:57.0486552Z",
+    "updatedAt":  "2026-04-21T15:04:57.4309179Z",
+    "nextSequence":  1,
+    "intakes": [],
+    "drafts":  {
+                   "id":  "drf-1776783897225-78c487",
+                   "sourceEmailExternalId":  "EXT-FALLBACK-001",
+                   "sourceIntakeId":  "INT-FALLBACK-001",
+                   "customerId":  "",
+                   "operationId":  "",
+                   "taskId":  "",
+                   "activityId":  "",
+                   "to":  [
+                              "operaciones@cliente.py"
+                          ],
+                   "cc":  [
+
+                          ],
+                   "subject":  "Re: Fallback validation",
+                   "summary":  "fallback test",
+                   "bodyDraft":  "fallback test body",
+                   "status":  "draft_failed",
+                   "createdAt":  "2026-04-21T15:04:57.2400921Z",
+                   "updatedAt":  "2026-04-21T15:04:57.3995298Z",
+                   "reviewedAt":  null,
+                   "exportedAt":  null,
+                   "failedAt":  "2026-04-21T15:04:57.4015307Z",
+                   "failureReason":  "No hay proveedor real de borradores configurado.",
+                   "metadata":  {
+                                    "exportAttempted":  true,
+                                    "providerCapability":  {
+                                                               "providerKind":  "imap",
+                                                               "supported":  false,
+                                                               "mode":  "local-fallback",
+                                                               "mailboxProfileId":  "bogus-profile",
+                                                               "mailboxFolder":  "",
+                                                               "reason":  "No hay proveedor real de borradores configurado."
+                                                           },
+                                    "operationReference":  "",
+                                    "summary":  "fallback test",
+                                    "operationId":  "",
+                                    "assistantVersion":  1,
+                                    "mailboxProfileId":  "bogus-profile",
+                                    "sourceKind":  "mailbox",
+                                    "sourceEmailExternalId":  "EXT-FALLBACK-001",
+                                    "providerReason":  "No hay proveedor real de borradores configurado.",
+                                    "exportMode":  "provider",
+                                    "providerKind":  "imap",
+                                    "mailboxFolder":  "INBOX.Drafts",
+                                    "sourceIntakeId":  "INT-FALLBACK-001",
+                                    "taskId":  "",
+                                    "customerMatch":  {
+                                                          "found":  false
+                                                      },
+                                    "providerSupported":  false,
+                                    "draftReply":  "fallback test body",
+                                    "classification":  {
+                                                           "caseType":  "informativo",
+                                                           "priority":  "Baja",
+                                                           "requiresResponse":  true,
+                                                           "requiresFollowUp":  false,
+                                                           "requiresOperation":  false,
+                                                           "requiresTask":  true
+                                                       }
+                                }
+               }
+}

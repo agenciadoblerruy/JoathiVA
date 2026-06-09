@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso al Portal JoathiVA | JoathiVA</title>
+  <meta name="description" content="Pantalla de acceso demo al portal JoathiVA por perfil operativo.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-panel login-panel-brand" aria-label="Presentación del portal">
+      <div class="login-brand-hero">
+        <img class="login-hero-logo" src="assets/logo_joathiva.png" alt="Logo oficial de JoathiVA">
+        <span class="eyebrow login-eyebrow">Acceso seguro</span>
+        <h1>Tu centro de control logístico</h1>
+        <p>Acceso corporativo para operar con trazabilidad, documentos, cotizaciones y seguimiento desde un único entorno.</p>
+        <div class="login-points" aria-label="Beneficios del portal">
+          <span>Control operativo</span>
+          <span>Seguimiento</span>
+          <span>Documentos</span>
+          <span>Soporte</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-panel login-panel-access" aria-label="Ingreso al portal">
+      <header class="login-topbar">
+        <a class="btn btn-light back-link" href="../">← Volver a joathilogistica.com</a>
+      </header>
+
+      <div class="login-workflow">
+        <section class="login-card-shell">
+          <span class="eyebrow">Portal SaaS</span>
+          <h2>Ingreso Seguro</h2>
+          <p class="login-subcopy">Conexión cifrada. Acceso reservado a usuarios autorizados.</p>
+
+          <form class="login-card" id="demo-login" novalidate>
+            <label>Usuario / Email
+              <input name="usuario" type="email" placeholder="usuario@empresa.com" required>
+            </label>
+            <label>Contraseña
+              <input name="password" type="password" placeholder="••••••••" required>
+            </label>
+            <button class="btn btn-primary btn-large" type="submit">Ingresar</button>
+            <a class="forgot-link" href="mailto:comercial@joathilogistica.com?subject=Recuperaci%C3%B3n%20de%20acceso%20JoathiVA">¿Olvidaste tu contraseña?</a>
+            <p class="note">Conexión cifrada. Acceso reservado a usuarios autorizados.</p>
+          </form>
+        </section>
+
+        <aside class="demo-panel" aria-labelledby="demo-title">
+          <span class="eyebrow demo-eyebrow">Modo demo</span>
+          <h3 id="demo-title">Selecciona un rol para probar la interfaz</h3>
+          <label class="demo-selector">
+            <span>Perfil de acceso</span>
+            <select id="profile" name="profile">
+              <option value="" selected>Seleccionar perfil</option>
+              <option value="cliente">Cliente</option>
+              <option value="comercial">Comercial</option>
+              <option value="operaciones">Operaciones</option>
+              <option value="despachante">Despachante</option>
+              <option value="administracion">Administración</option>
+              <option value="direccion">Dirección</option>
+              <option value="cotizador">Cotizador</option>
+            </select>
+          </label>
+          <p class="demo-message" id="demo-message">Selecciona un perfil de acceso</p>
+          <p class="demo-note">La demo redirige a una vista estática por rol y no usa backend real.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const routes = {
+      cliente: 'cliente.html',
+      comercial: 'comercial.html',
+      operaciones: 'operaciones.html',
+      despachante: 'despachante.html',
+      administracion: 'administracion.html',
+      direccion: 'direccion.html',
+      cotizador: 'cotizador.html',
+    };
+
+    const form = document.getElementById('demo-login');
+    const profile = document.getElementById('profile');
+
+    const message = document.getElementById('demo-message');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const destination = routes[profile.value];
+      if (!destination) {
+        message.textContent = 'Selecciona un perfil de acceso';
+        return;
+      }
+      message.textContent = `Abriendo ${profile.options[profile.selectedIndex].text}...`;
+      window.location.href = destination;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Servicios | Joathi Logística</title>
+  <meta name="description" content="Servicios logísticos corporativos de Joathi Logística.">
+  <!-- Tailwind CSS para diseño fluido y premium -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome para iconos más realistas y estilizados -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Fuentes corporativas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
+    .bg-corporate-dark { background-color: #0B251C; }
+    .text-corporate-yellow { color: #FFB800; }
+    .bg-corporate-yellow { background-color: #FFB800; }
+    .bg-corporate-yellow:hover { background-color: #E0A200; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+  <!-- 1. HEADER / NAVEGACIÓN -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo Dinámico -->
+      <a class="flex items-center space-x-3" href="/" aria-label="Joathi Logística">
+        <img class="h-10 w-auto object-contain" src="assets/logo_joathi.png" alt="Joathi Logística">
+      </a>
+      
+      <!-- Menú Central -->
+      <nav class="hidden md:flex space-x-8 font-medium text-gray-600" aria-label="Navegación principal">
+        <a href="/" class="hover:text-corporate-dark transition-colors">Inicio</a>
+        <a href="/quienes-somos.html" class="hover:text-corporate-dark transition-colors">Sobre Nosotros</a>
+        <a href="/servicios.html" class="text-corporate-dark border-b-2 border-corporate-yellow pb-1 font-semibold">Servicios</a>
+        <a href="/contacto.html" class="hover:text-corporate-dark transition-colors">Contacto</a>
+      </nav>
+
+      <!-- Botones de Acción -->
+      <div class="flex items-center space-x-4">
+        <a class="bg-corporate-yellow text-corporate-dark font-bold px-5 py-2.5 rounded-full text-sm transition-all transform hover:scale-105 shadow-md shadow-yellow-500/10" href="/cotizador.html">Cotizador</a>
+        <a class="bg-corporate-dark text-white hover:bg-gray-800 font-medium px-5 py-2.5 rounded-full text-sm transition-all" href="/joathiva/">Acceso a JoathiVA</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2. HERO SECTION CON ESTILO CARRYON (Respirable y Premium) -->
+    <section class="relative bg-corporate-dark text-white overflow-hidden py-20 lg:py-28">
+      <div class="absolute inset-0 z-0">
+        <!-- Reutilizamos tu banner realista pero con opacidad controlada para que la tipografía destaque -->
+        <img src="assets/brand/bg_banner_ruta_realista.jpg" alt="Camiones en ruta con red logística conectada" class="w-full h-full object-cover opacity-15 transform scale-105">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0B251C]/50 via-[#0B251C] to-[#0B251C]"></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <span class="inline-flex items-center gap-2 bg-white/10 text-corporate-yellow text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">
+            <span class="w-2 h-2 rounded-full bg-corporate-yellow"></span> Servicios Corporativos
+          </span>
+          <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+            Servicios logísticos diseñados para <span class="text-corporate-yellow">operaciones reales</span>.
+          </h1>
+          <p class="text-gray-300 text-lg font-light max-w-xl">
+            Cubrimos las necesidades comerciales, operativas y documentales de cada carga con gestión personalizada y trazabilidad absoluta de extremo a extremo.
+          </p>
+          <div class="pt-2">
+            <a class="inline-flex items-center gap-2 bg-corporate-yellow text-corporate-dark font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg shadow-yellow-500/20 hover:scale-105" href="/cotizador.html">
+              Solicitar cotización <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tarjeta de destaque lateral de operación conectada -->
+        <div class="lg:col-span-5 bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-2xl hidden lg:block">
+          <div class="flex items-center gap-3 text-corporate-yellow font-bold text-sm uppercase tracking-wider mb-2">
+            <i class="fa-solid fa-circle-nodes"></i> Visión Multimodal
+          </div>
+          <p class="text-gray-300 text-sm font-light leading-relaxed">
+            Cada servicio se apoya en una visión clara de ruta, reduciendo imprevistos a través de una sólida planificación en el Cono Sur.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. REDISEÑO DE TARJETAS: Enfoque de servicios reales sobre fondo claro -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center mb-16 space-y-3">
+          <span class="text-xs font-bold text-corporate-yellow uppercase tracking-widest bg-yellow-50 px-3 py-1 rounded-full">Nuestra Cobertura</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-corporate-dark tracking-tight">Especialistas en transporte de carga internacional</h2>
+          <p class="text-gray-500 font-light">Combinamos capacidad de coordinación regional, seguimiento operativo constante y rigurosidad documental.</p>
+        </div>
+
+        <!-- Grid de 3 columnas de Transporte de Carga -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <!-- Terrestre -->
+          <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 transition-all hover:-translate-y-2 hover:shadow-xl hover:bg-white group">
+            <div class="w-14 h-14 rounded-xl bg-corporate-dark text-white flex items-center justify-center text-2xl mb-6 group-hover:bg-corporate-yellow group-hover:text-corporate-dark transition-colors">
+              <i class="fa-solid fa-truck-moving"></i>
+            </div>
+            <h3 class="text-xl font-bold text-corporate-dark mb-3">Transporte Terrestre Regional</h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4">
+              Conectividad terrestre eficiente y segura para importaciones y exportaciones. Especialistas en tránsitos regionales clave que garantizan la integridad de la carga en frontera.
+            </p>
+            <div class="text-xs font-bold text-emerald-600 bg-emerald-50 inline-block px-2.5 py-1 rounded-md">
+              <i class="fa-solid fa-file-shield mr-1"></i> Incluye MIC y CRT
+            </div>
+          </div>
+
+          <!-- Marítimo -->
+          <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 transition-all hover:-translate-y-2 hover:shadow-xl hover:bg-white group">
+            <div class="w-14 h-14 rounded-xl bg-corporate-dark text-white flex items-center justify-center text-2xl mb-6 group-hover:bg-corporate-yellow group-hover:text-corporate-dark transition-colors">
+              <i class="fa-solid fa-ship"></i>
+            </div>
+            <h3 class="text-xl font-bold text-corporate-dark mb-3">Transporte Marítimo</h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4">
+              Coordinación integral de contenedores completos (FCL) y carga consolidada (LCL). Optimizamos la logística portuaria y los enlaces de distribución internacional.
+            </p>
+            <div class="text-xs font-bold text-corporate-dark bg-gray-200/60 inline-block px-2.5 py-1 rounded-md">
+              FCL / LCL Multimodal
+            </div>
+          </div>
+
+          <!-- Aéreo -->
+          <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 transition-all hover:-translate-y-2 hover:shadow-xl hover:bg-white group">
+            <div class="w-14 h-14 rounded-xl bg-corporate-dark text-white flex items-center justify-center text-2xl mb-6 group-hover:bg-corporate-yellow group-hover:text-corporate-dark transition-colors">
+              <i class="fa-solid fa-plane-departure"></i>
+            </div>
+            <h3 class="text-xl font-bold text-corporate-dark mb-3">Transporte Aéreo</h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-4">
+              Soluciones de alta prioridad para mercancías urgentes o de alto valor. Conexiones ágiles en terminales de carga con monitoreo estricto de tiempos de tránsito.
+            </p>
+            <div class="text-xs font-bold text-corporate-dark bg-gray-200/60 inline-block px-2.5 py-1 rounded-md">
+              Alta prioridad B2B
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-servicios Operativos (Fondo Claro, estilizado) -->
+        <div class="border-t border-gray-100 pt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div class="flex items-start gap-4">
+            <div class="text-corporate-yellow text-xl mt-1"><i class="fa-solid fa-magnifying-glass-location"></i></div>
+            <div>
+              <h4 class="font-bold text-corporate-dark mb-1">Seguimiento Activo</h4>
+              <p class="text-gray-500 text-sm">Registramos estados y novedades constantes para mantener la visibilidad en cada etapa crítica.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="text-corporate-yellow text-xl mt-1"><i class="fa-solid fa-users-gear"></i></div>
+            <div>
+              <h4 class="font-bold text-corporate-dark mb-1">Coordinación en Campo</h4>
+              <p class="text-gray-500 text-sm">Acompañamos físicamente la operación coordinando de forma directa con los puntos de carga.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="text-corporate-yellow text-xl mt-1"><i class="fa-solid fa-handshake"></i></div>
+            <div>
+              <h4 class="font-bold text-corporate-dark mb-1">Red Homologada</h4>
+              <p class="text-gray-500 text-sm">Proveedores validados bajo estrictos criterios de puntualidad, seguridad y disponibilidad regional.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. BLOQUE DE PROCESO Y REGLAS CLARAS (Fondo Soft Gris) -->
+    <section class="py-20 bg-gray-50 border-t border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+          <span class="text-xs font-bold text-corporate-dark uppercase tracking-widest bg-gray-100 px-2.5 py-1 rounded">Proceso Comercial</span>
+          <h3 class="text-2xl font-bold text-corporate-dark">Coordinación simple y respuesta directa.</h3>
+          <p class="text-gray-600 font-light text-sm leading-relaxed">
+            El servicio no termina al enviar la tarifa. Sostenemos un circuito integrado donde las solicitudes se procesan con velocidad comercial y se estructuran directamente para la ejecución en ruta.
+          </p>
+        </div>
+        
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+          <span class="text-xs font-bold text-corporate-dark uppercase tracking-widest bg-gray-100 px-2.5 py-1 rounded">Soporte y Garantías</span>
+          <h3 class="text-2xl font-bold text-corporate-dark">Control de tiempos libres para evitar fricciones.</h3>
+          <p class="text-gray-600 font-light text-sm leading-relaxed">
+            Establecemos <strong>2 horas libres</strong> para realizar la carga y descarga en las unidades sin costo adicional. La claridad documental nos permite cuidar tus costos logísticos frente a imprevistos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. QUÉ RESOLVEMOS & PANEL VISUAL (Simulación JoathiVA) -->
+    <section class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="space-y-6">
+          <span class="text-xs font-bold text-corporate-yellow uppercase tracking-widest bg-yellow-50 px-3 py-1 rounded-full">Valor Agregado</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-corporate-dark tracking-tight">Una operación pensada para el sector corporativo B2B.</h2>
+          <p class="text-gray-600 font-light leading-relaxed">
+            Unimos capacidad de gestión, orden documental estricto y un ecosistema digital ágil para eliminar la fricción habitual en el transporte de mercaderías.
+          </p>
+          
+          <div class="space-y-4 pt-2">
+            <div class="flex items-start gap-4">
+              <div class="bg-gray-50 p-2 text-corporate-dark border border-gray-100 rounded-lg mt-1"><i class="fa-solid fa-check"></i></div>
+              <div>
+                <h4 class="font-bold text-corporate-dark text-base">Seguimiento de punta a punta</h4>
+                <p class="text-gray-500 text-sm">La visibilidad en tiempo real sobre hitos de frontera y ruta reduce la incertidumbre y optimiza tu toma de decisiones.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="bg-gray-50 p-2 text-corporate-dark border border-gray-100 rounded-lg mt-1"><i class="fa-solid fa-bolt"></i></div>
+              <div>
+                <h4 class="font-bold text-corporate-dark text-base">Respuesta comercial ágil</h4>
+                <p class="text-gray-500 text-sm">Canal directo con ejecutivos comerciales calificados. Menos burocracia, cotizaciones más rápidas y precisas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Monitoreo Realista (Estilo Dashboard Digital) -->
+        <div class="bg-corporate-dark rounded-2xl p-8 text-white shadow-2xl border border-white/10 relative overflow-hidden group">
+          <div class="absolute -right-12 -bottom-12 text-white/5 text-9xl transform rotate-12 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-square-poll-vertical"></i>
+          </div>
+          <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500"></span>
+            </div>
+            <span class="text-xs text-gray-400 font-mono">Control Operativo | JoathiVA</span>
+          </div>
+          
+          <!-- Reutilizamos conceptualmente tu imagen de control de carga -->
+          <img src="assets/brand/bg_post_control_operativo.jpg" alt="Panel de control y monitoreo logístico" class="w-full h-48 object-cover rounded-xl opacity-40 mb-6 border border-white/10">
+          
+          <div class="space-y-3">
+            <div class="bg-white/5 rounded-xl p-4 flex items-center justify-between border border-white/5 text-xs sm:text-sm">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-route text-emerald-400"></i>
+                <span>Tránsito Internacional Registrado</span>
+              </div>
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Activo</span>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4 flex items-center justify-between border border-white/5 text-xs sm:text-sm">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-file-signature text-corporate-yellow"></i>
+                <span>Respaldo Documental Confeccionado</span>
+              </div>
+              <span class="text-xs font-bold text-corporate-yellow uppercase tracking-wider">MIC/CRT OK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 6. FOOTER (Alineado a las rutas del proyecto) -->
+  <footer class="bg-neutral-900 text-gray-400 py-12 border-t border-neutral-800 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <div class="space-y-4">
+        <a class="inline-block" href="/">
+          <img class="h-10 w-auto filter brightness-0 invert" src="assets/logo_joathi.png" alt="Joathi Logística">
+        </a>
+        <p class="text-xs leading-relaxed">
+          Logística B2B con trazabilidad, control documental y respuesta comercial ágil.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase tracking-wider text-xs">Enlaces</h3>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/" class="hover:text-white transition-colors">Inicio</a></li>
+          <li><a href="/quienes-somos.html" class="hover:text-white transition-colors">Quiénes Somos</a></li>
+          <li><a href="/servicios.html" class="hover:text-white transition-colors">Servicios</a></li>
+          <li><a href="/cotizador.html" class="hover:text-white transition-colors">Cotizador</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase tracking-wider text-xs">Contacto comercial</h3>
+        <ul class="space-y-2 text-xs">
+          <li><a href="mailto:comercial@joathilogistica.com" class="hover:text-white transition-colors"><i class="fa-solid fa-envelope mr-1"></i> comercial@joathilogistica.com</a></li>
+          <li><a href="https://wa.me/59897971122" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors"><i class="fa-solid fa-phone mr-1"></i> +598 97 971 122</a></li>
+          <li><a href="/contacto.html" class="hover:text-white transition-colors">Ver contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase tracking-wider text-xs">Sistemas</h3>
+        <div class="space-y-2">
+          <a class="block bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2.5 rounded-lg text-center text-xs transition-colors" href="/joathiva/">
+            Acceso a JoathiVA
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-neutral-800 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs gap-4">
+      <span>© 2026 Joathi Logística. Todos los derechos reservados.</span>
+      <div class="flex space-x-6">
+        <a href="/terms.html" class="hover:text-white transition-colors">Términos de uso</a>
+        <a href="/joathiva/" class="hover:text-white transition-colors">JoathiVA</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

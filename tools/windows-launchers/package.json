@@ -1,0 +1,9 @@
+{
+  "name": "joathiva-windows-launchers",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Windows launchers for JoathiVA and Lucia tools.",
+  "scripts": {
+    "build:windows": "node build-windows-exes.js"
+  }
+}

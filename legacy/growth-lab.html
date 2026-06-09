@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Growth Lab</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="growth-lab.css">
+</head>
+<body data-page="growth">
+  <div class="portal-shell growth-lab-shell">
+    <header class="topbar">
+      <a href="index.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Control operacional y trazabilidad</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="growth-lab.html" data-nav="growth" data-marketing-only hidden>Growth Lab</a>
+        <a href="mktjoathi.html" data-nav="mktjoathi" data-marketing-only hidden>mktjoathi</a>
+        <a href="choferes.html" data-nav="drivers" data-provider-only>Choferes</a>
+        <a href="transportes.html" data-nav="vehicles" data-provider-only>Transportes</a>
+        <a href="viajes.html" data-nav="trips" data-provider-only>Viajes</a>
+      </nav>
+      <div class="session-box" data-session-box hidden>
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="growth-hero panel">
+        <div class="growth-hero-copy">
+          <p class="eyebrow">Cabina organica Joathi</p>
+          <h1>Contenido que vende tranquilidad operativa antes de pedir cotizacion.</h1>
+          <p class="lede">
+            Este modulo convierte la experiencia de Joathi Logistica en piezas organicas para Sudamerica.
+            El foco no es publicar por publicar: es abrir conversaciones comerciales con empresas que valoran
+            seguimiento, soporte 24/7, importacion y exportacion sin ruido, y tecnologia que ordena a toda la cadena.
+          </p>
+          <div class="hero-actions growth-hero-actions">
+            <a href="#industryPlannerForm" class="button button-accent">Planificar industria</a>
+            <a href="#growthBriefForm" class="button button-secondary">Construir pieza</a>
+            <a href="mktjoathi.html" class="button button-secondary">mktjoathi</a>
+            <a href="#campaignDashboardForm" class="button button-primary">Medir campana</a>
+          </div>
+          <div class="badge-row growth-hero-pills">
+            <span class="badge">Tu carga, nuestro compromiso</span>
+            <span class="badge warning">Atencion personalizada</span>
+            <span class="badge">Seguimiento 24/7</span>
+            <span class="badge warning">Automatizacion operativa</span>
+          </div>
+        </div>
+        <aside class="growth-hero-side">
+          <article class="record-card growth-principle-card">
+            <strong>No mas contenido tibio</strong>
+            <p>
+              LinkedIn se usa para autoridad tecnica y criterio ejecutivo. Meta se usa para alcance, recordacion
+              y confianza con lenguaje mas calle, directo y memorable.
+            </p>
+          </article>
+          <article class="record-card growth-principle-card">
+            <strong>Lo que vende Joathi</strong>
+            <p>
+              No se vende solo un traslado. Se vende calma operativa: menos llamadas, menos incertidumbre,
+              menos fallas entre proveedores, choferes, despachantes y clientes.
+            </p>
+          </article>
+        </aside>
+      </section>
+
+      <section class="stats-row growth-signal-row" id="growthSignalGrid"></section>
+
+      <section class="growth-command-strip">
+        <article class="growth-command-card">
+          <span>01</span>
+          <strong>Planificar</strong>
+          <p>Elegir industria, dolor y oferta comercial antes de escribir una sola pieza.</p>
+        </article>
+        <article class="growth-command-card">
+          <span>02</span>
+          <strong>Construir</strong>
+          <p>Generar copy, CTA, guion visual y sprint con una voz distinta para Joathi.</p>
+        </article>
+        <article class="growth-command-card">
+          <span>03</span>
+          <strong>Ejecutar</strong>
+          <p>Abrir ChatGPT, Canva, LinkedIn, Meta o Firefly segun el flujo elegido.</p>
+        </article>
+        <article class="growth-command-card">
+          <span>04</span>
+          <strong>Medir</strong>
+          <p>Cargar resultados, detectar el mejor canal y corregir antes de repetir contenido.</p>
+        </article>
+      </section>
+
+      <section class="panel growth-panel" id="joathiGptPanel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">IA integrada</p>
+          <h2>ChatGPT dentro de JoathiVA</h2>
+          <p>Asistente interno para marketing, ventas y criterio operativo. La API key se guarda solo en tu servidor local y la consulta sale desde esta PC usando OpenAI Responses API.</p>
+        </div>
+        <div class="growth-ai-grid">
+          <article class="growth-ai-settings-card">
+            <form id="joathiGptSettingsForm" class="form-grid">
+              <label>
+                Modelo OpenAI
+                <input name="model" type="text" list="joathiGptModelList" value="gpt-5" required>
+                <datalist id="joathiGptModelList">
+                  <option value="gpt-5"></option>
+                  <option value="gpt-5.4"></option>
+                </datalist>
+              </label>
+              <label>
+                Razonamiento
+                <select name="reasoningEffort">
+                  <option value="none">Sin razonamiento extra</option>
+                  <option value="minimal">Minimal</option>
+                  <option value="low" selected>Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </label>
+              <label class="full-width">
+                API key de OpenAI
+                <input name="apiKey" type="password" autocomplete="off" placeholder="sk-..." spellcheck="false">
+              </label>
+              <label class="full-width">
+                Instrucciones base
+                <textarea name="instructions" rows="6">Eres el asistente interno de JoathiVA. Responde siempre en espanol claro, orientado a logistica, transporte, comercio exterior, growth B2B y ejecucion comercial. Prioriza propuestas accionables, tono ejecutivo y foco en Sudamerica.</textarea>
+              </label>
+              <div class="full-width growth-form-actions">
+                <button type="submit" class="button button-accent">Guardar conexion</button>
+                <button type="button" class="button button-secondary" id="clearJoathiGptKeyButton">Quitar API key</button>
+                <button type="button" class="button button-primary" id="clearJoathiGptThreadButton">Limpiar chat</button>
+              </div>
+            </form>
+            <div id="joathiGptStatus" class="stack-list"></div>
+            <div class="panel-heading panel-divider">
+              <p class="eyebrow">Acciones rapidas</p>
+              <h2>Usar contexto actual</h2>
+            </div>
+            <div id="joathiGptQuickActions" class="growth-ai-quick-actions"></div>
+          </article>
+
+          <article class="growth-ai-chat-card">
+            <div class="panel-heading">
+              <p class="eyebrow">Conversacion</p>
+              <h2>Asistente Joathi</h2>
+              <p>Toma el brief, los copies actuales y el estado del dashboard para responder con contexto real de JoathiVA.</p>
+            </div>
+            <div id="joathiGptChatThread" class="growth-ai-thread"></div>
+            <form id="joathiGptMessageForm" class="growth-ai-composer">
+              <label class="full-width">
+                Tu mensaje
+                <textarea id="joathiGptMessageField" name="message" rows="5" placeholder="Ejemplo: toma el brief actual y dame 3 angulos mas agresivos para LinkedIn que apunten a gerencia de logistica."></textarea>
+              </label>
+              <div class="hero-actions growth-copy-actions">
+                <button type="submit" class="button button-accent" id="sendJoathiGptMessageButton">Consultar ChatGPT</button>
+              </div>
+            </form>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Planificador</p>
+          <h2>Planificador por industria</h2>
+          <p>Indica la industria que quieres atacar y el sistema te devuelve foco comercial, pilares, CTA y plan de 4 semanas.</p>
+        </div>
+        <form id="industryPlannerForm" class="form-grid">
+          <label>
+            Industria foco
+            <input name="industryFocus" type="text" list="industryFocusList" placeholder="Industria automotriz" value="Industria automotriz" required>
+            <datalist id="industryFocusList">
+              <option value="Industria automotriz"></option>
+              <option value="Industria farmaceutica"></option>
+              <option value="Retail"></option>
+              <option value="Alimentos y bebidas"></option>
+              <option value="Agroindustria"></option>
+              <option value="Quimica"></option>
+              <option value="Manufactura"></option>
+              <option value="Consumo masivo"></option>
+            </datalist>
+          </label>
+          <label>
+            Mercado
+            <select name="plannerMarket">
+              <option value="regional">Sudamerica</option>
+              <option value="uruguay">Uruguay</option>
+              <option value="argentina">Argentina</option>
+              <option value="brasil">Brasil</option>
+              <option value="chile">Chile</option>
+              <option value="paraguay">Paraguay</option>
+            </select>
+          </label>
+          <label>
+            Objetivo comercial
+            <select name="plannerGoal">
+              <option value="lead">Abrir conversaciones</option>
+              <option value="authority">Construir autoridad</option>
+              <option value="trust">Instalar confianza</option>
+              <option value="objection">Romper objeciones</option>
+              <option value="tech">Posicionar tecnologia</option>
+            </select>
+          </label>
+          <label>
+            Oferta principal
+            <select name="plannerOffer">
+              <option value="support">Seguimiento y soporte 24/7</option>
+              <option value="integral">Operador integral logistico</option>
+              <option value="comex">Importacion y exportacion</option>
+              <option value="network">Red de proveedores confiables</option>
+              <option value="automation">Automatizacion operativa</option>
+            </select>
+          </label>
+          <label class="full-width">
+            Contexto del foco comercial
+            <textarea name="plannerContext" rows="3" placeholder="Ejemplo: quiero entrar en laboratorios que hoy tienen baja visibilidad en sus importaciones y sufren demoras con proveedores que no responden."></textarea>
+          </label>
+          <div class="full-width growth-form-actions">
+            <button type="submit" class="button button-accent">Generar plan</button>
+            <button type="button" class="button button-secondary" id="applyIndustryPlanToBriefButton">Usar este enfoque en el brief</button>
+          </div>
+        </form>
+        <div class="growth-plan-grid">
+          <article class="growth-plan-card">
+            <div class="panel-heading">
+              <p class="eyebrow">Direccion</p>
+              <h2>Resumen estrategico</h2>
+            </div>
+            <div id="industryPlanSummary"></div>
+          </article>
+          <article class="growth-plan-card">
+            <div class="panel-heading">
+              <p class="eyebrow">Contenido</p>
+              <h2>Plan de 4 semanas</h2>
+            </div>
+            <div id="industryPlanWeeks" class="growth-plan-week-grid"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-grid growth-brief-grid">
+        <article class="panel growth-panel" data-collapsible-panel>
+          <div class="panel-heading">
+            <p class="eyebrow">Brief</p>
+            <h2>Configura la pieza</h2>
+            <p>Elige red, sector, dolor y objetivo comercial. El sistema devuelve copy, CTA, guion y variaciones.</p>
+          </div>
+          <form id="growthBriefForm" class="form-grid">
+            <label>
+              Red principal
+              <select name="platform">
+                <option value="linkedin">LinkedIn</option>
+                <option value="meta">Meta</option>
+              </select>
+            </label>
+            <label>
+              Formato
+              <select name="format">
+                <option value="post">Post de opinion</option>
+                <option value="carousel">Carrusel / documento</option>
+                <option value="reel">Reel / video corto</option>
+                <option value="case">Caso real</option>
+                <option value="checklist">Checklist</option>
+              </select>
+            </label>
+            <label>
+              Sector foco
+              <select name="sector">
+                <option value="automotriz">Industria automotriz</option>
+                <option value="farma">Industria farmaceutica</option>
+                <option value="retail">Retail</option>
+                <option value="regional">Operaciones regionales</option>
+              </select>
+            </label>
+            <label>
+              Mercado
+              <select name="market">
+                <option value="regional">Sudamerica</option>
+                <option value="uruguay">Uruguay</option>
+                <option value="argentina">Argentina</option>
+                <option value="brasil">Brasil</option>
+                <option value="chile">Chile</option>
+                <option value="paraguay">Paraguay</option>
+              </select>
+            </label>
+            <label>
+              Comprador ideal
+              <select name="persona">
+                <option value="logistica">Gerencia de logistica</option>
+                <option value="operaciones">Gerencia de operaciones</option>
+                <option value="compras">Compras / abastecimiento</option>
+                <option value="comex">Comercio exterior</option>
+                <option value="direccion">Direccion / duenio</option>
+              </select>
+            </label>
+            <label>
+              Objetivo
+              <select name="goal">
+                <option value="authority">Construir autoridad</option>
+                <option value="lead">Abrir conversaciones</option>
+                <option value="trust">Instalar confianza</option>
+                <option value="objection">Romper objeciones</option>
+                <option value="tech">Posicionar tecnologia</option>
+              </select>
+            </label>
+            <label>
+              Dolor principal
+              <select name="pain">
+                <option value="demoras">Demoras que frenan la operacion</option>
+                <option value="frontera">Cuellos de botella en frontera</option>
+                <option value="trazabilidad">Falta de visibilidad y seguimiento</option>
+                <option value="stock">Roturas de stock y reabastecimiento</option>
+                <option value="cadena-frio">Exigencia de cadena de frio y control</option>
+                <option value="proveedores">Proveedores que fallan</option>
+                <option value="costos">Costos ocultos por descoordinacion</option>
+              </select>
+            </label>
+            <label>
+              Oferta que quieres empujar
+              <select name="offer">
+                <option value="integral">Operador integral logistico</option>
+                <option value="comex">Importacion y exportacion</option>
+                <option value="support">Seguimiento y soporte 24/7</option>
+                <option value="network">Red de proveedores confiables</option>
+                <option value="automation">Automatizacion operativa</option>
+              </select>
+            </label>
+            <label>
+              Tono
+              <select name="voice">
+                <option value="sharp">Filoso y ejecutivo</option>
+                <option value="technical">Tecnico y profesional</option>
+                <option value="direct">Directo y comercial</option>
+                <option value="street">Callejero con humor operativo</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Insight operativo o prompt base
+            <textarea name="insight" rows="4" placeholder="Ejemplo: nuestros clientes valoran poder coordinar despachante, chofer y proveedor sin perder tiempo por correo, planillas y llamadas cruzadas."></textarea>
+          </label>
+            <div class="full-width growth-form-actions">
+              <button type="submit" class="button button-accent">Generar pieza</button>
+              <button type="button" class="button button-secondary" id="generateCalendarButton">Generar sprint de 14 dias</button>
+              <button type="button" class="button button-primary" id="generateVariantButton">Nueva variacion</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel growth-panel" data-collapsible-panel>
+          <div class="panel-heading">
+            <p class="eyebrow">Arquitectura</p>
+            <h2>Como debe sonar Joathi</h2>
+            <p>No vendemos humo creativo. Vendemos criterio, calma operativa y velocidad para resolver.</p>
+          </div>
+          <div class="growth-voice-grid" id="growthVoiceGrid"></div>
+          <div class="panel-heading panel-divider">
+            <p class="eyebrow">Series</p>
+            <h2>Formatos con personalidad propia</h2>
+          </div>
+          <div class="growth-series-grid" id="growthSeriesGrid"></div>
+        </article>
+      </section>
+
+      <section class="content-grid growth-output-grid">
+        <article class="panel growth-panel" data-collapsible-panel>
+          <div class="panel-heading">
+            <p class="eyebrow">Pieza lista</p>
+            <h2>Copy principal</h2>
+            <p>Texto central para publicar hoy. Mantiene posicionamiento y CTA sin sonar a anuncio.</p>
+          </div>
+          <textarea id="primaryCopyField" class="growth-copybox" rows="14" readonly></textarea>
+          <div class="hero-actions growth-copy-actions">
+            <button type="button" class="button button-secondary" data-copy-target="primaryCopyField">Copiar copy</button>
+            <button type="button" class="button button-primary" data-copy-target="crossCopyField">Copiar adaptacion cruzada</button>
+          </div>
+        </article>
+
+        <article class="panel growth-panel" data-collapsible-panel>
+          <div class="panel-heading">
+            <p class="eyebrow">Adaptacion</p>
+            <h2>Version para la otra red</h2>
+            <p>La misma idea convertida al lenguaje correcto para LinkedIn o Meta, sin parecer reciclada.</p>
+          </div>
+          <textarea id="crossCopyField" class="growth-copybox" rows="14" readonly></textarea>
+        </article>
+      </section>
+
+      <section class="content-grid growth-output-grid">
+        <article class="panel growth-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Guion</p>
+            <h2>Visual, CTA y seguimiento</h2>
+            <p>Direccion creativa, comentario ancla y mensaje para convertir interaccion organica en reunion.</p>
+          </div>
+          <textarea id="assetCopyField" class="growth-copybox" rows="18" readonly></textarea>
+          <div class="hero-actions growth-copy-actions">
+            <button type="button" class="button button-secondary" data-copy-target="assetCopyField">Copiar guion</button>
+            <button type="button" class="button button-accent" data-copy-target="promptCopyField">Copiar prompt maestro</button>
+          </div>
+        </article>
+
+        <article class="panel growth-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Prompt</p>
+            <h2>Boveda exportable</h2>
+            <p>Prompt largo para enriquecer la pieza en otra IA sin perder el posicionamiento de Joathi.</p>
+          </div>
+          <textarea id="promptCopyField" class="growth-copybox" rows="18" readonly></textarea>
+        </article>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Campana</p>
+          <h2>Cambiate a un operador que si responde</h2>
+          <p>Paquete listo para producir piezas visuales, carruseles, reels y copies comerciales con una misma idea madre.</p>
+        </div>
+        <div class="hero-actions growth-copy-actions">
+          <button type="button" class="button button-accent" id="applyResponderCampaignButton">Cargar brief recomendado</button>
+          <button type="button" class="button button-secondary" id="saveResponderCampaignButton">Guardar 7 prompts en boveda</button>
+        </div>
+        <div id="campaignPromptGrid" class="growth-prompt-grid"></div>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Ejecucion</p>
+            <h2>Ejecutar accion</h2>
+            <p>Abre las herramientas correctas para producir, revisar o publicar la pieza. El boton dispara solo programas permitidos desde esta PC. Adobe Firefly para Windows se abre en navegador.</p>
+          </div>
+        <div class="growth-execution-grid">
+          <article class="growth-execution-card">
+            <label>
+              Flujo a ejecutar
+              <select id="growthExecutionAction">
+                <option value="produce-visual">Producir visual</option>
+                <option value="prepare-linkedin">Preparar LinkedIn</option>
+                <option value="prepare-meta">Preparar Meta</option>
+                <option value="followup-leads">Seguimiento comercial</option>
+              </select>
+            </label>
+            <div class="hero-actions growth-copy-actions">
+              <button type="button" class="button button-accent" id="executeGrowthActionButton">Ejecutar accion</button>
+              <button type="button" class="button button-secondary" id="copyGrowthActionChecklistButton">Copiar checklist</button>
+            </div>
+            <div id="growthExecutionStatus" class="stack-list"></div>
+          </article>
+          <article class="growth-execution-card">
+            <div class="panel-heading">
+              <p class="eyebrow">Programas</p>
+              <h2>Herramientas que se abriran</h2>
+            </div>
+            <div id="growthExecutionPrograms" class="growth-execution-programs"></div>
+            <div class="panel-heading panel-divider">
+              <p class="eyebrow">Proceso</p>
+              <h2>Grafica del flujo</h2>
+            </div>
+            <div id="growthExecutionFlow" class="growth-execution-flow"></div>
+            <div class="panel-heading panel-divider">
+              <p class="eyebrow">Checklist</p>
+              <h2>Secuencia sugerida</h2>
+            </div>
+            <div id="growthExecutionChecklist" class="growth-execution-checklist"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel growth-panel" id="growthToolAccessPanel" data-collapsible-panel hidden>
+        <div class="panel-heading">
+          <p class="eyebrow">Acceso local</p>
+          <h2>Credenciales operativas de Rodrigo</h2>
+          <p>Panel local para abrir Canva, LinkedIn y Meta Business Suite, y copiar usuario o clave cuando haga falta revisar o iniciar sesion.</p>
+        </div>
+        <div class="hero-actions growth-copy-actions">
+          <button type="button" class="button button-secondary" id="refreshGrowthToolProfilesButton">Actualizar accesos</button>
+        </div>
+        <div id="growthToolProfilesStatus" class="stack-list"></div>
+        <div id="growthToolProfilesGrid" class="growth-tool-access-grid"></div>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Cierre comercial</p>
+          <h2>Copys finales de venta</h2>
+          <p>Textos ya escritos con la voz de Joathi para publicar, vender y abrir conversaciones sin sonar generico.</p>
+        </div>
+        <div id="salesCopyGrid" class="growth-sales-grid"></div>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Dashboard</p>
+          <h2>Resultados de campanas</h2>
+          <p>Carga las metricas reales de cada campana y mira que industria, canal y formato estan moviendo conversaciones y clientes.</p>
+        </div>
+        <form id="campaignDashboardForm" class="form-grid">
+          <label>
+            Nombre de campana
+            <input name="campaignName" type="text" placeholder="Cambiarse a un operador que si responde | Mayo" required>
+          </label>
+          <label>
+            Industria
+            <input name="campaignIndustry" type="text" list="industryFocusList" placeholder="Industria automotriz" required>
+          </label>
+          <label>
+            Canal
+            <select name="campaignChannel">
+              <option value="linkedin">LinkedIn</option>
+              <option value="meta">Meta</option>
+            </select>
+          </label>
+          <label>
+            Formato
+            <select name="campaignFormat">
+              <option value="post">Post</option>
+              <option value="carousel">Carrusel</option>
+              <option value="reel">Reel</option>
+              <option value="case">Caso</option>
+              <option value="checklist">Checklist</option>
+            </select>
+          </label>
+          <label>
+            Periodo
+            <input name="campaignPeriod" type="text" placeholder="Abril 2026">
+          </label>
+          <label>
+            Impresiones
+            <input name="campaignImpressions" type="number" min="0" step="1" placeholder="8500" required>
+          </label>
+          <label>
+            Interacciones
+            <input name="campaignInteractions" type="number" min="0" step="1" placeholder="210" required>
+          </label>
+          <label>
+            DMs / conversaciones
+            <input name="campaignDms" type="number" min="0" step="1" placeholder="18" required>
+          </label>
+          <label>
+            Leads
+            <input name="campaignLeads" type="number" min="0" step="1" placeholder="9" required>
+          </label>
+          <label>
+            Reuniones
+            <input name="campaignMeetings" type="number" min="0" step="1" placeholder="5" required>
+          </label>
+          <label>
+            Propuestas
+            <input name="campaignProposals" type="number" min="0" step="1" placeholder="3" required>
+          </label>
+          <label>
+            Clientes cerrados
+            <input name="campaignClients" type="number" min="0" step="1" placeholder="1" required>
+          </label>
+          <div class="full-width growth-form-actions">
+            <button type="submit" class="button button-accent">Guardar campana</button>
+            <button type="button" class="button button-secondary" id="prefillDashboardIndustryButton">Tomar industria del planificador</button>
+          </div>
+        </form>
+        <div class="growth-dashboard-toolbar">
+          <label class="growth-dashboard-filter">
+            Ver industria
+            <select id="dashboardIndustryFilter">
+              <option value="all">Todas</option>
+            </select>
+          </label>
+        </div>
+        <div id="campaignDashboardSummary" class="stats-row growth-dashboard-summary"></div>
+        <div class="growth-dashboard-grid">
+          <article class="growth-dashboard-card">
+            <div class="panel-heading">
+              <p class="eyebrow">Ranking</p>
+              <h2>Campanas cargadas</h2>
+            </div>
+            <div id="campaignDashboardList" class="growth-dashboard-list"></div>
+          </article>
+          <article class="growth-dashboard-card">
+            <div class="panel-heading">
+              <p class="eyebrow">Consejos</p>
+              <h2>Como mejorar</h2>
+            </div>
+            <div id="campaignDashboardTips" class="growth-dashboard-tips"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Sprint organico</p>
+          <h2>Calendario de 14 dias</h2>
+          <p>Ritmo editorial pensado para atraer operaciones en Sudamerica, no para inflar vanity metrics.</p>
+        </div>
+        <div id="calendarGrid" class="growth-calendar-grid"></div>
+        <textarea id="calendarCopyField" class="growth-copybox growth-copybox-compact" rows="14" readonly></textarea>
+        <div class="hero-actions growth-copy-actions">
+          <button type="button" class="button button-secondary" data-copy-target="calendarCopyField">Copiar sprint</button>
+        </div>
+      </section>
+
+      <section class="panel growth-panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Boveda</p>
+          <h2>Prompts, ideas y pruebas internas</h2>
+          <p>Pega aqui los prompts que quieras conservar. El motor los incorpora al prompt maestro y al tono futuro del sistema.</p>
+        </div>
+        <form id="promptVaultForm" class="form-grid">
+          <label>
+            Nombre corto
+            <input name="title" type="text" placeholder="Prompt de carrusel tecnico" required>
+          </label>
+          <label class="full-width">
+            Prompt o idea
+            <textarea name="promptText" rows="4" placeholder="Pega aqui tu prompt completo o una observacion estrategica de ventas." required></textarea>
+          </label>
+          <div class="full-width growth-form-actions">
+            <button type="submit" class="button button-primary">Guardar en boveda</button>
+          </div>
+        </form>
+        <div id="promptVaultList" class="stack-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+  <script src="growth-lab.js"></script>
+</body>
+</html>

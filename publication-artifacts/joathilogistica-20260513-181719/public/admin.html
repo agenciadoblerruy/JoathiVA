@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Maestro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="admin">
+  <div class="portal-shell">
+    <header class="topbar">
+      <a href="admin.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Administracion maestra</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="mailbox.html" data-nav="mailbox" data-mailbox-only>Casilla mail</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="growth-lab.html" data-nav="growth" data-marketing-only hidden>Growth Lab</a>
+        <a href="mktjoathi.html" data-nav="mktjoathi" data-marketing-only hidden>mktjoathi</a>
+        <a href="brand-studio.html" data-nav="brand-studio">Marca Viva</a>
+        <a href="choferes.html" data-nav="drivers" data-provider-only>Choferes</a>
+        <a href="transportes.html" data-nav="vehicles" data-provider-only>Transportes</a>
+        <a href="viajes.html" data-nav="trips" data-provider-only>Viajes</a>
+      </nav>
+      <div class="session-box" data-session-box hidden>
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="dashboard-banner dashboard-banner-admin">
+        <div class="dashboard-banner-copy">
+          <p class="eyebrow">Panel maestro</p>
+          <h1>Centro ejecutivo de JoathiVA</h1>
+          <p>Una mesa de control inspirada en dashboards corporativos: operaciones, pedidos, growth y correo reunidos en una sola vista para decidir mas rapido.</p>
+          <div class="hero-actions">
+            <a href="growth-lab.html" class="button button-accent" data-marketing-only hidden>Abrir Growth Lab</a>
+            <a href="mktjoathi.html" class="button button-secondary" data-marketing-only hidden>Crear en mktjoathi</a>
+            <a href="#admin-requests" class="button button-secondary">Revisar pedidos</a>
+            <a href="mailbox.html" class="button button-primary" data-mailbox-only hidden>Ver casilla mail</a>
+          </div>
+        </div>
+        <aside class="dashboard-banner-side">
+          <article class="dashboard-highlight-card">
+            <span>Command center</span>
+            <strong>Visibilidad total para operar, vender y responder.</strong>
+            <p>El foco ya no es buscar datos en distintas pantallas, sino tener una lectura clara del pulso comercial y operativo de Joathi.</p>
+          </article>
+          <div class="dashboard-mini-grid">
+            <article class="dashboard-mini-card">
+              <span>Operacion</span>
+              <strong>Pedidos, viajes y cobro</strong>
+              <p>Control cruzado entre base activa, rentabilidad y etapas de cumplimiento.</p>
+            </article>
+            <article class="dashboard-mini-card" data-marketing-only hidden>
+              <span>Growth</span>
+              <strong>Contenido con criterio comercial</strong>
+              <p>Ideas, ejecucion y resultados conectados para captar cuentas nuevas.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stats-row admin-stats">
+        <article class="panel stat-card">
+          <span>Usuarios</span>
+          <strong id="adminUsersCount">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Choferes</span>
+          <strong id="adminDriversCount">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Transportes</span>
+          <strong id="adminVehiclesCount">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Viajes</span>
+          <strong id="adminTripsCount">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Pedidos</span>
+          <strong id="adminRequestsCount">0</strong>
+        </article>
+        <article class="panel stat-card">
+          <span>Casos de exito</span>
+          <strong id="adminSuccessCasesCount">0</strong>
+        </article>
+      </section>
+
+      <section class="panel" id="admin-operations-board" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Operaciones</p>
+          <h2>Estado general del negocio</h2>
+          <p>Seguimiento maestro por etapa, cantidad de operaciones y resumen comercial acumulado.</p>
+        </div>
+        <div id="adminOperationStages" class="stats-row admin-stage-row"></div>
+        <div id="adminOperationFinance" class="content-grid admin-finance-grid"></div>
+      </section>
+
+      <article class="panel admin-request-spotlight" id="admin-requests-spotlight" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Pedidos</p>
+          <h2>Radar rapido de pedidos</h2>
+          <p>Vista ejecutiva para revisar solicitudes recientes, estados de cobro y el pulso comercial sin bajar a toda la base.</p>
+        </div>
+        <div id="adminRequestsSpotlight" class="content-grid admin-request-spotlight-grid"></div>
+      </article>
+
+      <section class="panel" id="admin-success-cases" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Clientes</p>
+          <h2>Casos de exito registrados</h2>
+          <p>Plantilla interna para que Rodrigo cargue casos de exito, deje permisos de publicacion y arme una base comercial reutilizable.</p>
+        </div>
+        <div class="content-grid">
+          <article class="record-card">
+            <strong>Cargar nuevo caso</strong>
+            <p>Este formulario queda centralizado en Maestro. Puedes asociarlo a un cliente del portal o dejarlo como caso interno.</p>
+            <form id="adminSuccessCaseForm" class="form-grid">
+              <label>
+                Cliente del portal
+                <select name="userId" id="adminSuccessCaseUserId">
+                  <option value="">Caso interno / sin asociar</option>
+                </select>
+              </label>
+              <label>
+                Estado comercial
+                <select name="status">
+                  <option value="aprobado">Aprobado</option>
+                  <option value="pendiente_revision">Pendiente de revision</option>
+                  <option value="archivado">Archivado</option>
+                </select>
+              </label>
+              <label>
+                Nombre del contacto
+                <input name="contactName" type="text" placeholder="Nombre y apellido" required>
+              </label>
+              <label>
+                Cargo del contacto
+                <input name="contactRole" type="text" placeholder="Gerencia, logistica, operaciones..." required>
+              </label>
+              <label>
+                Empresa
+                <input name="company" type="text" placeholder="Empresa cliente" required>
+              </label>
+              <label>
+                Industria
+                <select name="industry" required>
+                  <option value="">Seleccionar industria</option>
+                  <option value="Automotriz">Automotriz</option>
+                  <option value="Farmaceutica">Farmaceutica</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Alimentos">Alimentos</option>
+                  <option value="Agro">Agro</option>
+                  <option value="Otra">Otra</option>
+                </select>
+              </label>
+              <label>
+                Servicio utilizado
+                <input name="serviceUsed" type="text" placeholder="Importacion, exportacion, coordinacion, transporte..." required>
+              </label>
+              <label>
+                Operativa o corredor
+                <input name="operationScope" type="text" placeholder="Ej: Montevideo - Asuncion / importacion farma" required>
+              </label>
+              <label class="full-width">
+                Problema inicial
+                <textarea name="challenge" rows="3" placeholder="Que pasaba antes: demoras, poca respuesta, falta de trazabilidad, reclamos..." required></textarea>
+              </label>
+              <label class="full-width">
+                Solucion aplicada por Joathi
+                <textarea name="solution" rows="3" placeholder="Que resolvio Joathi y como se sostuvo la operativa." required></textarea>
+              </label>
+              <label class="full-width">
+                Resultado logrado
+                <textarea name="results" rows="3" placeholder="Impacto comercial u operativo: cumplimiento, control, tranquilidad, ahorro..." required></textarea>
+              </label>
+              <label class="full-width">
+                Metricas o datos concretos
+                <textarea name="metrics" rows="2" placeholder="Ej: menos demoras, mejor tiempo de respuesta, cargas gestionadas, porcentaje de cumplimiento."></textarea>
+              </label>
+              <label class="full-width">
+                Frase testimonial
+                <textarea name="quote" rows="3" placeholder="Frase breve que resuma la experiencia del cliente."></textarea>
+              </label>
+              <label class="full-width">
+                Link o evidencia opcional
+                <input name="evidenceLink" type="url" placeholder="https://...">
+              </label>
+              <article class="record-card full-width">
+                <strong>Permisos de uso</strong>
+                <p>Define como puede usarse este caso en piezas comerciales o materiales de marca.</p>
+                <div class="checkbox-stack">
+                  <label class="checkbox-field">
+                    <span>Publicable con nombre del contacto</span>
+                    <input name="allowPublishName" type="checkbox">
+                  </label>
+                  <label class="checkbox-field">
+                    <span>Publicable con nombre de empresa</span>
+                    <input name="allowPublishCompany" type="checkbox">
+                  </label>
+                  <label class="checkbox-field">
+                    <span>Logo o marca habilitados</span>
+                    <input name="allowPublishLogo" type="checkbox">
+                  </label>
+                </div>
+              </article>
+              <button type="submit" class="button button-accent">Guardar caso de exito</button>
+            </form>
+          </article>
+          <article class="record-card">
+            <strong>Criterio de carga</strong>
+            <div class="stack-list">
+              <article class="record-card">
+                <strong>Que conviene registrar</strong>
+                <p>Casos con antes y despues claro: menos demoras, mejor seguimiento, respuesta 24/7, automatizacion o tranquilidad operativa.</p>
+              </article>
+              <article class="record-card">
+                <strong>Como usarlo luego</strong>
+                <p>La idea es que esta base nutra Growth Lab, propuestas comerciales, carruseles, reels y respuestas de venta sin salir del panel maestro.</p>
+              </article>
+            </div>
+          </article>
+        </div>
+        <div id="adminSuccessCasesSummary" class="stats-row"></div>
+        <div id="adminSuccessCasesList" class="stack-list"></div>
+      </section>
+
+      <section class="panel admin-external-board" id="admin-external-board" data-collapsible-panel data-rodrigo-master-only hidden>
+        <div class="panel-heading">
+          <p class="eyebrow">Gestion externa</p>
+          <h2>Workbook operativo integrado</h2>
+          <p>Lectura ejecutiva de cada hoja de la planilla de gestion: operaciones, gastos, PETRO y cualquier otra pestaña visible del libro de Google Sheets.</p>
+        </div>
+        <div class="hero-actions">
+          <button type="button" class="button button-accent" id="adminExternalRefreshButton">Actualizar workbook</button>
+          <a href="https://docs.google.com/spreadsheets/d/1nnv6VTlu0EENM5b2Uzxiq9JOa3fl4icBAC_M4vLZXWg/edit?usp=sharing" target="_blank" rel="noopener" class="button button-secondary">Abrir Google Sheets</a>
+        </div>
+        <div id="adminExternalStatus" class="stack-list"></div>
+        <div class="admin-external-ai-grid">
+          <article class="record-card admin-external-ai-panel">
+            <div class="panel-heading">
+              <p class="eyebrow">Analisis IA</p>
+              <h2>ChatGPT sobre el workbook</h2>
+              <p>Usa el estado actual del workbook para bajar prioridades, riesgos, cobros y decisiones concretas sin salir de Maestro.</p>
+            </div>
+            <div id="adminExternalAiQuickActions" class="hero-actions admin-external-ai-actions"></div>
+            <form id="adminExternalAiForm" class="form-grid">
+              <label class="full-width">
+                Consulta para ChatGPT
+                <textarea name="prompt" rows="4" placeholder="Ejemplo: prioriza las alertas del workbook y dime que deberia resolver Rodrigo hoy."></textarea>
+              </label>
+              <div class="full-width hero-actions">
+                <button type="submit" class="button button-accent">Analizar workbook</button>
+                <button type="button" class="button button-secondary" id="adminExternalAiCopyButton">Copiar analisis</button>
+                <a href="growth-lab.html#joathiGptPanel" class="button button-primary" data-marketing-only hidden>Configurar ChatGPT</a>
+              </div>
+            </form>
+            <div id="adminExternalAiStatus" class="stack-list"></div>
+          </article>
+          <article class="record-card admin-external-ai-panel">
+            <div class="panel-heading">
+              <p class="eyebrow">Salida</p>
+              <h2>Respuesta ejecutiva</h2>
+              <p>El resultado queda orientado a accion: que revisar hoy, que cobrar, donde hay riesgo y que decidir.</p>
+            </div>
+            <div id="adminExternalAiOutput" class="admin-external-ai-output"></div>
+          </article>
+        </div>
+        <div id="adminExternalSummary" class="stats-row admin-external-summary"></div>
+        <div id="adminExternalWorkbook" class="stack-list admin-external-workbook"></div>
+      </section>
+
+      <article class="panel admin-mailbox-quick-card" data-mailbox-only hidden>
+        <div class="panel-heading">
+          <p class="eyebrow">Correo</p>
+          <h2>Casilla IMAP iniciada</h2>
+          <p>La cuenta de Rodrigo ya queda preconfigurada. Solo entra a la casilla y la bandeja se carga en modo lectura automaticamente.</p>
+        </div>
+        <div class="hero-actions">
+          <a href="mailbox.html" class="button button-accent">Abrir Casilla mail</a>
+        </div>
+      </article>
+
+      <section class="cta-grid">
+        <article class="panel cta-card" data-marketing-only hidden>
+          <p class="eyebrow">Growth</p>
+          <h3>Growth Lab</h3>
+          <p>Construye contenido organico para captar clientes y bajar dependencia de mensajes genericos.</p>
+          <a href="growth-lab.html" class="button button-accent">Ir a Growth Lab</a>
+        </article>
+        <article class="panel cta-card" data-marketing-only hidden>
+          <p class="eyebrow">IA</p>
+          <h3>ChatGPT interno</h3>
+          <p>Abre el asistente de OpenAI integrado a JoathiVA para revisar brief, copies y estrategia con contexto real.</p>
+          <a href="growth-lab.html#joathiGptPanel" class="button button-primary">Abrir asistente</a>
+        </article>
+        <article class="panel cta-card" data-marketing-only hidden>
+          <p class="eyebrow">Visual</p>
+          <h3>mktjoathi</h3>
+          <p>Crea prompts de imagen, guiones de video, copy y checklist para piezas realistas de redes Joathi.</p>
+          <a href="mktjoathi.html" class="button button-secondary">Abrir mktjoathi</a>
+        </article>
+        <article class="panel cta-card" data-mailbox-only hidden>
+          <p class="eyebrow">Correo</p>
+          <h3>Casilla mail</h3>
+          <p>Abre la bandeja compacta de Rodrigo para decidir rapido que responder, derivar o seguir.</p>
+          <a href="mailbox.html" class="button button-secondary">Abrir casilla</a>
+        </article>
+        <article class="panel cta-card">
+          <p class="eyebrow">Base de datos</p>
+          <h3>Usuarios</h3>
+          <p>Gestiona credenciales, perfiles, razon social y preferencias de notificacion.</p>
+          <a href="#admin-users" class="button button-secondary">Ir a usuarios</a>
+        </article>
+        <article class="panel cta-card">
+          <p class="eyebrow">Base de datos</p>
+          <h3>Choferes</h3>
+          <p>Edita datos personales, origen y documentacion declarada.</p>
+          <a href="#admin-drivers" class="button button-secondary">Ir a choferes</a>
+        </article>
+        <article class="panel cta-card">
+          <p class="eyebrow">Base de datos</p>
+          <h3>Transportes</h3>
+          <p>Administra flota, documentos y capacidad operativa.</p>
+          <a href="#admin-vehicles" class="button button-secondary">Ir a transportes</a>
+        </article>
+      </section>
+
+      <section class="cta-grid">
+        <article class="panel cta-card">
+          <p class="eyebrow">Base de datos</p>
+          <h3>Viajes</h3>
+          <p>Controla disponibilidad, corredor y precio de los retornos publicados.</p>
+          <a href="#admin-trips" class="button button-secondary">Ir a viajes</a>
+        </article>
+        <article class="panel cta-card">
+          <p class="eyebrow">Base de datos</p>
+          <h3>Pedidos</h3>
+          <p>Revisa solicitudes de clientes y recalcula la facturacion cuando haga falta.</p>
+          <a href="#admin-requests" class="button button-secondary">Ir a pedidos</a>
+        </article>
+        <article class="panel cta-card">
+          <p class="eyebrow">Gestion</p>
+          <h3>Vista total</h3>
+          <p>La administracion y gestion se concentran en este panel maestro.</p>
+          <a href="#admin-users" class="button button-accent">Abrir base completa</a>
+        </article>
+      </section>
+
+      <section id="admin-users" class="panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Usuarios</p>
+          <h2>Base de usuarios</h2>
+        </div>
+        <div class="content-grid admin-import-grid">
+          <article class="record-card">
+            <strong>Importar clientes, proveedores o despachantes</strong>
+            <p>Sube un archivo CSV y selecciona si los registros ingresan como clientes, proveedores o despachantes.</p>
+            <form id="userImportForm" class="form-grid">
+              <label>
+                Perfil a importar
+                <select name="importRole" required>
+                  <option value="">Seleccionar</option>
+                  <option value="client">Cliente</option>
+                  <option value="provider">Proveedor</option>
+                  <option value="broker">Despachante</option>
+                </select>
+              </label>
+              <label class="full-width upload-field">
+                <span>Archivo CSV</span>
+                <input id="userImportFile" name="importFile" type="file" accept=".csv,text/csv" required>
+                <label for="userImportFile" class="button button-secondary upload-button">Adjuntar archivo CSV</label>
+                <small data-file-name>Sin archivo seleccionado</small>
+              </label>
+              <button type="submit" class="button button-accent">Importar usuarios</button>
+            </form>
+          </article>
+          <article class="record-card">
+            <strong>Formato requerido</strong>
+            <p>La primera fila debe contener estos encabezados exactamente:</p>
+            <code class="import-format">displayName,username,password,company,legalName,documentType,documentNumber,email,phone,notificationsEnabled,notificationOrigin,notificationDestination,bankAccountHolder,bankName,bankAccountType,bankAccountNumber,bankSwift</code>
+            <p>Ejemplo: `Juan Perez,jperez,Clave123,Acme,Acme SA,rut,219999990012,jperez@acme.com,+59899000000,true,Brasil,Uruguay,Juan Perez,Banco Republica,Cuenta corriente USD,001234567890,BROUUYMM`</p>
+          </article>
+        </div>
+        <div id="adminUsersList" class="stack-list"></div>
+      </section>
+
+      <section id="admin-drivers" class="panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Choferes</p>
+          <h2>Base de choferes</h2>
+        </div>
+        <div id="adminDriversList" class="stack-list"></div>
+      </section>
+
+      <section id="admin-vehicles" class="panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Transportes</p>
+          <h2>Base de transportes</h2>
+        </div>
+        <div id="adminVehiclesList" class="stack-list"></div>
+      </section>
+
+      <section id="admin-trips" class="panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Viajes</p>
+          <h2>Base de viajes</h2>
+        </div>
+        <div id="adminTripsList" class="stack-list"></div>
+      </section>
+
+      <section id="admin-requests" class="panel" data-collapsible-panel>
+        <div class="panel-heading">
+          <p class="eyebrow">Pedidos</p>
+          <h2>Base de pedidos</h2>
+        </div>
+        <div id="adminRequestsList" class="stack-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <article class="panel empty-state">
+      <strong>No hay registros disponibles.</strong>
+      <span>Completa las altas del portal para empezar a publicar retornos.</span>
+    </article>
+  </template>
+
+  <script src="portal.js"></script>
+  <script src="lucia-arancel-data.js"></script>
+  <script src="lucia-reference-data.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

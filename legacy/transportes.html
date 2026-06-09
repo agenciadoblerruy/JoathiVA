@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Transportes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="vehicles">
+  <div class="portal-shell">
+    <header class="topbar">
+      <a href="index.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Control operacional y trazabilidad</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="choferes.html" data-nav="drivers">Choferes</a>
+        <a href="transportes.html" data-nav="vehicles">Transportes</a>
+        <a href="viajes.html" data-nav="trips">Viajes</a>
+      </nav>
+      <div class="session-box">
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="dashboard-banner dashboard-banner-ops">
+        <div class="dashboard-banner-copy">
+          <p class="eyebrow">Alta de unidad</p>
+          <h1>Transportes habilitados</h1>
+          <p>Panel de flota inspirado en dashboards administrativos para revisar capacidad, documentos y asignacion de unidad con mayor claridad.</p>
+        </div>
+        <aside class="dashboard-banner-side">
+          <div class="dashboard-mini-grid">
+            <article class="dashboard-mini-card">
+              <span>Documentos</span>
+              <strong>Propiedad y seguro</strong>
+              <p>La alta queda lista para control operativo y trazabilidad.</p>
+            </article>
+            <article class="dashboard-mini-card">
+              <span>Capacidad</span>
+              <strong>m3 y kg visibles</strong>
+              <p>La lectura comercial arranca con la unidad bien parametrizada.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <form id="vehicleForm" class="form-grid">
+            <label>
+              Chofer responsable
+              <select name="driverId" id="vehicleDriverSelect" required></select>
+            </label>
+            <label>
+              Matricula
+              <input name="plate" type="text" placeholder="SBT 1020" required>
+            </label>
+            <label>
+              Marca
+              <input name="brand" type="text" placeholder="Scania" required>
+            </label>
+            <label>
+              Modelo
+              <input name="model" type="text" placeholder="R450" required>
+            </label>
+            <label>
+              Tipo de transporte
+              <select name="type" required>
+                <option value="">Seleccionar</option>
+                <option>Semi remolque</option>
+                <option>Refrigerado</option>
+                <option>Sider</option>
+                <option>Cisterna</option>
+                <option>Plataforma</option>
+              </select>
+            </label>
+            <label>
+              Ano
+              <input name="year" type="number" min="1990" max="2100" placeholder="2022" required>
+            </label>
+            <label>
+              Capacidad util (m3)
+              <input name="capacityM3" type="number" min="1" step="0.1" placeholder="86" required>
+            </label>
+            <label>
+              Peso maximo (kg)
+              <input name="maxWeightKg" type="number" min="1" step="100" placeholder="28000" required>
+            </label>
+            <label class="full-width upload-field">
+              <span>Libreta de propiedad</span>
+              <input id="ownershipDocFile" name="ownershipDoc" type="file" accept="image/*,.pdf" capture="environment" required>
+              <label for="ownershipDocFile" class="button button-secondary upload-button">Adjuntar libreta de propiedad</label>
+              <small data-file-name>Sin archivo seleccionado</small>
+            </label>
+            <label class="full-width upload-field">
+              <span>Poliza o comprobante de seguro</span>
+              <input id="insuranceDocFile" name="insuranceDoc" type="file" accept="image/*,.pdf" capture="environment" required>
+              <label for="insuranceDocFile" class="button button-secondary upload-button">Adjuntar seguro</label>
+              <small data-file-name>Sin archivo seleccionado</small>
+            </label>
+            <label class="full-width">
+              Observaciones
+              <textarea name="notes" rows="3" placeholder="Ejemplo: apto Mercosur, control satelital, doble chofer eventual."></textarea>
+            </label>
+            <button type="submit" class="button button-accent">Guardar transporte</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Flota activa</p>
+            <h2>Unidades registradas</h2>
+          </div>
+          <div id="vehiclesList" class="stack-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <article class="panel empty-state">
+      <strong>No hay registros disponibles.</strong>
+      <span>Completa las altas del portal para empezar a publicar retornos.</span>
+    </article>
+  </template>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

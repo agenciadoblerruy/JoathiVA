@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang='es'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>JoathiVA - Validacion manual Fase 2</title>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f0; color: #1f1f1f; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 32px; }
+    h1, h2, h3 { margin: 0 0 12px; }
+    .hero { background: #111827; color: #fff; padding: 28px; border-radius: 20px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 20px; }
+    .card { background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 10px 28px rgba(0,0,0,.08); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; font-size: 14px; }
+    .ok { color: #0a7a31; font-weight: 700; }
+    .partial { color: #9a6400; font-weight: 700; }
+    .missing { color: #b91c1c; font-weight: 700; }
+    .muted { color: #616161; }
+    code { background: #eee; padding: 2px 6px; border-radius: 6px; }
+    ul { margin-top: 8px; }
+  </style>
+</head>
+<body>
+<div class='wrap'>
+  <section class='hero'>
+    <h1>JoathiVA - Validacion manual Fase 2</h1>
+    <p>Estado general: <strong>apto con observaciones</strong>. Los flujos principales funcionan en frontend; los paneles de export/outbox/backend siguen siendo parciales o inexistentes en esta SPA.</p>
+    <p class='muted'>Fecha: 2026-05-09 | Capturas guardadas en <code>/mnt/e/Joathi/JOATHIVA/validation/manual-final-2026-05-09/screenshots</code></p>
+  </section>
+
+  <div class='grid'>
+    <div class='card'><h2>Decision final</h2><p class='partial'>Apto con observaciones</p><p>Sin bugs críticos observados en los flujos principales. Persisten ausencias de UI para export/PDF formal, outbox y panel backend.</p></div>
+    <div class='card'><h2>Riesgos</h2><ul><li>Export/PDF formal no expuesto como panel dedicado.</li><li>Outbox/correo real no visible; solo mailto.</li><li>Backend integration panel no expuesto en frontend.</li><li>Persistencia sigue siendo local-first en esta base.</li></ul></div>
+    <div class='card'><h2>Bugs</h2><p><strong>Críticos:</strong> 0</p><p><strong>Medios:</strong> 3</p><p><strong>Menores:</strong> 2</p></div>
+  </div>
+
+  <section class='card' style='margin-top:20px;'>
+    <h2>Checklist final</h2>
+    <table>
+      <thead><tr><th>Punto</th><th>Estado</th><th>Nota</th><th>Captura</th></tr></thead>
+      <tbody>
+        <tr><td>1. Home / navegación</td><td class='ok'>Hecho</td><td>Acceso, dashboard y menu visibles; rutas principales navegables.</td><td>01, 02, 03</td></tr>
+        <tr><td>2. commercial_ops</td><td class='ok'>Hecho</td><td>Dashboard claro, métricas y flujo entendido.</td><td>02</td></tr>
+        <tr><td>3. Clientes</td><td class='ok'>Hecho</td><td>Alta/listado/reutilización/historial validados.</td><td>05, 06, 07, 08</td></tr>
+        <tr><td>4. Cotizador</td><td class='ok'>Hecho</td><td>Cotización creada y visible en historial.</td><td>12, 13, 14</td></tr>
+        <tr><td>5. Provider</td><td class='partial'>Parcial</td><td>Listado, alta, edición y portal sí; request/receive/compare/confirm no aparecen como UI dedicada.</td><td>09, 10, 11, 15, 16, 17, 18, 19</td></tr>
+        <tr><td>6. Documento comercial</td><td class='partial'>Parcial</td><td>Detalle/preview de cotización sirve como documento básico, sin panel formal dedicado.</td><td>13</td></tr>
+        <tr><td>7. Export / PDF</td><td class='missing'>Faltante</td><td>No existe panel export/PDF visible en esta SPA.</td><td>03, 20</td></tr>
+        <tr><td>8. Outbox / correo</td><td class='partial'>Parcial</td><td>Solo enlace mailto y contexto de respuesta; no hay outbox visible.</td><td>15</td></tr>
+        <tr><td>9. Backend integration panel</td><td class='partial'>Parcial</td><td>Solo backup local / arquitectura; no hay panel de estado backend.</td><td>03, 04, 20</td></tr>
+        <tr><td>10. Persistencia central + fallback</td><td class='partial'>Parcial</td><td>Fallback local-first visible; persistencia central no expuesta en UI.</td><td>03, 04, 20</td></tr>
+        <tr><td>11. Closure board / estado final</td><td class='ok'>Hecho</td><td>Se documenta el estado real de forma ejecutiva en este reporte.</td><td>23</td></tr>
+        <tr><td>12. Responsive</td><td class='ok'>Hecho</td><td>Home y provider aceptables en móvil/ventana angosta.</td><td>21, 22</td></tr>
+        <tr><td>13. Validación visual general</td><td class='ok'>Hecho</td><td>Diseño consistente, tarjetas y botones claros.</td><td>01, 02, 15</td></tr>
+        <tr><td>14. Registro final</td><td class='ok'>Hecho</td><td>Capturas, bugs y decisión final registrados.</td><td>23</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class='grid' style='margin-top:20px;'>
+    <div class='card'>
+      <h2>Bugs críticos</h2>
+      <ul><li>Ninguno observado.</li></ul>
+    </div>
+    <div class='card'>
+      <h2>Bugs medios</h2>
+      <ul>
+        <li>No existe panel export/PDF formal.</li>
+        <li>No existe outbox real en la UI.</li>
+        <li>No existe panel backend de estado.</li>
+      </ul>
+    </div>
+    <div class='card'>
+      <h2>Bugs menores</h2>
+      <ul>
+        <li>Algunos flujos quedan como mailto o respaldo local-first.</li>
+        <li>La interfaz no muestra un cierre productivo completo todavía.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+</body>
+</html>

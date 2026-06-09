@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | mktjoathi</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="mktjoathi.css">
+</head>
+<body data-page="mktjoathi">
+  <div class="portal-shell mktjoathi-shell">
+    <header class="topbar">
+      <a href="admin.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>mktjoathi</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="mailbox.html" data-nav="mailbox" data-mailbox-only>Casilla mail</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="growth-lab.html" data-nav="growth" data-marketing-only hidden>Growth Lab</a>
+        <a href="mktjoathi.html" data-nav="mktjoathi" data-marketing-only hidden>mktjoathi</a>
+      </nav>
+      <div class="session-box" data-session-box hidden>
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="media-hero panel">
+        <div class="media-hero-copy">
+          <p class="eyebrow">mktjoathi</p>
+          <h1>Imagenes y videos realistas para publicar Joathi con criterio comercial.</h1>
+          <p class="lede">
+            Escribe la idea, elige donde se va a publicar y mktjoathi arma el paquete de produccion:
+            prompt visual, guion de video, copy, formato y checklist operativo para aprobar antes de publicar.
+          </p>
+          <div class="hero-actions">
+            <a href="#mediaBriefForm" class="button button-accent">Crear pieza</a>
+            <button type="button" class="button button-secondary" id="mediaHeroGenerateButton">Generar ejemplo</button>
+          </div>
+        </div>
+        <aside class="media-hero-panel">
+          <div class="media-preview-card">
+            <div class="media-preview-top">
+              <img src="logo.svg" alt="JoathiVA">
+              <span>Joathi Logistica</span>
+            </div>
+            <div class="media-preview-frame" aria-hidden="true">
+              <div class="media-preview-road"></div>
+              <div class="media-preview-truck"></div>
+              <div class="media-preview-dashboard">
+                <span>Tracking activo</span>
+                <strong>24/7</strong>
+              </div>
+            </div>
+            <div class="media-preview-copy">
+              <strong>Tu carga, nuestro compromiso.</strong>
+              <p>Visual realista, operativo y premium para redes B2B.</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="media-command-strip">
+        <article class="media-command-card">
+          <span>01</span>
+          <strong>Prompt</strong>
+          <p>Describe la escena, dolor comercial o mensaje que quieres convertir en pieza visual.</p>
+        </article>
+        <article class="media-command-card">
+          <span>02</span>
+          <strong>Destino</strong>
+          <p>Selecciona LinkedIn, Instagram, Facebook, Stories, Reels o WhatsApp Business.</p>
+        </article>
+        <article class="media-command-card">
+          <span>03</span>
+          <strong>Produccion</strong>
+          <p>Obtiene prompt hiperrealista, guion, copy, formato y restricciones de marca.</p>
+        </article>
+        <article class="media-command-card">
+          <span>04</span>
+          <strong>Publicacion</strong>
+          <p>Valida checklist, CTA y estado antes de pasar la pieza a la herramienta final.</p>
+        </article>
+      </section>
+
+      <section class="content-grid media-workbench">
+        <article class="panel media-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Brief</p>
+            <h2>Crear pieza de imagen o video</h2>
+            <p>El prompt debe ser claro, operativo y comercial. El sistema lo convierte en una direccion visual realista para Joathi.</p>
+          </div>
+          <form id="mediaBriefForm" class="form-grid">
+            <label class="full-width">
+              Prompt base
+              <textarea name="sourcePrompt" rows="5" placeholder="Ej: mostrar una carga urgente saliendo de Montevideo hacia Buenos Aires con seguimiento 24/7, tono premium y confianza operativa." required>Camion moderno saliendo de un centro logistico al amanecer, equipo de Joathi monitoreando tracking en tiempo real y sensacion de control operativo para una empresa importadora.</textarea>
+            </label>
+            <label>
+              Cantidad de prompts
+              <input name="promptCount" type="number" min="1" max="10" step="1" value="3">
+            </label>
+            <label>
+              Industria objetivo
+              <input name="targetIndustry" type="text" list="mktTargetIndustryList" value="Importadores y exportadores" placeholder="Ej: farma, retail, agro, automotriz">
+              <datalist id="mktTargetIndustryList">
+                <option value="Importadores y exportadores"></option>
+                <option value="Industria automotriz"></option>
+                <option value="Industria farmaceutica"></option>
+                <option value="Retail"></option>
+                <option value="Alimentos y bebidas"></option>
+                <option value="Agroindustria"></option>
+                <option value="Quimica"></option>
+                <option value="Manufactura"></option>
+                <option value="Consumo masivo"></option>
+              </datalist>
+            </label>
+            <label>
+              Donde se publica
+              <select name="platform">
+                <option value="linkedin">LinkedIn empresa</option>
+                <option value="instagram-feed">Instagram feed</option>
+                <option value="instagram-reel">Instagram Reel</option>
+                <option value="facebook">Facebook</option>
+                <option value="stories">Stories</option>
+                <option value="whatsapp">WhatsApp Business</option>
+              </select>
+            </label>
+            <label>
+              Tipo de pieza
+              <select name="assetType">
+                <option value="image">Imagen realista</option>
+                <option value="video">Video corto</option>
+                <option value="carousel">Carrusel</option>
+              </select>
+            </label>
+            <label>
+              Formato
+              <select name="format">
+                <option value="vertical">Vertical 9:16</option>
+                <option value="square">Cuadrado 1:1</option>
+                <option value="portrait">Portrait 4:5</option>
+                <option value="landscape">Horizontal 16:9</option>
+              </select>
+            </label>
+            <label>
+              Objetivo
+              <select name="objective">
+                <option value="meeting">Concretar reunion</option>
+                <option value="call">Concretar llamada</option>
+                <option value="email">Concretar mail</option>
+                <option value="sales">Ventas</option>
+                <option value="service-presence">Presencia y destacamiento del servicio</option>
+                <option value="brand-identity">Identidad de la marca</option>
+              </select>
+            </label>
+            <label>
+              Audiencia
+              <select name="audience">
+                <option value="logistics-manager">Gerencia de logistica</option>
+                <option value="owner">Direccion / duenos</option>
+                <option value="importer">Importadores y exportadores</option>
+                <option value="broker">Despachantes de aduana</option>
+                <option value="supplier">Proveedores de transporte</option>
+              </select>
+            </label>
+            <label>
+              Escena principal
+              <select name="scene">
+                <option value="truck-road">Camion en ruta</option>
+                <option value="warehouse">Centro logistico</option>
+                <option value="control-room">Tablero de control</option>
+                <option value="border">Frontera y aduana</option>
+                <option value="executive">Reunion ejecutiva</option>
+                <option value="driver">Chofer y unidad</option>
+              </select>
+            </label>
+            <label>
+              Mercado
+              <select name="market">
+                <option value="sudamerica">Sudamerica</option>
+                <option value="uruguay">Uruguay</option>
+                <option value="argentina">Argentina</option>
+                <option value="paraguay">Paraguay</option>
+                <option value="brasil">Brasil</option>
+                <option value="chile">Chile</option>
+              </select>
+            </label>
+            <label class="full-width">
+              CTA
+              <input name="cta" type="text" value="Solicita una cotizacion con seguimiento real." placeholder="Accion que debe tomar el prospecto">
+            </label>
+            <label class="full-width">
+              Sitio web / landing destino
+              <input name="landingDestination" type="url" value="https://joathilogistica.com/" placeholder="https://joathilogistica.com/landing">
+            </label>
+            <section class="full-width mkt-company-panel" aria-label="Datos de la empresa">
+              <div class="mkt-logo-panel-head">
+                <div>
+                  <p class="eyebrow">Datos comerciales</p>
+                  <h3>Contacto de la empresa</h3>
+                  <p>Estos datos se agregan al copy, CTA y checklist para que la pieza tenga un siguiente paso claro.</p>
+                </div>
+              </div>
+              <div class="mkt-company-grid">
+                <label>
+                  Web
+                  <input name="companyWebsite" type="url" value="https://joathilogistica.com/" placeholder="https://joathilogistica.com/">
+                </label>
+                <label>
+                  Mail
+                  <input name="companyEmail" type="email" value="rhernandez@joathilogistica.com" placeholder="ventas@empresa.com">
+                </label>
+                <label>
+                  WhatsApp
+                  <input name="companyWhatsapp" type="tel" value="+598 97 971 122" placeholder="+598 99 000 000">
+                </label>
+              </div>
+            </section>
+            <fieldset class="full-width mkt-measures-panel">
+              <legend>Medidas y formatos</legend>
+              <p>Selecciona una o varias medidas. Si no marcas ninguna, el sistema usa un set base para feed, story/reel y web hero.</p>
+              <div class="mkt-measures-grid">
+                <label class="mkt-measure-card" data-media-measure="instagram-feed-square">
+                  <input type="checkbox" name="mediaMeasures" value="instagram-feed-square" checked>
+                  <div>
+                    <strong>Instagram Feed cuadrado</strong>
+                    <span>1080x1080</span>
+                    <small>1:1</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="instagram-story">
+                  <input type="checkbox" name="mediaMeasures" value="instagram-story" checked>
+                  <div>
+                    <strong>Instagram/Facebook Story</strong>
+                    <span>1080x1920</span>
+                    <small>9:16</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="reel-tiktok-short">
+                  <input type="checkbox" name="mediaMeasures" value="reel-tiktok-short">
+                  <div>
+                    <strong>Reel/TikTok/Short</strong>
+                    <span>1080x1920</span>
+                    <small>9:16</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="linkedin-post-square">
+                  <input type="checkbox" name="mediaMeasures" value="linkedin-post-square">
+                  <div>
+                    <strong>LinkedIn post</strong>
+                    <span>1200x1200</span>
+                    <small>1:1</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="linkedin-horizontal">
+                  <input type="checkbox" name="mediaMeasures" value="linkedin-horizontal">
+                  <div>
+                    <strong>LinkedIn horizontal</strong>
+                    <span>1200x627</span>
+                    <small>1.91:1</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="meta-horizontal">
+                  <input type="checkbox" name="mediaMeasures" value="meta-horizontal">
+                  <div>
+                    <strong>Facebook/Meta Ads horizontal</strong>
+                    <span>1200x628</span>
+                    <small>1.91:1</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="google-display-horizontal">
+                  <input type="checkbox" name="mediaMeasures" value="google-display-horizontal">
+                  <div>
+                    <strong>Google Display horizontal</strong>
+                    <span>1200x628</span>
+                    <small>1.91:1</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="web-hero-desktop">
+                  <input type="checkbox" name="mediaMeasures" value="web-hero-desktop" checked>
+                  <div>
+                    <strong>Web hero desktop</strong>
+                    <span>1920x1080</span>
+                    <small>16:9</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="web-banner-wide">
+                  <input type="checkbox" name="mediaMeasures" value="web-banner-wide">
+                  <div>
+                    <strong>Web banner ancho</strong>
+                    <span>1600x600</span>
+                    <small>panoramico</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="whatsapp-flyer-vertical">
+                  <input type="checkbox" name="mediaMeasures" value="whatsapp-flyer-vertical">
+                  <div>
+                    <strong>WhatsApp flyer vertical</strong>
+                    <span>1080x1350</span>
+                    <small>4:5</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="email-header">
+                  <input type="checkbox" name="mediaMeasures" value="email-header">
+                  <div>
+                    <strong>Email header</strong>
+                    <span>1200x400</span>
+                    <small>3:1</small>
+                  </div>
+                </label>
+                <label class="mkt-measure-card" data-media-measure="presentation-slide">
+                  <input type="checkbox" name="mediaMeasures" value="presentation-slide">
+                  <div>
+                    <strong>Presentación slide</strong>
+                    <span>1920x1080</span>
+                    <small>16:9</small>
+                  </div>
+                </label>
+              </div>
+              <div class="mkt-measures-subgroup">
+                <div class="mkt-measures-subhead">
+                  <strong>Medidas web a usar</strong>
+                  <p>Estas variantes sirven para landing, home, módulos, dashboard, email y previsualizaciones sociales.</p>
+                </div>
+                <div class="mkt-measures-grid mkt-measures-grid-web">
+                  <label class="mkt-measure-card" data-media-measure="web-hero-ultrawide">
+                    <input type="checkbox" name="mediaMeasures" value="web-hero-ultrawide">
+                    <div>
+                      <strong>Web hero ultrawide</strong>
+                      <span>2560x1080</span>
+                      <small>21:9</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="web-hero-mobile">
+                    <input type="checkbox" name="mediaMeasures" value="web-hero-mobile">
+                    <div>
+                      <strong>Web hero mobile</strong>
+                      <span>1080x1920</span>
+                      <small>9:16</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="web-section-horizontal">
+                    <input type="checkbox" name="mediaMeasures" value="web-section-horizontal">
+                    <div>
+                      <strong>Web sección horizontal</strong>
+                      <span>1440x700</span>
+                      <small>web section</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="card-web-square">
+                    <input type="checkbox" name="mediaMeasures" value="card-web-square">
+                    <div>
+                      <strong>Card web cuadrada</strong>
+                      <span>1080x1080</span>
+                      <small>1:1</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="card-web-vertical">
+                    <input type="checkbox" name="mediaMeasures" value="card-web-vertical">
+                    <div>
+                      <strong>Card web vertical</strong>
+                      <span>1080x1350</span>
+                      <small>4:5</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="dashboard-background">
+                    <input type="checkbox" name="mediaMeasures" value="dashboard-background">
+                    <div>
+                      <strong>Dashboard background</strong>
+                      <span>1920x1080</span>
+                      <small>16:9</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="email-header">
+                    <input type="checkbox" name="mediaMeasures" value="email-header">
+                    <div>
+                      <strong>Header email</strong>
+                      <span>1200x400</span>
+                      <small>3:1</small>
+                    </div>
+                  </label>
+                  <label class="mkt-measure-card" data-media-measure="open-graph-preview">
+                    <input type="checkbox" name="mediaMeasures" value="open-graph-preview">
+                    <div>
+                      <strong>Open Graph preview</strong>
+                      <span>1200x630</span>
+                      <small>1.91:1</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="full-width mkt-web-use-panel">
+              <legend>Uso web / landing</legend>
+              <p>Marca el contexto de uso para que el prompt se adapte a home, landing, cards, dashboard o email comercial.</p>
+              <div class="mkt-web-use-grid">
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-hero-main">
+                  <div>
+                    <strong>Hero principal web</strong>
+                    <small>Imagen central de la landing o homepage.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-services-section">
+                  <div>
+                    <strong>Sección de servicios</strong>
+                    <small>Bloque que explica capacidades o soluciones.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-banner-horizontal">
+                  <div>
+                    <strong>Banner horizontal</strong>
+                    <small>Franja visual para módulos, home o campañas.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-service-card">
+                  <div>
+                    <strong>Card de servicio</strong>
+                    <small>Tarjeta individual con un servicio puntual.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-dashboard-background">
+                  <div>
+                    <strong>Fondo para dashboard</strong>
+                    <small>Base visual de paneles, métricas o tracking.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-contact-page">
+                  <div>
+                    <strong>Imagen para página de contacto</strong>
+                    <small>Bloque sobrio para contacto comercial.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-quote-page">
+                  <div>
+                    <strong>Imagen para página de cotización</strong>
+                    <small>Pieza orientada a conversión y solicitud.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-suppliers-page">
+                  <div>
+                    <strong>Imagen para proveedores</strong>
+                    <small>Material para onboarding o vínculos con proveedores.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-tracking-page">
+                  <div>
+                    <strong>Imagen para tracking / seguimiento</strong>
+                    <small>Visual de trazabilidad, estado y monitoreo.</small>
+                  </div>
+                </label>
+                <label class="mkt-web-use-card">
+                  <input type="checkbox" name="webUses" value="web-email-header">
+                  <div>
+                    <strong>Header para email comercial</strong>
+                    <small>Cabecera para campañas y correos de venta.</small>
+                  </div>
+                </label>
+              </div>
+            </fieldset>
+            <label class="full-width">
+              Restricciones o detalles a evitar
+              <textarea name="constraints" rows="3" placeholder="Ej: evitar caricaturas, logos deformados, rutas irreales, exceso de texto en imagen.">Evitar estilo cartoon, fantasia, logos deformados, patentes legibles, marcas de terceros y promesas absolutas. Mantener estetica premium B2B.</textarea>
+            </label>
+            <section class="full-width mkt-logo-panel" aria-label="Logos de la pieza">
+              <div class="mkt-logo-panel-head">
+                <div>
+                  <p class="eyebrow">Assets de marca</p>
+                  <h3>Logos para aplicar manualmente</h3>
+                  <p>Sube el logo de Joathi y, si corresponde, el logo del proveedor. Quedan guardados solo en este navegador.</p>
+                </div>
+              </div>
+              <div class="mkt-logo-upload-grid">
+                <article class="mkt-logo-upload-card">
+                  <div class="mkt-logo-card-head">
+                    <span>Marca principal</span>
+                    <strong>Logo Joathi</strong>
+                  </div>
+                  <div class="mkt-logo-preview" id="mktBrandLogoPreview">
+                    <span>Sin logo cargado</span>
+                  </div>
+                  <div class="mkt-logo-actions">
+                    <label class="button button-secondary mkt-logo-button">
+                      Subir logo
+                      <input id="mktBrandLogoInput" type="file" accept="image/png,image/jpeg,image/webp">
+                    </label>
+                    <button type="button" class="button button-primary" id="mktClearBrandLogoButton">Quitar</button>
+                  </div>
+                  <small id="mktBrandLogoMeta">PNG, JPG o WebP. Maximo recomendado: 750 KB.</small>
+                </article>
+                <article class="mkt-logo-upload-card">
+                  <div class="mkt-logo-card-head">
+                    <span>Co-branding</span>
+                    <strong>Logo proveedor</strong>
+                  </div>
+                  <div class="mkt-logo-preview" id="mktSupplierLogoPreview">
+                    <span>Sin logo cargado</span>
+                  </div>
+                  <div class="mkt-logo-actions">
+                    <label class="button button-secondary mkt-logo-button">
+                      Subir logo
+                      <input id="mktSupplierLogoInput" type="file" accept="image/png,image/jpeg,image/webp">
+                    </label>
+                    <button type="button" class="button button-primary" id="mktClearSupplierLogoButton">Quitar</button>
+                  </div>
+                  <small id="mktSupplierLogoMeta">Usar solo si la pieza debe mostrar al proveedor.</small>
+                </article>
+              </div>
+            </section>
+            <div class="full-width media-form-actions">
+              <button type="submit" class="button button-accent">Generar paquete</button>
+              <button type="button" class="button button-secondary" id="mediaAiGenerateButton">Mejorar con IA</button>
+              <button type="button" class="button button-primary" id="mediaSavePackageButton">Guardar paquete</button>
+            </div>
+          </form>
+          <div id="mediaStudioStatus" class="stack-list" aria-live="polite"></div>
+        </article>
+
+        <aside class="panel media-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Destino</p>
+            <h2>Formato y criterio de publicacion</h2>
+            <p>El brief cambia segun red, formato y objetivo para evitar piezas genericas.</p>
+          </div>
+          <div id="mediaPlatformSpec" class="media-spec-grid"></div>
+          <div class="media-readiness-card">
+            <span>Estado</span>
+            <strong id="mediaReadinessTitle">Listo para producir</strong>
+            <p id="mediaReadinessText">Completa el brief y genera el paquete para revisar el prompt final.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel media-panel">
+        <div class="panel-heading">
+          <p class="eyebrow">Resultado</p>
+          <h2>Paquete de produccion</h2>
+          <p>Copia estos bloques en ChatGPT, Sora, Firefly, Canva u otra herramienta aprobada. La pieza final debe revisarse antes de publicar.</p>
+        </div>
+        <div class="content-grid media-output-grid">
+          <article class="media-output-card">
+            <div class="media-output-head">
+              <strong>Prompt de imagen realista</strong>
+              <button type="button" class="button button-secondary" data-copy-media-target="mediaImagePromptOutput">Copiar</button>
+            </div>
+            <textarea id="mediaImagePromptOutput" class="media-copybox" rows="12" readonly></textarea>
+          </article>
+          <article class="media-output-card">
+            <div class="media-output-head">
+              <strong>Guion de video</strong>
+              <button type="button" class="button button-secondary" data-copy-media-target="mediaVideoPromptOutput">Copiar</button>
+            </div>
+            <textarea id="mediaVideoPromptOutput" class="media-copybox" rows="12" readonly></textarea>
+          </article>
+          <article class="media-output-card">
+            <div class="media-output-head">
+              <strong>Copy para publicar</strong>
+              <button type="button" class="button button-secondary" data-copy-media-target="mediaCaptionOutput">Copiar</button>
+            </div>
+            <textarea id="mediaCaptionOutput" class="media-copybox" rows="12" readonly></textarea>
+          </article>
+          <article class="media-output-card">
+            <div class="media-output-head">
+              <strong>Checklist operativo</strong>
+              <button type="button" class="button button-secondary" data-copy-media-target="mediaChecklistOutput">Copiar</button>
+            </div>
+            <textarea id="mediaChecklistOutput" class="media-copybox" rows="12" readonly></textarea>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel media-panel">
+        <div class="panel-heading">
+          <p class="eyebrow">Historial local</p>
+          <h2>Paquetes guardados</h2>
+          <p>Guarda ideas aprobadas para repetir campanas por industria, corredor o servicio sin empezar desde cero.</p>
+        </div>
+        <div id="mediaSavedPackages" class="media-history-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+  <script src="mktjoathi.js"></script>
+</body>
+</html>

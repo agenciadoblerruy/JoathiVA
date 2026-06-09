@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Viajes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="trips">
+  <div class="portal-shell">
+    <header class="topbar">
+      <a href="index.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Control operacional y trazabilidad</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="choferes.html" data-nav="drivers">Choferes</a>
+        <a href="transportes.html" data-nav="vehicles">Transportes</a>
+        <a href="viajes.html" data-nav="trips">Viajes</a>
+      </nav>
+      <div class="session-box">
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="dashboard-banner dashboard-banner-ops">
+        <div class="dashboard-banner-copy">
+          <p class="eyebrow">Publicacion de retorno</p>
+          <h1>Registrar viaje disponible</h1>
+          <p>El flujo de viajes ahora se lee como un tablero comercial: origen, destino, capacidad, tarifa y estado en una misma secuencia visual.</p>
+        </div>
+        <aside class="dashboard-banner-side">
+          <div class="dashboard-mini-grid">
+            <article class="dashboard-mini-card">
+              <span>Precio</span>
+              <strong>Base comercial clara</strong>
+              <p>La publicacion queda lista para calcular proveedor, cliente y margen.</p>
+            </article>
+            <article class="dashboard-mini-card">
+              <span>Visibilidad</span>
+              <strong>Listo para home y pedidos</strong>
+              <p>El viaje queda expuesto para que los clientes soliciten traslado con menos friccion.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <form id="tripForm" class="form-grid">
+            <label>
+              Chofer
+              <select name="driverId" id="tripDriverSelect" required></select>
+            </label>
+            <label>
+              Transporte
+              <select name="vehicleId" id="tripVehicleSelect" required></select>
+            </label>
+            <label>
+              Ubicacion actual
+              <input name="currentLocation" type="text" placeholder="Santiago, Chile" required>
+            </label>
+            <label>
+              Pais de origen
+              <select name="originCountry" required>
+                <option value="">Seleccionar</option>
+                <option>Uruguay</option>
+                <option>Brasil</option>
+                <option>Argentina</option>
+                <option>Paraguay</option>
+                <option>Chile</option>
+              </select>
+            </label>
+            <label>
+              Punto de retorno
+              <input name="returnDestination" type="text" placeholder="Montevideo, Uruguay" required>
+            </label>
+            <label>
+              Pais de destino
+              <select name="destinationCountry" required>
+                <option value="">Seleccionar</option>
+                <option>Uruguay</option>
+                <option>Brasil</option>
+                <option>Argentina</option>
+                <option>Paraguay</option>
+                <option>Chile</option>
+              </select>
+            </label>
+            <label>
+              Fecha disponible
+              <input name="availableDate" type="date" required>
+            </label>
+            <label>
+              Estado
+              <select name="status" required>
+                <option>Disponible</option>
+                <option>Confirmado</option>
+                <option>En revision</option>
+              </select>
+            </label>
+            <label>
+              Espacio disponible (m3)
+              <input name="availableM3" type="number" min="1" step="0.1" placeholder="60" required>
+            </label>
+            <label>
+              Peso disponible (kg)
+              <input name="availableWeightKg" type="number" min="1" step="100" placeholder="18000" required>
+            </label>
+            <label>
+              Precio base del viaje (USD)
+              <input name="priceUsd" type="number" min="1" step="1" placeholder="2400" required>
+            </label>
+            <label>
+              Tipo de carga admitida
+              <input name="cargoType" type="text" placeholder="Carga general o palletizada" required>
+            </label>
+            <label class="full-width">
+              Observaciones operativas
+              <textarea name="notes" rows="3" placeholder="Ejemplo: retiro 24 horas luego de descarga, admite transito internacional."></textarea>
+            </label>
+            <button type="submit" class="button button-accent">Publicar viaje</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Publicados</p>
+            <h2>Viajes visibles en el home</h2>
+          </div>
+          <div class="stack-list service-note">
+            <article class="record-card">
+              <strong>Condiciones del servicio</strong>
+              <p>Incluye 2 horas de carga, 2 horas de descarga y documentacion MIC y CRT.</p>
+            </article>
+          </div>
+          <div id="tripsList" class="stack-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <article class="panel empty-state">
+      <strong>No hay registros disponibles.</strong>
+      <span>Completa las altas del portal para empezar a publicar retornos.</span>
+    </article>
+  </template>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Joathi EmailRecord",
+  "type": "object",
+  "required": ["id", "source", "sourceId", "subject", "classification", "summary", "nextAction"],
+  "properties": {
+    "id": { "type": "string" },
+    "source": { "type": "string", "enum": ["outlook-export", "microsoft-graph", "local-json"] },
+    "sourceId": { "type": "string" },
+    "receivedAt": { "type": ["string", "null"] },
+    "from": { "type": "string" },
+    "subject": { "type": "string" },
+    "bodyPreview": { "type": "string" },
+    "hasAttachments": { "type": "boolean" },
+    "attachmentCount": { "type": ["integer", "null"] },
+    "customerCandidate": { "type": ["string", "null"] },
+    "operationRefs": { "type": "object" },
+    "classification": {
+      "type": "object",
+      "required": ["requiresResponse", "needsFollowUp", "needsQuote", "createsTask", "priority", "confidence"],
+      "properties": {
+        "requiresResponse": { "type": "boolean" },
+        "needsFollowUp": { "type": "boolean" },
+        "needsQuote": { "type": "boolean" },
+        "createsTask": { "type": "boolean" },
+        "hasDocuments": { "type": "boolean" },
+        "isUrgent": { "type": "boolean" },
+        "paymentRelated": { "type": "boolean" },
+        "priority": { "type": "string", "enum": ["alta", "media", "baja"] },
+        "confidence": { "type": "number" },
+        "signals": { "type": "object" }
+      }
+    },
+    "outlookCategories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "summary": { "type": "string" },
+    "suggestedTask": { "type": "string" },
+    "draftReply": { "type": "string" },
+    "nextAction": { "type": "string" },
+    "joathiva": {
+      "type": "object",
+      "properties": {
+        "activity": { "type": "object" },
+        "task": { "type": ["object", "null"] }
+      }
+    }
+  }
+}

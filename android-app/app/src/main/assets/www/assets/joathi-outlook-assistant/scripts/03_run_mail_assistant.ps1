@@ -1,0 +1,291 @@
+<#
+.SYNOPSIS
+  Ejecuta el Asistente Operativo Joathi para ordenar correos de Outlook.
+
+.DESCRIPTION
+  Modo seguro por defecto: lee correos exportados o correos descargados desde Microsoft Graph,
+  clasifica, genera EmailRecord, tareas sugeridas, borradores y resumen.
+
+  No envia respuestas automaticas. No mueve correos por defecto.
+  Solo modifica Outlook si se usa -ApplyToOutlook para categorias y/o -ApplyMoves para mover a carpetas.
+
+.EXAMPLE
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\03_run_mail_assistant.ps1 -Mode files
+
+.EXAMPLE
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\03_run_mail_assistant.ps1 -Mode graph -Limit 25
+
+.EXAMPLE
+  powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\03_run_mail_assistant.ps1 -Mode graph -ApplyToOutlook -ApplyMoves -Limit 25
+#>
+
+[CmdletBinding()]
+param(
+  [ValidateSet('files', 'graph')]
+  [string]$Mode = 'files',
+
+  [int]$Limit = 25,
+
+  [string]$Folder = 'Inbox',
+
+  [string]$InputDir = '',
+
+  [string]$OutputDir = '',
+
+  [string]$RulesFile = '',
+
+  [switch]$ApplyToOutlook,
+
+  [switch]$ApplyMoves,
+
+  [switch]$InstallDependencies
+)
+
+$ErrorActionPreference = 'Stop'
+
+function Get-RepoRoot {
+  $scriptDir = Split-Path -Parent $PSCommandPath
+  return (Resolve-Path (Join-Path $scriptDir '..')).Path
+}
+
+function Read-LocalEnv {
+  param([string]$Path)
+  if (-not (Test-Path $Path)) { return }
+  Get-Content -LiteralPath $Path | ForEach-Object {
+    $line = $_.Trim()
+    if (-not $line -or $line.StartsWith('#') -or -not $line.Contains('=')) { return }
+    $parts = $line.Split('=', 2)
+    $name = $parts[0].Trim()
+    $value = $parts[1].Trim().Trim('"').Trim("'")
+    if ($name) { [Environment]::SetEnvironmentVariable($name, $value, 'Process') }
+  }
+}
+
+function Resolve-ProjectPath {
+  param([string]$Root, [string]$Value, [string]$Fallback)
+  $target = if ($Value) { $Value } else { $Fallback }
+  if ([System.IO.Path]::IsPathRooted($target)) { return $target }
+  return (Join-Path $Root $target)
+}
+
+function Ensure-Node {
+  $node = Get-Command node -ErrorAction SilentlyContinue
+  if (-not $node) {
+    throw 'Node.js no esta instalado o no esta en PATH. Instala Node 18+ y vuelve a ejecutar.'
+  }
+}
+
+function Ensure-GraphModule {
+  $module = Get-Module -ListAvailable Microsoft.Graph.Authentication
+  if ($module) { return }
+  if (-not $InstallDependencies) {
+    throw 'Falta Microsoft.Graph.Authentication. Ejecuta con -InstallDependencies o instala: Install-Module Microsoft.Graph -Scope CurrentUser'
+  }
+  Install-Module Microsoft.Graph -Scope CurrentUser -Force -AllowClobber
+}
+
+function Invoke-AssistantNode {
+  param(
+    [string]$Root,
+    [string]$NodeMode,
+    [string]$InputPath,
+    [string]$OutputPath,
+    [string]$RulesPath,
+    [int]$MaxItems
+  )
+  Ensure-Node
+  $script = Join-Path $Root 'src\joathi-mail-assistant.js'
+  if (-not (Test-Path $script)) { throw "No existe el motor del asistente: $script" }
+  New-Item -ItemType Directory -Force -Path $OutputPath | Out-Null
+  & node $script --mode $NodeMode --input $InputPath --output $OutputPath --rules $RulesPath --limit $MaxItems
+  if ($LASTEXITCODE -ne 0) { throw 'El motor Node del asistente fallo.' }
+}
+
+function Get-GraphMessages {
+  param([string]$MailFolder, [int]$Top, [string]$OutputFile)
+  Ensure-GraphModule
+  Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
+
+  $scopes = @('Mail.ReadWrite', 'MailboxSettings.ReadWrite')
+  Connect-MgGraph -Scopes $scopes -NoWelcome | Out-Null
+
+  $encodedFolder = [uri]::EscapeDataString($MailFolder)
+  $select = 'id,subject,from,receivedDateTime,bodyPreview,hasAttachments,internetMessageId,categories,parentFolderId'
+  $uri = "https://graph.microsoft.com/v1.0/me/mailFolders/$encodedFolder/messages?`$top=$Top&`$orderby=receivedDateTime desc&`$select=$select"
+  $response = Invoke-MgGraphRequest -Method GET -Uri $uri
+  $json = $response | ConvertTo-Json -Depth 12
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllText($OutputFile, $json, $utf8NoBom)
+  return $OutputFile
+}
+
+function Ensure-OutlookCategories {
+  param([string[]]$CategoryNames)
+  $existing = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/v1.0/me/outlook/masterCategories'
+  $existingNames = @()
+  if ($existing.value) { $existingNames = @($existing.value | ForEach-Object { $_.displayName }) }
+
+  foreach ($name in $CategoryNames | Sort-Object -Unique) {
+    if (-not $name) { continue }
+    if ($existingNames -contains $name) { continue }
+    $body = @{ displayName = $name; color = 'preset0' } | ConvertTo-Json
+    try {
+      Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/v1.0/me/outlook/masterCategories' -Body $body -ContentType 'application/json' | Out-Null
+      Write-Host "Categoria creada: $name"
+    } catch {
+      Write-Warning "No se pudo crear la categoria '$name'. Se intentara aplicar igual. Detalle: $($_.Exception.Message)"
+    }
+  }
+}
+
+function Apply-CategoriesToOutlook {
+  param([string]$ClassifiedFile)
+  if (-not (Test-Path $ClassifiedFile)) { throw "No existe salida clasificada: $ClassifiedFile" }
+  $items = Get-Content -LiteralPath $ClassifiedFile -Raw | ConvertFrom-Json
+  if (-not $items) { Write-Host 'No hay mensajes clasificados para aplicar.'; return }
+
+  $allCategories = @($items | ForEach-Object { $_.outlookCategories } | Where-Object { $_ })
+  Ensure-OutlookCategories -CategoryNames $allCategories
+
+  foreach ($item in $items) {
+    if ($item.source -ne 'microsoft-graph') { continue }
+    if (-not $item.sourceId) { continue }
+    $existing = @()
+    if ($item.existingOutlookCategories) { $existing = @($item.existingOutlookCategories) }
+    $merged = @($existing + @($item.outlookCategories)) | Where-Object { $_ } | Sort-Object -Unique
+    $body = @{ categories = $merged } | ConvertTo-Json -Depth 5
+    $msgId = [uri]::EscapeDataString($item.sourceId)
+    Invoke-MgGraphRequest -Method PATCH -Uri "https://graph.microsoft.com/v1.0/me/messages/$msgId" -Body $body -ContentType 'application/json' | Out-Null
+    Write-Host "Categorias aplicadas: $($item.subject)"
+  }
+}
+
+
+function Get-AllOutlookMailFolders {
+  $folders = New-Object System.Collections.Generic.List[object]
+
+  function Add-FoldersRecursively {
+    param([string]$ParentId, [string]$ParentPath)
+    if ($ParentId) {
+      $encodedParent = [uri]::EscapeDataString($ParentId)
+      $uri = "https://graph.microsoft.com/v1.0/me/mailFolders/$encodedParent/childFolders?`$top=100&`$select=id,displayName,parentFolderId"
+    } else {
+      $uri = "https://graph.microsoft.com/v1.0/me/mailFolders?`$top=100&`$select=id,displayName,parentFolderId"
+    }
+
+    do {
+      $response = Invoke-MgGraphRequest -Method GET -Uri $uri
+      foreach ($folder in @($response.value)) {
+        $folderPath = if ($ParentPath) { "$ParentPath/$($folder.displayName)" } else { $folder.displayName }
+        $folders.Add([pscustomobject]@{
+          Id = $folder.id
+          DisplayName = $folder.displayName
+          ParentFolderId = $folder.parentFolderId
+          Path = $folderPath
+        }) | Out-Null
+        Add-FoldersRecursively -ParentId $folder.id -ParentPath $folderPath
+      }
+      $uri = $response.'@odata.nextLink'
+    } while ($uri)
+  }
+
+  Add-FoldersRecursively -ParentId '' -ParentPath ''
+  return $folders
+}
+
+function Resolve-OutlookFolderPathIndex {
+  $index = @{}
+  $folders = Get-AllOutlookMailFolders
+  foreach ($folder in $folders) {
+    if (-not $folder.Path) { continue }
+    $normalized = $folder.Path.ToLowerInvariant()
+    if (-not $index.ContainsKey($normalized)) {
+      $index[$normalized] = $folder.Id
+    }
+  }
+  return $index
+}
+
+function Move-MessagesToOutlookFolders {
+  param([string]$ClassifiedFile)
+  if (-not (Test-Path $ClassifiedFile)) { throw "No existe salida clasificada: $ClassifiedFile" }
+  $items = Get-Content -LiteralPath $ClassifiedFile -Raw | ConvertFrom-Json
+  if (-not $items) { Write-Host 'No hay mensajes clasificados para mover.'; return }
+
+  Write-Host 'Leyendo arbol de carpetas de Outlook...'
+  $folderIndex = Resolve-OutlookFolderPathIndex
+  $moved = 0
+  $missing = 0
+
+  foreach ($item in $items) {
+    if ($item.source -ne 'microsoft-graph') { continue }
+    if (-not $item.sourceId) { continue }
+    if (-not $item.targetFolderPath) { continue }
+
+    $key = [string]$item.targetFolderPath
+    $normalized = $key.ToLowerInvariant()
+    if (-not $folderIndex.ContainsKey($normalized)) {
+      Write-Warning "No encontre la carpeta destino '$key'. No se movio: $($item.subject)"
+      $missing += 1
+      continue
+    }
+
+    $destinationId = $folderIndex[$normalized]
+    $msgId = [uri]::EscapeDataString($item.sourceId)
+    $body = @{ destinationId = $destinationId } | ConvertTo-Json
+    Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/v1.0/me/messages/$msgId/move" -Body $body -ContentType 'application/json' | Out-Null
+    $moved += 1
+    Write-Host "Movido a '$key': $($item.subject)"
+  }
+
+  Write-Host "Movimientos aplicados: $moved. Carpetas no encontradas: $missing."
+}
+
+$Root = Get-RepoRoot
+Read-LocalEnv -Path (Join-Path $Root 'config\assistant.local.env')
+
+if (-not $InputDir) { $InputDir = $env:JOATHI_INPUT_DIR }
+if (-not $OutputDir) { $OutputDir = $env:JOATHI_OUTPUT_DIR }
+if (-not $RulesFile) { $RulesFile = $env:JOATHI_RULES_FILE }
+if ($env:JOATHI_GRAPH_FOLDER -and $Folder -eq 'Inbox') { $Folder = $env:JOATHI_GRAPH_FOLDER }
+if ($env:JOATHI_GRAPH_LIMIT -and $Limit -eq 25) { $Limit = [int]$env:JOATHI_GRAPH_LIMIT }
+if ($env:JOATHI_APPLY_TO_OUTLOOK -eq 'true') { $ApplyToOutlook = $true }
+if ($env:JOATHI_APPLY_MOVES -eq 'true') { $ApplyMoves = $true }
+
+$InputDir = Resolve-ProjectPath -Root $Root -Value $InputDir -Fallback 'input\emails'
+$OutputDir = Resolve-ProjectPath -Root $Root -Value $OutputDir -Fallback 'output'
+$RulesFile = Resolve-ProjectPath -Root $Root -Value $RulesFile -Fallback 'config\assistant.rules.json'
+
+Write-Host 'Joathi Outlook Assistant'
+Write-Host "Root: $Root"
+Write-Host "Modo: $Mode"
+Write-Host "Output: $OutputDir"
+Write-Host "ApplyToOutlook: $ApplyToOutlook"
+Write-Host "ApplyMoves: $ApplyMoves"
+
+if ($Mode -eq 'files') {
+  Invoke-AssistantNode -Root $Root -NodeMode 'files' -InputPath $InputDir -OutputPath $OutputDir -RulesPath $RulesFile -MaxItems $Limit
+  Write-Host "Listo. Revisa: $OutputDir"
+  exit 0
+}
+
+$graphJson = Join-Path $OutputDir 'graph_messages.json'
+New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+Get-GraphMessages -MailFolder $Folder -Top $Limit -OutputFile $graphJson | Out-Null
+Invoke-AssistantNode -Root $Root -NodeMode 'graph-json' -InputPath $graphJson -OutputPath $OutputDir -RulesPath $RulesFile -MaxItems $Limit
+
+if ($ApplyToOutlook) {
+  Apply-CategoriesToOutlook -ClassifiedFile (Join-Path $OutputDir 'classified_messages.json')
+  Write-Host 'Listo. Se aplicaron categorias en Outlook.'
+} else {
+  Write-Host 'Dry-run listo. No se aplicaron categorias. Para aplicar categorias usa -ApplyToOutlook.'
+}
+
+if ($ApplyMoves) {
+  Move-MessagesToOutlookFolders -ClassifiedFile (Join-Path $OutputDir 'classified_messages.json')
+  Write-Host 'Listo. Se movieron correos a las carpetas sugeridas.'
+} else {
+  Write-Host 'No se movieron correos. Para moverlos usa -ApplyMoves despues de revisar folder_moves_suggested.csv.'
+}
+
+Write-Host "Archivos generados en: $OutputDir"

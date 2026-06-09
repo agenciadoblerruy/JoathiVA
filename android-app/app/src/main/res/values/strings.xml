@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JoathiVA</string>
+    <string name="app_subtitle">CRM, cotizaciones y seguimiento comercial</string>
+    <string name="portal_load_error">No se pudo cargar el portal.</string>
+    <string name="file_picker_unavailable">No hay selector de archivos disponible.</string>
+    <string name="external_app_unavailable">No se encontro una aplicacion para abrir ese enlace.</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_crm">CRM</string>
+    <string name="nav_quote">Cotizador</string>
+    <string name="nav_agenda">Agenda</string>
+    <string name="location_permission_denied">Sin permiso de ubicacion, el tracking GPS no podra activarse.</string>
+    <string name="tagline">Tu carga, nuestro compromiso</string>
+</resources>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-signin-client_id" content="">
+  <title>JoathiVA | Centro Operativo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="home">
+  <div class="portal-shell joathiva-home-shell">
+    <header class="topbar topbar-sticky">
+      <a href="index.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Logística premium y control operativo</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="#servicios-logisticos">Servicios</a>
+        <a href="#paneles-operativos">Paneles</a>
+        <a href="#quotePanel">Cotizador</a>
+        <a href="#contacto-soporte">Contacto</a>
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="brand-studio.html" data-nav="brand-studio">Marca Viva</a>
+        <a href="choferes.html" data-nav="drivers" data-provider-only>Choferes</a>
+        <a href="transportes.html" data-nav="vehicles" data-provider-only>Transportes</a>
+        <a href="viajes.html" data-nav="trips" data-provider-only>Viajes</a>
+        <a href="#solicitar-traslado" data-client-only>Solicitar traslado</a>
+        <a href="#despachante-aduana" data-broker-only>Despachante</a>
+        <a href="#registro-usuario" data-guest-only>Nuevo usuario</a>
+        <a href="login.html" data-guest-only>Ingresar</a>
+      </nav>
+      <div class="session-box" data-session-box hidden>
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack joathiva-home-main">
+      <section class="hero hero-home joathiva-hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">JoathiVA | logística corporativa</p>
+          <h1>Conectamos tu logística con inteligencia operativa.</h1>
+          <p class="lede">
+            Cotiza, gestiona y analiza tus operaciones en tiempo real desde una experiencia clara, premium y enfocada en B2B.
+          </p>
+          <div class="hero-actions">
+            <a href="#quotePanel" class="button button-accent">Solicitar Cotización</a>
+            <a href="#servicios-logisticos" class="button button-secondary">Ver operaciones</a>
+            <a href="#paneles-operativos" class="button button-ghost">Acceder al panel</a>
+          </div>
+          <div class="hero-trust-grid">
+            <article class="trust-chip">
+              <span>Control</span>
+              <strong>Operación visible</strong>
+            </article>
+            <article class="trust-chip">
+              <span>Velocidad</span>
+              <strong>Respuesta ágil</strong>
+            </article>
+            <article class="trust-chip">
+              <span>Marca</span>
+              <strong>Identidad coherente</strong>
+            </article>
+          </div>
+        </div>
+        <aside class="hero-side panel" id="tracking-publico">
+          <div class="hero-visual" style="background-image: url('https://source.unsplash.com/1600x1200/?logistics,container,truck');"></div>
+          <div class="panel-heading">
+            <p class="eyebrow">Tracking operativo</p>
+            <h2>Consulta rápida de viajes y unidades</h2>
+            <p>Busca por ruta, estado, matrícula o identificador. Si hay señal activa, verás la última referencia disponible.</p>
+          </div>
+          <form id="publicTrackingForm" class="tracking-search-form">
+            <label class="full-width">
+              Número, ruta o unidad
+              <input name="query" type="search" placeholder="Ej: Montevideo, SBT 1020, trp-1" autocomplete="off">
+            </label>
+            <button type="submit" class="button button-accent">Rastrear</button>
+            <a href="login.html" class="button button-secondary">Ingresar al portal</a>
+          </form>
+          <div id="publicTrackingResult" class="stack-list"></div>
+          <div class="mini-stats">
+            <article>
+              <span>Viajes activos</span>
+              <strong id="statTrips">0</strong>
+            </article>
+            <article>
+              <span>Unidades</span>
+              <strong id="statVehicles">0</strong>
+            </article>
+            <article>
+              <span>Choferes</span>
+              <strong id="statDrivers">0</strong>
+            </article>
+            <article>
+              <span>Corredores</span>
+              <strong id="statRoutes">0</strong>
+            </article>
+          </div>
+          <div class="hero-actions hero-side-actions">
+            <a href="#registro-usuario" class="button button-ghost">Crear acceso cliente</a>
+            <a href="#quotePanel" class="button button-accent">Cotizar ahora</a>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section-head section-head-wide" id="servicios-logisticos" data-guest-only>
+        <div>
+          <p class="eyebrow">Servicios</p>
+          <h2>Soluciones logísticas para empresas</h2>
+          <p>Operación, documentación y cobertura para cargas que necesitan orden, trazabilidad y continuidad comercial.</p>
+        </div>
+      </section>
+
+      <section class="services-grid" data-guest-only>
+        <article class="panel service-card">
+          <div class="service-media" style="background-image: url('https://source.unsplash.com/1200x900/?freight,truck');"></div>
+          <div class="service-body">
+            <p class="eyebrow">Transporte</p>
+            <h3>Movimiento terrestre y multimodal</h3>
+            <p>Planificación de carga, rutas y ventanas operativas con seguimiento visible de punta a punta.</p>
+          </div>
+        </article>
+        <article class="panel service-card">
+          <div class="service-media" style="background-image: url('https://source.unsplash.com/1200x900/?customs,shipping');"></div>
+          <div class="service-body">
+            <p class="eyebrow">Aduana</p>
+            <h3>Despacho y control documental</h3>
+            <p>Clasificación, trámites y documentos para movimientos internacionales con foco en cumplimiento.</p>
+          </div>
+        </article>
+        <article class="panel service-card">
+          <div class="service-media" style="background-image: url('https://source.unsplash.com/1200x900/?warehouse,storage');"></div>
+          <div class="service-body">
+            <p class="eyebrow">Almacenaje</p>
+            <h3>Depósito, consolidación y resguardo</h3>
+            <p>Espacios y procesos para ordenar inventario, consolidar cargas y sostener continuidad operativa.</p>
+          </div>
+        </article>
+        <article class="panel service-card">
+          <div class="service-media" style="background-image: url('https://source.unsplash.com/1200x900/?insurance,logistics');"></div>
+          <div class="service-body">
+            <p class="eyebrow">Seguros</p>
+            <h3>Cobertura y gestión de riesgo</h3>
+            <p>Protección comercial y operativa para cargas sensibles, de valor o con requerimientos especiales.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="section-head section-head-wide" id="paneles-operativos">
+        <div>
+          <p class="eyebrow">Paneles interactivos</p>
+          <h2>Accesos pensados para cada rol</h2>
+          <p>Una navegación clara para cliente, proveedor, despachante, facturación, marketing y dirección.</p>
+        </div>
+      </section>
+
+      <section class="panel-grid">
+        <article class="panel role-card">
+          <p class="eyebrow">Cliente</p>
+          <h3>Seguimiento y solicitudes</h3>
+          <p>Visualiza operaciones, consulta estado y pide cotizaciones sin fricción.</p>
+          <a href="#quotePanel" class="button button-secondary">Cotizar ahora</a>
+        </article>
+        <article class="panel role-card">
+          <p class="eyebrow">Proveedor</p>
+          <h3>Flota y disponibilidad</h3>
+          <p>Administra unidades, choferes, viajes y documentos de forma ordenada.</p>
+          <a href="viajes.html" class="button button-secondary">Ver operaciones</a>
+        </article>
+        <article class="panel role-card">
+          <p class="eyebrow">Despachante</p>
+          <h3>Documentación aduanera</h3>
+          <p>Concentra clasificaciones, expedientes y coordinación de frontera.</p>
+          <a href="#despachante-aduana" class="button button-secondary">Acceder al panel</a>
+        </article>
+        <article class="panel role-card">
+          <p class="eyebrow">Facturación</p>
+          <h3>Liquidación y control</h3>
+          <p>Revisa subtotales, IVA, cobros y pagos con lectura ejecutiva.</p>
+          <a href="#roleIndicators" class="button button-secondary">Ver operaciones</a>
+        </article>
+        <article class="panel role-card">
+          <p class="eyebrow">Marketing</p>
+          <h3>Contenido y marca</h3>
+          <p>Usa activos visuales y mensajes coherentes con la identidad JoathiVA.</p>
+          <a href="brand-studio.html" class="button button-secondary">Ir a marca</a>
+        </article>
+        <article class="panel role-card">
+          <p class="eyebrow">Dirección</p>
+          <h3>Panel ejecutivo</h3>
+          <p>Resumen de indicadores para tomar decisiones con una sola mirada.</p>
+          <a href="#roleIndicators" class="button button-secondary">Acceder al panel</a>
+        </article>
+      </section>
+
+      <section class="panel" id="roleIndicators" data-accounting-only hidden>
+        <div class="panel-heading">
+          <p class="eyebrow">Indicadores</p>
+          <h2 id="roleIndicatorsTitle">Seguimiento, facturación, cobro y pago</h2>
+          <p id="roleIndicatorsSubtitle">Vista rápida para trabajar con foco operativo y financiero desde el inicio.</p>
+        </div>
+        <div class="stats-row" id="roleIndicatorsGrid"></div>
+      </section>
+
+      <section class="content-grid quote-grid">
+        <article class="panel" id="quotePanel">
+          <div class="panel-heading">
+            <p class="eyebrow">Cotizador online</p>
+            <h2>Solicitar Cotización</h2>
+            <p>Completá los datos de la carga y obtené un estimado con desglose de costos.</p>
+          </div>
+          <form id="quoteForm" class="form-grid">
+            <label>
+              Origen
+              <input name="origin" type="text" placeholder="Montevideo, Uruguay" required>
+            </label>
+            <label>
+              Destino
+              <input name="destination" type="text" placeholder="São Paulo, Brasil" required>
+            </label>
+            <label>
+              Tipo de carga
+              <select name="cargoType" required>
+                <option value="general">General</option>
+                <option value="perecedera">Perecedera</option>
+                <option value="peligrosa">Peligrosa</option>
+                <option value="voluminosa">Voluminosa</option>
+                <option value="documentaria">Documentaria</option>
+              </select>
+            </label>
+            <label>
+              Peso (kg)
+              <input name="weightKg" type="number" min="1" step="1" placeholder="12000" required>
+            </label>
+            <label class="full-width">
+              Valor estimado (USD)
+              <input name="declaredValue" type="number" min="0" step="50" placeholder="25000" required>
+            </label>
+            <button type="submit" class="button button-accent full-width">Calcular costo</button>
+          </form>
+        </article>
+
+        <article class="panel quote-result-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Resultado dinámico</p>
+            <h2>Desglose de costos</h2>
+          </div>
+          <div id="quoteResult" class="stack-list"></div>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel joathiva-live-board">
+          <div class="panel-heading">
+            <p class="eyebrow">Viajes publicados</p>
+            <h2>Operaciones disponibles</h2>
+            <p>Capacidad, cobertura y visibilidad operativa para convertir solicitudes en traslados trazables.</p>
+          </div>
+          <div class="carousel-toolbar hero-carousel-toolbar">
+            <div class="carousel-copy">
+              <span>Consulta rutas, espacio y estado antes de iniciar una solicitud.</span>
+            </div>
+            <div class="carousel-controls" data-carousel-controls>
+              <button type="button" class="button button-secondary carousel-button" data-carousel-prev>Anterior</button>
+              <button type="button" class="button button-secondary carousel-button" data-carousel-next>Siguiente</button>
+            </div>
+          </div>
+          <section id="availableTrips" class="trip-carousel"></section>
+        </article>
+      </section>
+
+      <section class="section-head section-head-wide" id="registro-usuario" data-guest-only>
+        <div>
+          <p class="eyebrow">Alta de acceso</p>
+          <h2>Registrarse como nuevo usuario</h2>
+          <p>Creá un perfil básico y completá los datos operativos a medida que uses la plataforma.</p>
+        </div>
+      </section>
+
+      <section class="content-grid registration-grid" data-guest-only>
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Acceso rápido</p>
+            <h2>Crear usuario</h2>
+            <p>Registro simple para empezar con cliente, proveedor o despachante.</p>
+          </div>
+          <form id="registerForm" class="form-grid">
+            <label class="full-width">
+              Perfil
+              <select name="role" required>
+                <option value="">Seleccionar perfil</option>
+                <option value="client">Cliente</option>
+                <option value="provider">Proveedor</option>
+                <option value="broker">Despachante de aduana</option>
+              </select>
+            </label>
+            <label>
+              Nombre completo
+              <input name="displayName" type="text" placeholder="Nombre y apellido" required>
+            </label>
+            <label>
+              Empresa
+              <input name="company" type="text" placeholder="Empresa o nombre comercial">
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" placeholder="correo@empresa.com" required>
+            </label>
+            <label>
+              Telefono
+              <input name="phone" type="text" placeholder="+598 99 000 000" required>
+            </label>
+            <label>
+              Contrasena
+              <input name="password" type="password" placeholder="Crea una contrasena">
+            </label>
+            <article class="record-card full-width auth-helper-card">
+              <strong>Alta inteligente</strong>
+              <p>JoathiVA completará razón social, documento y preferencias comerciales más adelante según tu operación real.</p>
+            </article>
+            <label class="full-width checkbox-field">
+              <span>Acepto todos los <a href="terms.html" target="_blank" rel="noopener">terminos y condiciones</a></span>
+              <input name="termsAccepted" type="checkbox" required>
+            </label>
+            <div class="full-width auth-actions">
+              <button type="submit" class="button button-accent">Crear acceso básico</button>
+              <div class="google-auth-card" data-google-auth="register"></div>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Perfiles del portal</p>
+            <h2>Accesos disponibles</h2>
+          </div>
+          <div class="stack-list">
+            <article class="record-card">
+              <strong>Cliente</strong>
+              <p>Solicita traslados, cotiza y sigue tu mercadería con trazabilidad completa.</p>
+            </article>
+            <article class="record-card">
+              <strong>Proveedor</strong>
+              <p>Administra choferes, flota, viajes y documentación operativa en un mismo lugar.</p>
+            </article>
+            <article class="record-card">
+              <strong>Despachante de aduana</strong>
+              <p>Controla clasificación arancelaria, declaraciones y documentación desde un panel unificado.</p>
+            </article>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid support-grid" id="contacto-soporte">
+        <article class="panel support-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Contacto y soporte</p>
+            <h2>Chat operativo y formulario</h2>
+            <p>Consultá con el equipo o dejá un mensaje corto para seguimiento comercial y operativo.</p>
+          </div>
+          <div class="support-chat-card">
+            <div class="support-chat-avatar">
+              <img src="isotipo.svg" alt="Isotipo JoathiVA">
+            </div>
+            <div>
+              <strong>Chat operativo</strong>
+              <p>Horario de atención: 08:00 a 18:00. Respuesta comercial para cotizaciones, documentación y seguimiento.</p>
+            </div>
+          </div>
+          <form id="contactForm" class="form-grid support-form">
+            <label>
+              Nombre
+              <input name="name" type="text" placeholder="Tu nombre" required>
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" placeholder="tu@email.com" required>
+            </label>
+            <label class="full-width">
+              Motivo
+              <input name="subject" type="text" placeholder="Cotización, seguimiento o soporte" required>
+            </label>
+            <label class="full-width">
+              Mensaje
+              <textarea name="message" rows="4" placeholder="Contanos qué necesitás" required></textarea>
+            </label>
+            <button type="submit" class="button button-accent">Enviar consulta</button>
+          </form>
+          <div id="contactResult" class="stack-list"></div>
+        </article>
+
+        <article class="panel contact-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Red comercial</p>
+            <h2>Canales de acceso</h2>
+          </div>
+          <div class="stack-list">
+            <article class="record-card">
+              <strong>Login</strong>
+              <p>Accedé al portal y visualizá paneles por rol desde la barra superior.</p>
+              <a href="login.html" class="button button-secondary">Ingresar</a>
+            </article>
+            <article class="record-card">
+              <strong>Marca</strong>
+              <p>Usá los activos oficiales de JoathiVA para campañas, presentaciones y redes.</p>
+              <a href="brand-studio.html" class="button button-secondary">Ver marca</a>
+            </article>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid" data-client-only hidden id="solicitar-traslado">
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Traslado</p>
+            <h2>Solicitar traslado</h2>
+            <p>Incluye 2 horas de carga y 2 horas de descarga sin costo, además de documentación MIC y CRT.</p>
+          </div>
+          <form id="requestForm" class="form-grid">
+            <label>
+              Viaje publicado
+              <select name="tripId" id="requestTripSelect" required></select>
+            </label>
+            <label>
+              Reserva
+              <select name="reservationMode" id="requestReservationMode" required>
+                <option value="partial">Espacio parcial</option>
+                <option value="full">Camion completo</option>
+              </select>
+            </label>
+            <label>
+              Mercaderia
+              <input name="cargoDescription" type="text" placeholder="Descripcion de la carga" required>
+            </label>
+            <label>
+              Peso (kg)
+              <input name="weightKg" type="number" min="1" step="100" placeholder="12000" required>
+            </label>
+            <label>
+              Volumen (m3)
+              <input name="volumeM3" type="number" min="0.1" step="0.1" placeholder="32" required>
+            </label>
+            <label>
+              Horas de carga
+              <input name="loadingHours" type="number" min="0" step="0.5" value="2" required>
+            </label>
+            <label>
+              Horas de descarga
+              <input name="unloadingHours" type="number" min="0" step="0.5" value="2" required>
+            </label>
+            <label class="full-width">
+              Estadia en frontera
+              <select name="frontierStay" required>
+                <option value="no">No</option>
+                <option value="yes">Si</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Observaciones
+              <textarea name="notes" rows="3" placeholder="Detalle del traslado o condicion operativa."></textarea>
+            </label>
+            <article class="record-card full-width" data-reservation-helper>
+              <strong>Capacidad disponible</strong>
+              <p>Selecciona un viaje para ver el espacio y el peso que todavia quedan libres.</p>
+            </article>
+            <button type="submit" class="button button-accent">Solicitar traslado</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Facturacion</p>
+            <h2>Resumen del traslado</h2>
+          </div>
+          <div id="billingSummary" class="stack-list"></div>
+          <div class="panel-heading panel-divider">
+            <p class="eyebrow">Historial</p>
+            <h2>Traslados del cliente</h2>
+          </div>
+          <div id="requestsList" class="stack-list"></div>
+        </article>
+      </section>
+
+      <section class="page-stack joathiva-broker-shell" data-broker-only hidden id="despachante-aduana">
+        <div id="brokerWorkspace" class="page-stack joathiva-broker-hub"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <p>JoathiVA une marca, operación y control técnico en una sola experiencia corporativa.</p>
+      </div>
+      <div class="site-footer-links">
+        <strong>Enlaces rápidos</strong>
+        <a href="#servicios-logisticos">Servicios</a>
+        <a href="#paneles-operativos">Paneles</a>
+        <a href="#quotePanel">Cotizador</a>
+        <a href="#contacto-soporte">Contacto</a>
+      </div>
+      <div class="site-footer-contact">
+        <strong>Contacto</strong>
+        <span>Montevideo, Uruguay</span>
+        <span>operaciones@joathiva.com</span>
+        <span>+598 99 000 000</span>
+      </div>
+      <div class="site-footer-mark">
+        <img src="isotipo.svg" alt="Isotipo JoathiVA">
+      </div>
+    </footer>
+  </div>
+
+  <template id="emptyStateTemplate">
+    <article class="panel empty-state">
+      <strong>No hay registros disponibles.</strong>
+      <span>Completa las altas del portal para empezar a publicar retornos.</span>
+    </article>
+  </template>
+
+  <script src="portal.js"></script>
+  <script src="lucia-arancel-data.js"></script>
+  <script src="lucia-reference-data.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

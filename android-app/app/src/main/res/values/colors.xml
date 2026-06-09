@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Design System Maestro: official semantic tokens -->
+    <color name="sys_color_brand_primary">#0E3B2E</color>
+    <color name="sys_color_brand_secondary">#F2B200</color>
+    <color name="sys_color_brand_accent">#F2B200</color>
+    <color name="sys_color_neutral_0">#FFFFFF</color>
+    <color name="sys_color_neutral_50">#FFFFFF</color>
+    <color name="sys_color_neutral_100">#EEF5F1</color>
+    <color name="sys_color_neutral_200">#DCE3EC</color>
+    <color name="sys_color_neutral_400">#9AA8B8</color>
+    <color name="sys_color_neutral_600">#637487</color>
+    <color name="sys_color_neutral_800">#1A1A1A</color>
+    <color name="sys_color_neutral_900">#1A1A1A</color>
+    <color name="sys_color_success">#0E3B2E</color>
+    <color name="sys_color_warning">#C97713</color>
+    <color name="sys_color_danger">#D24A3D</color>
+    <color name="sys_color_info">#0E3B2E</color>
+
+    <!-- Legacy-compatible resource names preserved for the current shell -->
+    <color name="brand_primary">#0E3B2E</color>
+    <color name="brand_secondary">#F2B200</color>
+    <color name="brand_accent">#F2B200</color>
+    <color name="brand_dark">#1A1A1A</color>
+    <color name="brand_light">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Surfaces -->
+    <color name="surface_dark">#1A1A1A</color>
+    <color name="surface_app">#FFFFFF</color>
+    <color name="surface_panel">#FFFFFF</color>
+    <color name="surface_soft">#FFFFFF</color>
+    <color name="surface_soft_alt">#EEF5F1</color>
+    <color name="webview_background">#FFFFFF</color>
+    <color name="system_bar_light">#FFFFFF</color>
+
+    <!-- Borders / lines -->
+    <color name="line_soft">#DCE3EC</color>
+    <color name="line_strong">#C9DCC3</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#637487</color>
+    <color name="text_inverse">#FFFFFF</color>
+
+    <!-- Status / utility -->
+    <color name="status_success">#0E3B2E</color>
+    <color name="status_warning">#C97713</color>
+    <color name="status_danger">#D24A3D</color>
+    <color name="status_info">#0E3B2E</color>
+    <color name="progress_track">#E9F4E9</color>
+    <color name="toolbar_icon_tint">#0E3B2E</color>
+
+    <!-- Bottom nav -->
+    <color name="bottom_nav_button_text">#637487</color>
+    <color name="bottom_nav_button_background">#FFFFFF</color>
+    <color name="bottom_nav_button_active_text">#FFFFFF</color>
+    <color name="bottom_nav_button_active_background">#0E3B2E</color>
+
+    <!-- CTA -->
+    <color name="cta_text">#1A1A1A</color>
+    <color name="cta_background">#F2B200</color>
+
+    <!-- Input -->
+    <color name="input_fill">#FFFFFF</color>
+    <color name="input_stroke">#DCE3EC</color>
+    <color name="input_stroke_focused">#0E3B2E</color>
+
+    <!-- Shadows / overlay substitute -->
+    <color name="surface_shadow">#140E3B2E</color>
+</resources>

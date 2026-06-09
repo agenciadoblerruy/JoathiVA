@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Presentacion para Proveedores</title>
+  <style>
+    :root {
+      --bg: #101114;
+      --panel: rgba(18, 24, 34, 0.88);
+      --panel-strong: rgba(12, 17, 24, 0.94);
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #f5f7fb;
+      --muted: #a9b2c3;
+      --brand: #d9e021;
+      --accent: #0fc4d1;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(217, 224, 33, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(15, 196, 209, 0.16), transparent 24%),
+        linear-gradient(160deg, #0a0c10 0%, #151c28 100%);
+      overflow: hidden;
+    }
+
+    .deck {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      padding: 32px;
+      display: grid;
+      place-items: center;
+    }
+
+    .slide {
+      width: min(1120px, 100%);
+      min-height: min(700px, calc(100vh - 64px));
+      display: none;
+      grid-template-rows: auto 1fr auto;
+      gap: 28px;
+      padding: 44px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-strong) 100%);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .slide.is-active {
+      display: grid;
+    }
+
+    .slide-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand img {
+      height: 54px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 4px;
+    }
+
+    .eyebrow,
+    .slide-number {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      color: var(--brand);
+    }
+
+    .slide-number {
+      color: var(--muted);
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      line-height: 1.05;
+      max-width: 860px;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 5vw, 5rem);
+    }
+
+    h2 {
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.6;
+    }
+
+    .lede {
+      font-size: 1.24rem;
+      max-width: 780px;
+    }
+
+    .hero-grid,
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-grid {
+      grid-template-columns: 1.4fr 0.9fr;
+      align-items: end;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card,
+    .quote,
+    .metric {
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .card strong,
+    .metric strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.02rem;
+    }
+
+    .metric strong {
+      font-size: 2.1rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      display: grid;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .quote {
+      background: linear-gradient(180deg, rgba(15, 196, 209, 0.1), rgba(217, 224, 33, 0.08));
+    }
+
+    .quote p {
+      color: var(--text);
+      font-size: 1.24rem;
+      line-height: 1.45;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .controls button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #0d1118;
+      background: var(--brand);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+    }
+
+    .controls button.secondary {
+      background: #f3f5f8;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;
+      }
+
+      .deck {
+        padding: 18px;
+      }
+
+      .slide {
+        min-height: auto;
+        padding: 24px;
+      }
+
+      .hero-grid,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .slide-top,
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+        background: #fff;
+        color: #111;
+      }
+
+      .deck {
+        display: block;
+        padding: 0;
+      }
+
+      .slide,
+      .slide.is-active {
+        display: grid;
+        min-height: 100vh;
+        page-break-after: always;
+        border-radius: 0;
+        box-shadow: none;
+        background: #fff;
+        color: #111;
+      }
+
+      .controls {
+        display: none;
+      }
+
+      p,
+      ul,
+      .slide-number {
+        color: #444;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide is-active">
+      <div class="slide-top">
+        <div class="brand">
+          <img src="../V/logo.svg" alt="JoathiVA">
+          <div class="brand-copy">
+            <span class="eyebrow">Presentacion Comercial</span>
+            <strong>JoathiVA para Proveedores</strong>
+          </div>
+        </div>
+        <span class="slide-number">01 / 05</span>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1>Mas viajes aprovechados. Menos kilometros vacios.</h1>
+          <p class="lede">JoathiVA ayuda al proveedor a transformar retornos y capacidad disponible en operaciones visibles, trazables y mejor administradas.</p>
+        </div>
+        <div class="quote">
+          <p>El valor no es solo conseguir carga. Es conseguirla con seguimiento, documentacion y una liquidacion mas clara.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>Enfocada en proveedores de transporte con viajes publicados o retornos disponibles.</span>
+        <span class="pill">Abrir en navegador y navegar con flechas</span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-top">
+        <div class="brand-copy">
+          <span class="eyebrow">Beneficio 1</span>
+          <h2>Mas oportunidades para tu destino</h2>
+        </div>
+        <span class="slide-number">02 / 05</span>
+      </div>
+      <div class="grid-3">
+        <article class="metric">
+          <strong>+ visibilidad</strong>
+          <p>Tus viajes publicados quedan visibles para clientes que necesitan exactamente ese corredor.</p>
+        </article>
+        <article class="metric">
+          <strong>+ compatibilidad</strong>
+          <p>JoathiVA cruza pedidos con el destino de tus viajes y te muestra demanda alineada con tu operacion.</p>
+        </article>
+        <article class="metric">
+          <strong>+ ocupacion</strong>
+          <p>La plataforma apunta a reducir tiempo ocioso y a capturar mejor los retornos disponibles.</p>
+        </article>
+      </div>
+      <div class="card">
+        <strong>Lo que cambia para el proveedor</strong>
+        <ul>
+          <li>No dependes solo de contactos aislados o WhatsApp para conseguir carga.</li>
+          <li>Puedes ver pedidos vinculados a los destinos que ya operas.</li>
+          <li>El viaje deja de ser una oferta pasiva y pasa a integrarse con demanda real del sistema.</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <span>Beneficio central: mejor aprovechamiento de capacidad.</span>
+        <span>JoathiVA</span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-top">
+        <div class="brand-copy">
+          <span class="eyebrow">Beneficio 2</span>
+          <h2>Operacion mas ordenada y mas confiable</h2>
+        </div>
+        <span class="slide-number">03 / 05</span>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <strong>Seguimiento del viaje</strong>
+          <ul>
+            <li>Inicio de operacion con GPS.</li>
+            <li>Comienzo de viaje, llegada, descarga y finalizacion.</li>
+            <li>Estado visible para maestro, cliente y despachante.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <strong>Documentacion y soporte</strong>
+          <ul>
+            <li>Repositorio de permisos, declaratorias, facturas y respaldos.</li>
+            <li>Soporte operativo visible en todo momento.</li>
+            <li>Menos dispersion entre llamadas, chats y archivos sueltos.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="quote">
+        <p>Para el proveedor, una operacion mejor documentada reduce friccion, reclamos y tiempos muertos de coordinacion.</p>
+      </div>
+      <div class="footer">
+        <span>Beneficio central: menos desorden operativo.</span>
+        <span>GPS + hitos + documentos</span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-top">
+        <div class="brand-copy">
+          <span class="eyebrow">Beneficio 3</span>
+          <h2>Liquidacion mas clara para el proveedor</h2>
+        </div>
+        <span class="slide-number">04 / 05</span>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <strong>Modelo simple</strong>
+          <ul>
+            <li>El proveedor informa su costo neto.</li>
+            <li>JoathiVA vende al cliente y administra el margen comercial.</li>
+            <li>Al finalizar la operacion se genera el recibo del proveedor.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <strong>Mayor formalidad</strong>
+          <ul>
+            <li>Datos bancarios cargados desde el registro del proveedor.</li>
+            <li>Monto a liquidar visible en el sistema.</li>
+            <li>Estado comercial asociado a la finalizacion real del viaje.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="quote">
+        <p>El proveedor sabe que monto espera cobrar, en que etapa esta la operacion y bajo que cuenta bancaria debe liquidarse.</p>
+      </div>
+      <div class="footer">
+        <span>Beneficio central: previsibilidad de cobro.</span>
+        <span>Recibo + estado + datos bancarios</span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-top">
+        <div class="brand-copy">
+          <span class="eyebrow">Cierre</span>
+          <h2>Por que un proveedor gana usando JoathiVA</h2>
+        </div>
+        <span class="slide-number">05 / 05</span>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <strong>1. Mas carga util</strong>
+          <p>Mejor aprovechamiento de viajes publicados y retornos.</p>
+        </article>
+        <article class="card">
+          <strong>2. Menos friccion</strong>
+          <p>Una sola plataforma para hitos, GPS, documentos y soporte.</p>
+        </article>
+        <article class="card">
+          <strong>3. Cobro mas ordenado</strong>
+          <p>Recibo de proveedor y liquidacion asociada al cierre real de la operacion.</p>
+        </article>
+      </div>
+      <div class="card">
+        <strong>Mensaje final</strong>
+        <p>JoathiVA propone al proveedor algo mas valioso que “estar listado”: una operacion con mas visibilidad comercial, mas control y mas claridad en la liquidacion.</p>
+      </div>
+      <div class="footer">
+        <span>Contacto operativo: +59897971122 | rhernandez@joathilogistica.com</span>
+        <span>JoathiVA</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button type="button" class="secondary" id="prevSlide">Anterior</button>
+    <button type="button" id="nextSlide">Siguiente</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    let activeIndex = 0;
+
+    function renderSlide(index) {
+      activeIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("is-active", slideIndex === activeIndex);
+      });
+    }
+
+    document.querySelector("#prevSlide").addEventListener("click", () => renderSlide(activeIndex - 1));
+    document.querySelector("#nextSlide").addEventListener("click", () => renderSlide(activeIndex + 1));
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown") renderSlide(activeIndex + 1);
+      if (event.key === "ArrowLeft" || event.key === "PageUp") renderSlide(activeIndex - 1);
+    });
+  </script>
+</body>
+</html>

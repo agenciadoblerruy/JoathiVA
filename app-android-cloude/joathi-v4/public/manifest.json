@@ -1,0 +1,17 @@
+{
+  "short_name": "Joathi",
+  "name": "Joathi Logística",
+  "description": "Plataforma operativa de Joathi Logística",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0D1F16",
+  "background_color": "#0D1F16",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

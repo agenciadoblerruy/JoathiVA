@@ -1,0 +1,40 @@
+{
+  "scenarioId": "ambiguous-no-operation-guardrail",
+  "signals": {
+    "customerMailbox": "agencia.doblerruy@gmail.com",
+    "providerMailbox": "rhernand14@gmail.com",
+    "usage": "controlled-test-fixtures-only"
+  },
+  "customer": {
+    "nombre": "Agencia Doblerruy",
+    "empresa": "Agencia Doblerruy",
+    "contactoPrincipal": "Agencia Doblerruy",
+    "telefono": "+598 91 000 111",
+    "email": "agencia.doblerruy@gmail.com",
+    "pais": "Uruguay",
+    "ciudad": "Montevideo",
+    "tipoCliente": "Cliente",
+    "etapa": "Prospecto",
+    "origenLead": "Fixture",
+    "ejecutivoResponsable": "Joathi",
+    "fechaSeguimiento": "2026-04-24",
+    "notas": "Fixture ambiguo para validar que un seguimiento comercial con preguntas no cree una operacion por error"
+  },
+  "messages": [
+    {
+      "externalId": "fixture-amb-001",
+      "from": "Proveedor de prueba <rhernand14@gmail.com>",
+      "subject": "",
+      "date": "2026-04-21T11:30:00Z",
+      "bodyText": "Agencia Doblerruy, ¿podemos avanzar con la propuesta comercial?"
+    }
+  ],
+  "expected": {
+    "operationCount": 0,
+    "taskExpected": true,
+    "activityExpected": true,
+    "draftExpected": true,
+    "caseType": "seguimiento comercial",
+    "requiresOperation": false
+  }
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Active/Checked state: Primary indicator for selection -->
+    <item android:color="@color/bottom_nav_button_active_background" android:state_checked="true" />
+
+    <!-- Pressed state: Provides immediate visual feedback, improving perceived responsiveness -->
+    <item android:color="@color/surface_soft" android:state_pressed="true" />
+
+    <!-- Focused state: Essential for accessibility and keyboard navigation -->
+    <item android:color="@color/surface_soft" android:state_focused="true" />
+
+    <!-- Default state: Minimalist background for inactive items -->
+    <item android:color="@color/bottom_nav_button_background" />
+</selector>

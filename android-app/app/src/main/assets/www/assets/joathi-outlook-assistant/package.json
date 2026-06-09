@@ -1,0 +1,15 @@
+{
+  "name": "joathi-outlook-assistant",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Asistente Operativo Joathi para clasificar correos de Outlook y generar EmailRecord, tareas, borradores y proximas acciones.",
+  "type": "commonjs",
+  "scripts": {
+    "check": "node --check src/joathi-mail-assistant.js",
+    "run:files": "node src/joathi-mail-assistant.js --mode files --input ./input/emails --output ./output",
+    "run:sample": "node src/joathi-mail-assistant.js --mode files --input ./samples --output ./output --limit 10"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

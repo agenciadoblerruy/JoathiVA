@@ -1,0 +1,79 @@
+{
+  "baseDir": "C:\\Joathi\\version-24\\V\\ops-runner",
+  "projectRoot": "C:\\Joathi\\version-24\\V",
+  "logsDir": "C:\\Joathi\\version-24\\V\\ops-runner\\logs",
+  "tools": {
+    "nodeExe": "C:\\Program Files\\nodejs\\node.exe",
+    "npmCmd": "C:\\Program Files\\nodejs\\npm.cmd",
+    "pnpmCmd": "C:\\Program Files\\nodejs\\pnpm.cmd",
+    "powershellExe": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+  },
+  "tasks": {
+    "hubspot_sync": {
+      "candidates": [
+        {
+          "name": "node-script-direct",
+          "workingDirectory": "{{PROJECT_ROOT}}",
+          "command": "{{NODE_EXE}}",
+          "entryFile": "{{PROJECT_ROOT}}\\scripts\\sync-hubspot.js",
+          "args": [
+            "{{PROJECT_ROOT}}\\scripts\\sync-hubspot.js"
+          ]
+        },
+        {
+          "name": "npm-script",
+          "workingDirectory": "{{PROJECT_ROOT}}",
+          "command": "{{NPM_CMD}}",
+          "entryFile": "{{PROJECT_ROOT}}\\package.json",
+          "args": [
+            "run",
+            "sync:hubspot"
+          ]
+        },
+        {
+          "name": "pnpm-script",
+          "workingDirectory": "{{PROJECT_ROOT}}",
+          "command": "{{PNPM_CMD}}",
+          "entryFile": "{{PROJECT_ROOT}}\\package.json",
+          "args": [
+            "run",
+            "sync:hubspot"
+          ]
+        }
+      ]
+    },
+    "imap_mail_sync": {
+      "candidates": [
+        {
+          "name": "node-script-direct",
+          "workingDirectory": "{{PROJECT_ROOT}}",
+          "command": "{{NODE_EXE}}",
+          "entryFile": "{{PROJECT_ROOT}}\\scripts\\sync-imap-mail.js",
+          "args": [
+            "{{PROJECT_ROOT}}\\scripts\\sync-imap-mail.js"
+          ]
+        },
+        {
+          "name": "npm-script",
+          "workingDirectory": "{{PROJECT_ROOT}}",
+          "command": "{{NPM_CMD}}",
+          "entryFile": "{{PROJECT_ROOT}}\\package.json",
+          "args": [
+            "run",
+            "sync:mail"
+          ]
+        },
+        {
+          "name": "pnpm-script",
+          "workingDirectory": "{{PROJECT_ROOT}}",
+          "command": "{{PNPM_CMD}}",
+          "entryFile": "{{PROJECT_ROOT}}\\package.json",
+          "args": [
+            "run",
+            "sync:mail"
+          ]
+        }
+      ]
+    }
+  }
+}

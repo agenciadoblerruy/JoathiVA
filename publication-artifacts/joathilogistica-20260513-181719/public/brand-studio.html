@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Marca Viva</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="brand-studio">
+  <div class="portal-shell">
+    <header class="topbar">
+      <a href="index.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Marca Viva | redes y campanas</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html" data-nav="home">Inicio</a>
+        <a href="admin.html" data-nav="admin">Maestro</a>
+        <a href="brand-studio.html" class="active" data-nav="brand-studio">Marca Viva</a>
+      </nav>
+    </header>
+
+    <main class="page-stack brand-studio-app">
+      <section class="dashboard-banner brand-studio-command">
+        <div class="dashboard-banner-copy">
+          <p class="eyebrow">Marca Viva by Joathi</p>
+          <h1>Redes, identidad y campanas con memoria local.</h1>
+          <p>Primera version sin integraciones: carga datos de una empresa, guarda textos y archivos grandes, detecta el objetivo recomendado y genera dos campanas listas para exportar con imagen y copy.</p>
+          <div class="hero-actions">
+            <button type="button" class="button button-accent" data-run-analysis>Analizar empresa</button>
+            <button type="button" class="button button-secondary" data-generate-campaigns>Crear 2 campanas</button>
+            <button type="button" class="button button-primary" data-export-campaign-package>Exportar estructura</button>
+          </div>
+        </div>
+        <aside class="dashboard-banner-side brand-studio-summary" aria-live="polite">
+          <article class="dashboard-highlight-card">
+            <span>Identidad activa</span>
+            <strong data-brand-summary-name>JoathiVA Logistics Premium</strong>
+            <p data-brand-summary-code>Codigo de marca: JV-B2B-001</p>
+          </article>
+          <div class="dashboard-mini-grid">
+            <article class="dashboard-mini-card">
+              <span>Consistencia</span>
+              <strong data-consistency-score>92%</strong>
+              <p>Completa paleta, estilo y restricciones para subir el puntaje.</p>
+            </article>
+            <article class="dashboard-mini-card">
+              <span>Campanas</span>
+              <strong data-prompt-count>0</strong>
+              <p>Banco local de piezas, textos, imagenes y hashtags.</p>
+            </article>
+            <article class="dashboard-mini-card">
+              <span>Memoria</span>
+              <strong data-memory-count>0</strong>
+              <p data-memory-size>Sin archivos cargados.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="content-grid brand-studio-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Empresa</p>
+            <h2>Datos iniciales y contexto</h2>
+            <p>Con poca informacion el sistema arma una base. Con mas memoria, mejora el analisis y la campana.</p>
+          </div>
+
+          <form id="companyForm" class="form-grid">
+            <label>
+              Empresa
+              <input name="companyName" type="text" autocomplete="organization" placeholder="Nombre de la empresa">
+            </label>
+            <label>
+              Web o red principal
+              <input name="website" type="url" placeholder="https://...">
+            </label>
+            <label>
+              Pais / mercado
+              <input name="country" type="text" placeholder="Uruguay, Paraguay, Brasil...">
+            </label>
+            <label>
+              Canales actuales
+              <input name="channels" type="text" placeholder="LinkedIn, Instagram, WhatsApp, web">
+            </label>
+            <label class="full-width">
+              Que vende o que servicio presta
+              <textarea name="offer" rows="3" placeholder="Servicios, productos, unidades de negocio, tickets, cobertura..."></textarea>
+            </label>
+            <label class="full-width">
+              Cliente ideal
+              <textarea name="audience" rows="3" placeholder="A quien le vende, cargo decisor, industria, dolor principal..."></textarea>
+            </label>
+            <label class="full-width">
+              Diferenciales y pruebas
+              <textarea name="differentiators" rows="3" placeholder="Por que elegirla, casos, certificaciones, experiencia, resultados..."></textarea>
+            </label>
+            <label class="full-width">
+              Competidores o alternativas
+              <textarea name="competitors" rows="2" placeholder="Competidores directos, sustitutos o forma actual de resolver el problema."></textarea>
+            </label>
+            <label class="full-width">
+              Situacion actual
+              <textarea name="currentSituation" rows="3" placeholder="Que esta pasando hoy: marca nueva, baja visibilidad, necesita leads, lanzamiento, rebranding..."></textarea>
+            </label>
+            <button type="button" class="button button-secondary" data-save-company>Guardar empresa</button>
+            <button type="button" class="button button-accent" data-run-analysis>Analizar empresa</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Memoria amplia</p>
+            <h2>Textos y archivos grandes</h2>
+            <p>Los contenidos se guardan en IndexedDB del navegador para no saturar el almacenamiento simple.</p>
+          </div>
+
+          <div class="form-stack">
+            <label>
+              Texto largo para sumar a memoria
+              <textarea id="sourceText" rows="8" placeholder="Pega brief, textos comerciales, historial, web copiada, publicaciones, entrevistas o documentos internos."></textarea>
+            </label>
+            <div class="brand-inline-actions">
+              <button type="button" class="button button-secondary" data-save-source-text>Guardar texto en memoria</button>
+              <button type="button" class="button button-ghost" data-clear-memory>Limpiar memoria</button>
+            </div>
+            <label class="upload-field">
+              <span>Archivos de contexto</span>
+              <input id="sourceFiles" type="file" multiple accept=".txt,.md,.csv,.json,.html,.htm,.xml,.rtf,text/*,application/json">
+              <label for="sourceFiles" class="button button-secondary upload-button">Adjuntar archivos</label>
+              <small data-source-file-status>Sin archivos cargados en esta sesion.</small>
+            </label>
+            <div id="memoryList" class="stack-list brand-memory-list"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid brand-studio-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Objetivo</p>
+            <h2>Objetivo e industria de campana</h2>
+            <p>El sistema recomienda una opcion, pero puedes cambiarla antes de generar las dos propuestas.</p>
+          </div>
+
+          <form id="campaignBriefForm" class="form-grid">
+            <label>
+              Nombre archivo madre
+              <input name="campaignName" type="text" placeholder="Campana Mayo Leads B2B">
+            </label>
+            <label>
+              Sector / industria
+              <select name="sector">
+                <option value="">Usar recomendacion</option>
+                <option value="logistica_transporte">Logistica y transporte</option>
+                <option value="servicios_b2b">Servicios B2B</option>
+                <option value="tecnologia_saas">Tecnologia / SaaS</option>
+                <option value="retail_ecommerce">Retail / e-commerce</option>
+                <option value="industria_manufactura">Industria / manufactura</option>
+                <option value="finanzas">Finanzas / seguros</option>
+                <option value="salud_bienestar">Salud / bienestar</option>
+                <option value="educacion">Educacion</option>
+                <option value="inmobiliario">Inmobiliario</option>
+                <option value="gastronomia_turismo">Gastronomia / turismo</option>
+                <option value="marca_personal">Marca personal / consultoria</option>
+              </select>
+            </label>
+            <label>
+              Objetivo de campana
+              <select name="objective">
+                <option value="">Usar recomendacion</option>
+                <option value="generar_leads">Generar leads calificados</option>
+                <option value="awareness">Aumentar reconocimiento</option>
+                <option value="lanzamiento">Lanzar producto o servicio</option>
+                <option value="rebranding">Construir identidad de marca</option>
+                <option value="autoridad">Posicionarse como autoridad</option>
+                <option value="retencion">Fidelizar clientes actuales</option>
+                <option value="trafico_web">Llevar trafico a web o landing</option>
+                <option value="reclutamiento">Atraer talento o aliados</option>
+              </select>
+            </label>
+            <label>
+              Presupuesto estimado
+              <select name="budgetRange">
+                <option value="organico">Organico / bajo presupuesto</option>
+                <option value="medio">Pauta media</option>
+                <option value="alto">Pauta alta / always-on</option>
+              </select>
+            </label>
+            <label>
+              Alcance
+              <select name="marketScope">
+                <option value="local">Local</option>
+                <option value="regional">Regional</option>
+                <option value="internacional">Internacional</option>
+              </select>
+            </label>
+            <label>
+              Oferta principal
+              <input name="mainOffer" type="text" placeholder="Diagnostico, demo, cotizacion, reunion, lanzamiento...">
+            </label>
+            <label class="full-width">
+              Notas de campana
+              <textarea name="notes" rows="3" placeholder="Restricciones, tono, productos foco, fechas, publico prioritario."></textarea>
+            </label>
+            <button type="button" class="button button-accent" data-generate-campaigns>Crear 2 campanas optimizadas</button>
+            <button type="button" class="button button-secondary" data-build-identity>Construir identidad base</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Recomendacion</p>
+            <h2>Lectura automatica</h2>
+            <p>Se actualiza con los datos guardados y la memoria cargada.</p>
+          </div>
+          <div id="recommendationPanel" class="stack-list"></div>
+        </article>
+      </section>
+
+      <section class="panel brand-analysis-panel">
+        <div class="carousel-toolbar">
+          <div class="panel-heading">
+            <p class="eyebrow">Analisis completo</p>
+            <h2>Diagnostico de empresa, marca y campana</h2>
+            <p>Resume posicionamiento, claridad comercial, riesgos, oportunidades y datos faltantes.</p>
+          </div>
+          <div class="brand-inline-actions">
+            <button type="button" class="button button-secondary" data-run-analysis>Actualizar analisis</button>
+            <button type="button" class="button button-ghost" data-build-identity>Usar para identidad</button>
+          </div>
+        </div>
+        <div id="analysisOutput" class="brand-analysis-output"></div>
+      </section>
+
+      <section class="panel brand-campaign-panel">
+        <div class="carousel-toolbar">
+          <div class="panel-heading">
+            <p class="eyebrow">Campanas posibles</p>
+            <h2>Dos rutas optimizadas</h2>
+            <p>Cada campana incluye estrategia, copy con hashtags, brief visual y una imagen SVG editable generada con la identidad activa.</p>
+          </div>
+          <div class="brand-inline-actions">
+            <button type="button" class="button button-accent" data-generate-campaigns>Generar campanas</button>
+            <button type="button" class="button button-primary" data-export-campaign-package>Exportar estructura</button>
+          </div>
+        </div>
+        <div id="campaignOutput" class="content-grid brand-campaign-output"></div>
+      </section>
+
+      <section class="content-grid brand-studio-grid">
+        <article class="panel brand-studio-base-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Diseno base</p>
+            <h2>Identidad fija para todas las imagenes</h2>
+            <p>Estos campos quedan guardados en este navegador y se reutilizan en cada brief.</p>
+          </div>
+
+          <form id="brandBaseForm" class="form-grid">
+            <label>
+              Nombre de marca
+              <input name="brandName" type="text" autocomplete="organization" required>
+            </label>
+            <label>
+              Codigo interno
+              <input name="brandCode" type="text" required>
+            </label>
+            <label>
+              Industria
+              <input name="industry" type="text" placeholder="Logistica B2B, transporte internacional">
+            </label>
+            <label>
+              Personalidad
+              <select name="personality">
+                <option value="premium B2B, confiable, tecnologica, ordenada">Premium B2B</option>
+                <option value="ejecutiva, sobria, clara, orientada a resultados">Ejecutiva</option>
+                <option value="dinamica, moderna, comercial, eficiente">Dinamica comercial</option>
+                <option value="institucional, segura, tecnica, precisa">Institucional tecnica</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Promesa visual
+              <textarea name="visualPromise" rows="3"></textarea>
+            </label>
+            <fieldset class="brand-color-fieldset full-width">
+              <legend>Paleta oficial</legend>
+              <label>
+                Primario
+                <input name="primaryColor" type="color" value="#0E3B2E" aria-label="Color primario">
+              </label>
+              <label>
+                Secundario
+                <input name="secondaryColor" type="color" value="#F2B200" aria-label="Color secundario">
+              </label>
+              <label>
+                Acento
+                <input name="accentColor" type="color" value="#F2B200" aria-label="Color de acento">
+              </label>
+              <label>
+                Fondo
+                <input name="backgroundColor" type="color" value="#F8FAFC" aria-label="Color de fondo">
+              </label>
+            </fieldset>
+            <label>
+              Tipografia sugerida
+              <input name="typography" type="text" placeholder="Montserrat, Segoe UI">
+            </label>
+            <label>
+              Logo
+              <select name="logoRule">
+                <option value="logo visible en esquina inferior derecha, limpio y sin deformar">Visible inferior derecha</option>
+                <option value="logo pequeno en esquina superior izquierda">Pequeno superior izquierda</option>
+                <option value="logo como placa discreta sobre fondo claro">Placa discreta</option>
+                <option value="sin logo, identidad aplicada por color y composicion">Sin logo</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Reglas de composicion
+              <textarea name="compositionRules" rows="3"></textarea>
+            </label>
+            <label class="full-width">
+              Evitar siempre
+              <textarea name="negativeRules" rows="3"></textarea>
+            </label>
+            <label class="full-width upload-field">
+              <span>Imagen de referencia opcional</span>
+              <input id="referenceImage" name="referenceImage" type="file" accept="image/png,image/jpeg,image/webp">
+              <label for="referenceImage" class="button button-secondary upload-button">Adjuntar referencia</label>
+              <small data-reference-name>Sin imagen cargada</small>
+            </label>
+          </form>
+        </article>
+
+        <article class="panel brand-studio-preview-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Vista base</p>
+            <h2>Lectura visual de marca</h2>
+            <p>El preview no genera una imagen final; muestra si la direccion visual es consistente antes de producir piezas.</p>
+          </div>
+
+          <div class="brand-preview-stage" data-preview-stage>
+            <div class="brand-preview-gridline"></div>
+            <div class="brand-preview-content">
+              <span data-preview-kicker>Control operacional</span>
+              <strong data-preview-title>Transporte con trazabilidad premium.</strong>
+              <p data-preview-copy>Visual ejecutivo, limpio y tecnologico para comunicaciones comerciales B2B.</p>
+              <div class="brand-preview-route">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="brand-preview-card">
+              <span>Marca</span>
+              <strong data-preview-brand>JoathiVA</strong>
+              <small data-preview-personality>Premium B2B</small>
+            </div>
+            <img class="brand-preview-logo" data-preview-logo src="logo.svg" alt="Logo JoathiVA">
+            <img class="brand-preview-reference" data-reference-preview alt="Referencia visual cargada" hidden>
+          </div>
+
+          <div class="brand-token-row" aria-label="Colores activos">
+            <span data-token-primary></span>
+            <span data-token-secondary></span>
+            <span data-token-accent></span>
+            <span data-token-background></span>
+          </div>
+
+          <div class="stack-list brand-master-output">
+            <article class="record-card">
+              <strong>Prompt maestro</strong>
+              <textarea id="masterPrompt" readonly rows="9"></textarea>
+              <div class="brand-inline-actions">
+                <button type="button" class="button button-secondary" data-copy-master>Copiar</button>
+                <button type="button" class="button button-ghost" data-reset-brand>Restaurar base</button>
+              </div>
+            </article>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid brand-studio-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Nueva pieza</p>
+            <h2>Generar brief consistente</h2>
+            <p>Describe lo que necesitas y la app lo combina con el diseno base guardado.</p>
+          </div>
+
+          <form id="pieceForm" class="form-grid">
+            <label>
+              Nombre de pieza
+              <input name="pieceName" type="text" placeholder="Post clientes exportadores" required>
+            </label>
+            <label>
+              Formato
+              <select name="format">
+                <option value="1:1, pieza cuadrada para feed">Feed 1:1</option>
+                <option value="4:5, pieza vertical para feed">Feed 4:5</option>
+                <option value="9:16, historia o reel vertical">Historia 9:16</option>
+                <option value="16:9, banner horizontal">Banner 16:9</option>
+                <option value="A4 vertical, folleto comercial">A4 vertical</option>
+              </select>
+            </label>
+            <label>
+              Canal
+              <select name="channel">
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Instagram">Instagram</option>
+                <option value="WhatsApp comercial">WhatsApp comercial</option>
+                <option value="Web">Web</option>
+                <option value="Presentacion comercial">Presentacion comercial</option>
+              </select>
+            </label>
+            <label>
+              Tipo de imagen
+              <select name="imageType">
+                <option value="foto realista corporativa con direccion de arte premium">Foto realista corporativa</option>
+                <option value="render 3D limpio de operacion logistica">Render 3D logistico</option>
+                <option value="composicion editorial con datos visuales">Editorial con datos</option>
+                <option value="mockup comercial de servicio B2B">Mockup comercial</option>
+              </select>
+            </label>
+            <label class="full-width">
+              Tema de la imagen
+              <textarea name="topic" rows="3" placeholder="Ej: carga consolidada Brasil-Uruguay, camiones con control GPS, equipo operativo revisando tablero..." required></textarea>
+            </label>
+            <label class="full-width">
+              Mensaje comercial
+              <textarea name="message" rows="3" placeholder="Ej: visibilidad de punta a punta para cargas empresariales."></textarea>
+            </label>
+            <button type="submit" class="button button-accent">Generar brief</button>
+            <button type="button" class="button button-secondary" data-generate-pack>Generar pack de 4</button>
+          </form>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Banco local</p>
+            <h2>Prompts listos para producir</h2>
+            <p>Se guardan en este navegador junto con el diseno base.</p>
+          </div>
+          <div id="promptBank" class="stack-list brand-prompt-bank"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="carousel-toolbar">
+          <div class="panel-heading">
+            <p class="eyebrow">Kit de marca</p>
+            <h2>Importar o compartir identidad</h2>
+            <p>Usa el JSON para mover la base entre maquinas sin reconstruir los criterios de marca.</p>
+          </div>
+          <div class="brand-inline-actions">
+            <input id="brandImportInput" type="file" accept="application/json,.json" hidden>
+            <button type="button" class="button button-secondary" data-import-brand>Importar kit</button>
+            <button type="button" class="button button-ghost" data-clear-prompts>Limpiar prompts</button>
+          </div>
+        </div>
+        <textarea id="brandJsonOutput" readonly rows="8" aria-label="JSON del kit de marca"></textarea>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyPromptTemplate">
+    <article class="record-card empty-state">
+      <strong>No hay prompts generados.</strong>
+      <p>Guarda el diseno base y crea una nueva pieza para empezar a producir imagenes con identidad consistente.</p>
+    </article>
+  </template>
+
+  <script src="brand-studio.js"></script>
+</body>
+</html>

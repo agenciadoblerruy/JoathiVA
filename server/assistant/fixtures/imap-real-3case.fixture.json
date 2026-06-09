@@ -1,0 +1,62 @@
+{
+  "scenarioId": "imap-real-3case-pilot",
+  "signals": {
+    "customerMailbox": "agencia.doblerruy@gmail.com",
+    "providerMailbox": "rhernand14@gmail.com",
+    "usage": "controlled-test-fixtures-only"
+  },
+  "customer": {
+    "nombre": "Agencia Doblerruy",
+    "empresa": "Agencia Doblerruy",
+    "contactoPrincipal": "Agencia Doblerruy",
+    "telefono": "+598 91 000 111",
+    "email": "agencia.doblerruy@gmail.com",
+    "contactos": [
+      {
+        "nombre": "Agencia Doblerruy",
+        "email": "agencia.doblerruy@gmail.com",
+        "rol": "cliente-fixture"
+      },
+      {
+        "nombre": "Proveedor de prueba",
+        "email": "rhernand14@gmail.com",
+        "rol": "proveedor-fixture"
+      }
+    ],
+    "pais": "Uruguay",
+    "ciudad": "Montevideo",
+    "tipoCliente": "Cliente",
+    "etapa": "Prospecto",
+    "origenLead": "Fixture",
+    "ejecutivoResponsable": "Joathi",
+    "fechaSeguimiento": "2026-04-24",
+    "notas": "Fixture real controlado para validar la cadena completa de 3 correos"
+  },
+  "messages": [
+    {
+      "externalId": "real-py-001",
+      "from": "Agencia Doblerruy <agencia.doblerruy@gmail.com>",
+      "subject": "Aviso de arribo PY26000006 - Montevideo Asunción",
+      "date": "2026-04-21T14:00:00Z",
+      "bodyText": "Agencia Doblerruy. Operacion PY26000006. Arribo detectado. Contenedor pendiente de identificar. Booking pendiente. Origen Montevideo destino Asuncion. Favor confirmar camion, NCM y DUA."
+    },
+    {
+      "externalId": "real-py-002",
+      "from": "Agencia Doblerruy <agencia.doblerruy@gmail.com>",
+      "subject": "Contenedor FFAU6465461 para PY26000006",
+      "date": "2026-04-21T16:00:00Z",
+      "bodyText": "Seguimiento del mismo caso PY26000006. Contenedor FFAU6465461 confirmado. Ruta Montevideo a Asuncion. Mantener seguimiento documental."
+    },
+    {
+      "externalId": "real-info-001",
+      "from": "Proveedor de prueba <rhernand14@gmail.com>",
+      "subject": "Gracias, quedamos atentos",
+      "date": "2026-04-21T18:00:00Z",
+      "bodyText": "Gracias por la respuesta. Quedamos atentos para confirmar la propuesta comercial."
+    }
+  ],
+  "expected": {
+    "sameOperation": true,
+    "operationCount": 1
+  }
+}

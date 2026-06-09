@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-signin-client_id" content="">
+  <title>JoathiVA | Acceso</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="login">
+  <main class="login-shell">
+    <section class="login-panel panel">
+      <div class="login-brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <p class="eyebrow">Acceso privado</p>
+          <h1>Control logístico con criterio comercial.</h1>
+        </div>
+      </div>
+
+      <p class="lede">
+        Ingresa para gestionar viajes, seguimiento GPS, documentación y control operativo
+        desde una sola plataforma.
+      </p>
+
+      <div class="login-trust-grid">
+        <article class="login-trust-card">
+          <span>Seguimiento</span>
+          <strong>24/7</strong>
+        </article>
+        <article class="login-trust-card">
+          <span>Cobertura</span>
+          <strong>Sudamérica</strong>
+        </article>
+        <article class="login-trust-card">
+          <span>Enfoque</span>
+          <strong>Operación + respuesta</strong>
+        </article>
+      </div>
+
+      <form id="loginForm" class="form-stack">
+        <label>
+          Correo o usuario
+          <input type="text" name="username" placeholder="correo@empresa.com o usuario" required>
+        </label>
+
+        <label>
+          Contraseña
+          <input type="password" name="password" placeholder="Contraseña" required>
+        </label>
+
+        <button type="submit" class="button button-primary">Ingresar al portal</button>
+
+        <p id="loginError" class="form-error" hidden>Credenciales inválidas.</p>
+
+        <div class="google-auth-card" data-google-auth="login"></div>
+
+        <a href="index.html#registro-usuario" class="button button-secondary">
+          Registrarse como nuevo usuario
+        </a>
+      </form>
+    </section>
+
+    <aside class="login-aside">
+      <p class="eyebrow">Torre de control JoathiVA</p>
+      <h2>Visibilidad, trazabilidad y ejecución en una sola operación.</h2>
+      <p class="lede">
+        Diseñado para equipos que necesitan responder rápido, operar con orden
+        y transmitir confianza en cada movimiento.
+      </p>
+
+      <ul class="feature-list">
+        <li>Centro operativo con roles claros y navegación consistente.</li>
+        <li>Control documental de choferes, flota y soportes de viaje.</li>
+        <li>Pedidos, viajes y estados visibles desde una misma vista de trabajo.</li>
+        <li>Seguimiento GPS, hitos operativos y trazabilidad centralizada.</li>
+        <li>Alta ágil de perfiles con captura de ciudad y país.</li>
+        <li>Acceso seguro con credenciales internas y Google Sign-In.</li>
+      </ul>
+
+      <article class="login-market-card">
+        <span>Dirección visual premium B2B</span>
+        <strong>Una plataforma para vender control, seguimiento y capacidad real de respuesta.</strong>
+        <p>
+          JoathiVA no está pensada para “verse tecnológica” sin sustancia.
+          Está pensada para que cada acceso transmita orden, criterio y confianza operativa.
+        </p>
+      </article>
+    </aside>
+  </main>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

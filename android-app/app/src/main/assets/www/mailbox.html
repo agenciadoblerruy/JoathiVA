@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Casilla mail</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="mailbox">
+  <div class="portal-shell">
+    <header class="topbar">
+      <a href="mailbox.html" class="brand">
+        <img src="logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Casilla de Rodrigo</span>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="admin.html" data-nav="admin" data-master-only>Maestro</a>
+        <a href="mailbox.html" data-nav="mailbox" data-mailbox-only>Casilla mail</a>
+        <a href="growth-lab.html" data-nav="growth" data-marketing-only hidden>Growth Lab</a>
+        <a href="index.html" data-nav="home">Inicio</a>
+      </nav>
+      <div class="session-box" data-session-box hidden>
+        <span data-user-name></span>
+        <button type="button" class="button button-ghost" data-logout>Cerrar sesion</button>
+      </div>
+    </header>
+
+    <main class="page-stack">
+      <section class="dashboard-banner dashboard-banner-mailbox">
+        <div class="dashboard-banner-copy">
+          <p class="eyebrow">Correo operativo</p>
+          <h1>Casilla de Rodrigo lista para triage</h1>
+          <p>Vista compacta y enfocada para revisar remitente, asunto y accion sugerida sin perder tiempo en una interfaz pesada.</p>
+          <div class="hero-actions">
+            <a href="#admin-mailbox" class="button button-accent">Abrir bandeja</a>
+            <a href="admin.html" class="button button-secondary">Volver a Maestro</a>
+          </div>
+        </div>
+        <aside class="dashboard-banner-side">
+          <article class="dashboard-highlight-card">
+            <span>Cuenta activa</span>
+            <strong>IMAP configurado para lectura inmediata.</strong>
+            <p>La cuenta de Rodrigo queda iniciada desde servidor local. Solo entras y la bandeja se consulta con la carpeta definida.</p>
+          </article>
+          <div class="dashboard-mini-grid">
+            <article class="dashboard-mini-card">
+              <span>Servidor</span>
+              <strong>mail.joathilogistica.com</strong>
+              <p>IMAP 993 con SSL/TLS y SMTP 465 como referencia del entorno.</p>
+            </article>
+            <article class="dashboard-mini-card">
+              <span>Salida</span>
+              <strong>Remitente, asunto, accion</strong>
+              <p>El formato esta pensado para decidir rapido si responder, derivar o seguir.</p>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section id="admin-mailbox" class="panel mailbox-panel">
+        <div class="panel-heading">
+          <p class="eyebrow">IMAP</p>
+          <h2>Bandeja compacta</h2>
+          <p>Configuracion fija para Rodrigo. La contrasena queda en el servidor local y la bandeja se consulta en modo lectura.</p>
+        </div>
+        <div class="content-grid admin-mailbox-grid">
+          <article class="record-card">
+            <strong>Conexion activa</strong>
+            <form id="adminMailboxForm" class="form-grid">
+              <input name="profile" type="hidden" value="rodrigo">
+              <label>
+                Cuenta
+                <input name="username" type="email" value="rhernandez@joathilogistica.com" readonly>
+              </label>
+              <label>
+                Servidor
+                <input name="host" type="text" value="mail.joathilogistica.com" readonly>
+              </label>
+              <label>
+                Puerto IMAP
+                <input name="port" type="number" value="993" readonly>
+              </label>
+              <label>
+                Carpeta
+                <input name="folder" type="text" value="INBOX">
+              </label>
+              <label>
+                Correos a mostrar
+                <input name="limit" type="number" min="1" max="25" value="15">
+              </label>
+              <article class="record-card full-width admin-mailbox-note">
+                <strong>Vista de trabajo</strong>
+                <p>Columnas visibles: remitente, asunto y accion a tomar. Los correos sin leer quedan resaltados para priorizar respuesta.</p>
+              </article>
+              <div class="full-width hero-actions">
+                <button type="submit" class="button button-accent">Actualizar bandeja</button>
+                <button type="button" class="button button-secondary" id="adminMailboxClearButton">Limpiar vista</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="record-card">
+            <strong>Referencia de servidor</strong>
+            <div class="data-grid">
+              <span><strong>IMAP</strong>mail.joathilogistica.com</span>
+              <span><strong>Puerto</strong>993 SSL/TLS</span>
+              <span><strong>SMTP</strong>mail.joathilogistica.com</span>
+              <span><strong>Puerto SMTP</strong>465</span>
+            </div>
+            <p>Usa esta vista para triage rapido. Si una conversacion requiere detalle, la accion sugerida te marca si conviene responder, derivar o seguir.</p>
+          </article>
+        </div>
+        <div id="adminMailboxStatus" class="stack-list"></div>
+        <div id="adminMailboxSummary" class="stats-row admin-mailbox-stats"></div>
+        <div id="adminMailboxList" class="stack-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="portal.js"></script>
+  <script src="joathiva.js"></script>
+</body>
+</html>

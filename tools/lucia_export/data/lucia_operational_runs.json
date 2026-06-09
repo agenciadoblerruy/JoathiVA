@@ -1,0 +1,41 @@
+[
+  {
+    "generatedAt": "2026-05-08T20:58:15",
+    "exportDir": "C:\\Joathi\\JOATHIVA\\tools\\lucia_export\\data\\lucia_public_export",
+    "itemCount": 2180,
+    "ftp": {
+      "rootCount": 25,
+      "fileCount": 2168
+    },
+    "catalog": {
+      "packageCount": 3,
+      "resourceCount": 9
+    }
+  },
+  {
+    "generatedAt": "2026-05-02T13:59:22",
+    "exportDir": "/mnt/e/Joathi/tools/lucia_export/data/lucia_public_export",
+    "itemCount": 2180,
+    "ftp": {
+      "rootCount": 25,
+      "fileCount": 2168
+    },
+    "catalog": {
+      "packageCount": 3,
+      "resourceCount": 9
+    }
+  },
+  {
+    "generatedAt": "2026-05-02T13:24:04",
+    "exportDir": "/mnt/e/Joathi/tools/lucia_export/data/lucia_public_export",
+    "itemCount": 2180,
+    "ftp": {
+      "rootCount": 25,
+      "fileCount": 2168
+    },
+    "catalog": {
+      "packageCount": 3,
+      "resourceCount": 9
+    }
+  }
+]

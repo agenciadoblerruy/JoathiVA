@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0E3B2E">
+  <title>JoathiVA V1</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-backdrop" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="#home" aria-label="Ir al inicio">
+        <img src="../logo.svg" alt="JoathiVA" class="brand-logo">
+        <div class="brand-copy">
+          <strong>JoathiVA V1</strong>
+          <span>CRM, cotizaciones y seguimiento comercial</span>
+        </div>
+      </a>
+
+      <div class="header-context" id="headerContext"></div>
+
+      <nav class="app-nav" id="appNav" aria-label="Navegacion principal"></nav>
+    </header>
+
+    <section class="shell-status" id="shellStatus" aria-live="polite"></section>
+
+    <main id="appMain" class="app-main"></main>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

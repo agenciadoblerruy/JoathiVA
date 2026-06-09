@@ -1,0 +1,3729 @@
+const SHARED_KEY = "joathivaWebSharedDemoV1";
+const COMMERCIAL_KEY = "joathivaWebCommercialDemoV1";
+const AGENT5_KEY = "joathivaWebAgent5DemoV1";
+const OPERATIONS_KEY = "joathiva_operaciones";
+const PROVIDERS_KEY = "joathiva_proveedores";
+const DRIVERS_KEY = "joathiva_choferes";
+const VEHICLES_KEY = "joathiva_vehiculos";
+const INCIDENTS_KEY = "joathiva_incidencias";
+const OP_DOCS_KEY = "joathiva_documentos";
+const TRACKING_KEY = "joathiva_tracking";
+const OP_HISTORY_KEY = "joathiva_historial_operativo";
+const ADMIN_NOTICES_KEY = "joathiva_avisos_admin";
+const AGENT6_KEY = "joathiva_operational_documents_demo";
+const AGENT1_KEY = "joathiva_prospects_demo";
+const AGENT1_STATUSES = ["NUEVO", "EN_ANALISIS", "CALIFICADO", "EN_CONTACTO", "SEGUIMIENTO", "NO_CALIFICA", "CONVERTIDO", "DESCARTADO"];
+const AGENT1_TERMINAL = ["CONVERTIDO", "DESCARTADO", "NO_CALIFICA"];
+
+const QUOTE_STATES = ["PENDIENTE", "EN_REVISION", "RESPONDIDA", "APROBADA", "CANCELADA", "VENCIDA"];
+const TASK_STATES = ["PENDIENTE", "EN_CURSO", "COMPLETADA", "VENCIDA"];
+const COMMERCIAL_MODULES = [
+  ["dashboard", "Dashboard"],
+  ["solicitudes", "Solicitudes"],
+  ["cotizaciones", "Cotizaciones"],
+  ["agente5", "Agente 5"],
+  ["agente1", "Agente 1"],
+  ["clientes", "Clientes"],
+  ["seguimiento", "Seguimiento"],
+  ["posventa", "Posventa"],
+  ["tareas", "Tareas"],
+  ["historial", "Historial"]
+];
+const OPERATIVE_MODULES = [
+  ["dashboard", "Dashboard"],
+  ["operaciones", "Operaciones"],
+  ["asignaciones", "Asignaciones"],
+  ["tracking", "Tracking"],
+  ["documentacion", "Documentación"],
+  ["agente6", "Gestor Documental Operativo"],
+  ["incidencias", "Incidencias"],
+  ["proveedores", "Proveedores"],
+  ["despacho", "Despacho"],
+  ["contactos", "Contactos"],
+  ["administracion", "Avisos Admin"],
+  ["historial", "Historial"]
+];
+const OP_STATES = ["CREADA", "COORDINACION_CARGA", "EN_RUTA", "EN_FRONTERA", "CARGA_ENTREGADA", "CERRADA", "DEMORADA"];
+const DOC_STATES = ["PENDIENTE", "CARGADO", "VALIDADO", "OBSERVADO"];
+const INCIDENT_SEVERITIES = ["BAJA", "MEDIA", "ALTA", "CRITICA"];
+const REQUIRED_OPERATION_DOCS = ["HBL", "CRT", "MIC", "DUA", "Factura"];
+const AGENT6_DOC_STATES = [
+  "RECIBIDO",
+  "CLASIFICADO",
+  "PENDIENTE_REVISION",
+  "OBSERVADO",
+  "CORREGIDO",
+  "APROBADO",
+  "LISTO_PARA_REENVIAR",
+  "REENVIO_PREPARADO",
+  "ENVIADO_MANUALMENTE",
+  "DESCARTADO",
+  "DRAFT_RECIBIDO",
+  "PENDIENTE_SALIDA",
+  "EN_TRANSITO",
+  "ARRIBADO",
+  "DOCUMENTACION_COMPLETA"
+];
+const AGENT6_RESEND_STATES = [
+  "BORRADOR_PREPARADO",
+  "PENDIENTE_APROBACION",
+  "APROBADO_PARA_ENVIO",
+  "ENVIADO_MANUALMENTE",
+  "CANCELADO"
+];
+
+let sharedState = loadSharedState();
+let commercialState = loadCommercialState();
+let agent5State = loadKey(AGENT5_KEY, initialAgent5State());
+let providersState = loadKey(PROVIDERS_KEY, initialProviders());
+let driversState = loadKey(DRIVERS_KEY, initialDrivers());
+let vehiclesState = loadKey(VEHICLES_KEY, initialVehicles());
+let incidentsState = loadKey(INCIDENTS_KEY, initialIncidents());
+let opDocsState = loadKey(OP_DOCS_KEY, initialOperationDocuments());
+let opHistoryState = loadKey(OP_HISTORY_KEY, [`${stamp()}: perfil Ejecutivo Operativo inicializado.`]);
+let adminNoticesState = loadKey(ADMIN_NOTICES_KEY, []);
+let agent6State = loadAgent6State();
+let agent1State = loadKey(AGENT1_KEY, initialAgent1State());
+let activeModule = "dashboard";
+let quoteFilter = "";
+let agent5Filter = "";
+let opFilter = "";
+let selected = null;
+let modal = null;
+let toast = "";
+
+const root = document.getElementById("portal-root");
+const portal = document.body.dataset.portal;
+
+function initialSharedState() {
+  return {
+    quotes: [
+      quote("COT-0010", "Importaciones SA", "Santiago Perez", "contacto@importacionessa.com", "+598 99 000 001", "Buenos Aires", "Montevideo", "Buenos Aires, deposito proveedor", "Montevideo, deposito Importaciones SA", "Carga general", "Paletizada", "5 tn / 12 pallets", "USD 24.000", "2026-06-01", "PENDIENTE", "USD 1.620", "", "Nueva solicitud para importacion con entrega coordinada en Montevideo."),
+      quote("COT-0008", "LogiTrans SRL", "Paula Martinez", "logitrans@email.com", "+598 99 000 002", "Santiago", "Montevideo", "Santiago, centro logistico", "Montevideo, zona franca", "Carga refrigerada", "Paletizada", "7 tn / temperatura controlada", "USD 46.000", "2026-05-30", "EN_REVISION", "USD 2.950", "", "Carga refrigerada con ventana de retiro confirmada."),
+      quote("COT-0006", "Importaciones SA", "Santiago Perez", "contacto@importacionessa.com", "+598 99 000 001", "Buenos Aires", "Montevideo", "Buenos Aires, deposito norte", "Montevideo, centro de distribucion", "Carga general", "Caja", "3.4 tn", "USD 18.500", "2026-05-26", "RESPONDIDA", "USD 1.740", "USD 1.850", "Operacion regular con entrega directa.", "Validez 7 dias. Servicio terrestre coordinado."),
+      quote("COT-0004", "Grupo Exporta", "Mariana Gomez", "exporta@grupoexporta.com", "+598 99 000 003", "Montevideo", "Sao Paulo", "Montevideo, planta exportadora", "Sao Paulo, operador regional", "Carga general", "Paletizada", "8 tn / 18 pallets", "USD 62.000", "2026-05-18", "APROBADA", "USD 2.820", "USD 3.050", "Exportacion regional aprobada por cliente.", "Precio formal aceptado. Operacion creada.", "OP-0002")
+    ],
+    operations: [
+      {
+        id: "OP-0002",
+        quoteId: "COT-0004",
+        client: "Grupo Exporta",
+        origin: "Montevideo, planta exportadora",
+        destination: "Sao Paulo, operador regional",
+        status: "EN_RUTA",
+        carrier: "Transportes del Sur SRL",
+        eta: "2026-06-01 18:00",
+        deliveredAt: "",
+        satisfaction: "Pendiente",
+        history: [`${stamp()}: operacion creada desde COT-0004.`]
+      },
+      {
+        id: "OP-0003",
+        quoteId: "COT-0006",
+        client: "Importaciones SA",
+        origin: "Buenos Aires, deposito norte",
+        destination: "Montevideo, centro de distribucion",
+        status: "CARGA_ENTREGADA",
+        carrier: "RioLog",
+        eta: "Entregada 2026-05-29 16:20",
+        deliveredAt: "2026-05-29",
+        satisfaction: "Conforme",
+        history: [`${stamp()}: carga entregada.`]
+      }
+    ],
+    nextOperationNumber: 4
+  };
+}
+
+function quote(id, company, requester, email, phone, origin, destination, originAddress, destinationAddress, cargoType, cargoCondition, weight, estimatedValue, updatedAt, status, priceEstimate, formalPrice, detail, terms = "", operationId = "") {
+  return {
+    id,
+    company,
+    requester,
+    email,
+    phone,
+    origin,
+    destination,
+    originAddress,
+    destinationAddress,
+    cargoType,
+    cargoCondition,
+    weight,
+    estimatedValue,
+    requestedAt: updatedAt,
+    updatedAt,
+    status,
+    priceEstimate,
+    formalPrice,
+    commercialTerms: terms,
+    operationId,
+    executive: "Valentina Torres",
+    detail,
+    clientObservations: status === "PENDIENTE" ? ["Solicitud cargada por cliente demo."] : [],
+    commercialObservations: status === "EN_REVISION" ? [`${stamp()}: costos en revision.`] : status === "RESPONDIDA" ? [`${stamp()}: precio formal enviado.`] : [],
+    history: [`${stamp()}: ${id} inicializada en estado ${status}.`]
+  };
+}
+
+function initialCommercialState() {
+  return {
+    tasks: [
+      task("COM-T001", "Llamar a Importaciones SA", "Importaciones SA", "COT-0010", addDays(1), "PENDIENTE", "Revisar alcance Buenos Aires a Montevideo."),
+      task("COM-T002", "Confirmar condiciones COT-0008", "LogiTrans SRL", "COT-0008", addDays(2), "PENDIENTE", "Validar frio y ventana de carga."),
+      task("COM-T003", "Seguimiento COT-0006 sin respuesta hace 5 dias", "Importaciones SA", "COT-0006", addDays(-5), "VENCIDA", "Esperando definicion del cliente.")
+    ],
+    postSaleNotes: [],
+    history: [`${stamp()}: perfil Ejecutivo Comercial inicializado.`],
+    nextTaskNumber: 4
+  };
+}
+
+function initialAgent5State() {
+  return {
+    activeQuoteId: "CQ-OVS-001",
+    history: [`${stamp()}: Agente 5 inicializado en modo demo/local.`],
+    quotes: [
+      agent5Quote({
+        id: "CQ-OVS-001",
+        client: "OVERSEAS ARGENTINA",
+        contact: "Karen Iglesias",
+        email: "assist3@overseas.com.ar",
+        phone: "+54 11 2150-5775 Int. 264 / +54 9 11 2580-0111",
+        routeIda: "Burzaco → Punta del Este",
+        routeRetorno: "Punta del Este → Burzaco",
+        service: "4 SEMI ida + 4 SEMI retorno",
+        cargoType: "Carga general",
+        units: 8,
+        currency: "USD",
+        providerCost: 14400,
+        margin: 5146,
+        additionalCosts: [],
+        delayCost: 0,
+        waitingCost: 0,
+        tax: 0,
+        finalPrice: 19546,
+        status: "BORRADOR",
+        version: 1,
+        validUntil: "2026-07-03",
+        conditions: "Vigencia sujeta a confirmación operativa. Coordinación previa requerida.",
+        exclusions: "No incluye esperas extraordinarias, peajes especiales ni servicios no detallados.",
+        internalNotes: "Demo comercial para validar separación entre costo interno y valor visible al cliente.",
+        customerNotes: "Cotización comercial para operación ida/retorno con revisión humana obligatoria.",
+        items: [
+          agent5LineItem("IDA", "Burzaco → Punta del Este", 4, 1900, 7600, 42.6578947368421, 3242, 2710.5, 10842),
+          agent5LineItem("RETORNO", "Punta del Este → Burzaco", 4, 1700, 6800, 28, 1904, 2176, 8704)
+        ],
+        history: [
+          `${stamp()}: cotización creada en borrador.`,
+          `${stamp()}: cálculo interno cargado con preview cliente separado.`
+        ],
+        versions: [
+          {
+            version: 1,
+            status: "BORRADOR",
+            reason: "Seed demo inicial",
+            createdAt: stamp()
+          }
+        ]
+      }),
+      agent5Quote({
+        id: "CQ-IMP-014",
+        client: "Importaciones SA",
+        contact: "Santiago Perez",
+        email: "contacto@importacionessa.com",
+        phone: "+598 99 000 001",
+        routeIda: "Buenos Aires → Montevideo",
+        routeRetorno: "Montevideo → Buenos Aires",
+        service: "Cobertura terrestre consolidada",
+        cargoType: "Carga general",
+        units: 3,
+        currency: "USD",
+        providerCost: 5500,
+        margin: 1650,
+        additionalCosts: [{ label: "Demora", amount: 120 }],
+        delayCost: 0,
+        waitingCost: 0,
+        tax: 0,
+        finalPrice: 7270,
+        status: "EN_REVISION",
+        version: 2,
+        validUntil: "2026-06-28",
+        conditions: "Revisión comercial en curso.",
+        exclusions: "No incluye almacenaje extendido.",
+        internalNotes: "Caso de seguimiento comercial.",
+        customerNotes: "A la espera de confirmación humana.",
+        items: [agent5LineItem("IDA", "Buenos Aires → Montevideo", 3, 1833.33, 5500, 30, 1650, 2423.33, 7270)],
+        history: [`${stamp()}: cotización en revisión.`],
+        versions: [
+          { version: 1, status: "BORRADOR", reason: "Carga inicial", createdAt: stamp() },
+          { version: 2, status: "EN_REVISION", reason: "Actualización de costos", createdAt: stamp() }
+        ]
+      }),
+      agent5Quote({
+        id: "CQ-LOG-022",
+        client: "LogiTrans SRL",
+        contact: "Paula Martinez",
+        email: "logitrans@email.com",
+        phone: "+598 99 000 002",
+        routeIda: "Santiago → Montevideo",
+        routeRetorno: "Montevideo → Santiago",
+        service: "Carga refrigerada con coordinación",
+        cargoType: "Carga refrigerada",
+        units: 2,
+        currency: "USD",
+        providerCost: 8600,
+        margin: 2240,
+        additionalCosts: [{ label: "Peajes", amount: 90 }, { label: "Espera", amount: 60 }],
+        delayCost: 0,
+        waitingCost: 0,
+        tax: 0,
+        finalPrice: 10990,
+        status: "LISTA_PARA_ENVIAR",
+        version: 3,
+        validUntil: "2026-06-26",
+        conditions: "Lista para revisión final.",
+        exclusions: "No incluye cambios de alcance posterior.",
+        internalNotes: "Lista para enviar por canal humano.",
+        customerNotes: "Documento listo para validación final.",
+        items: [agent5LineItem("IDA", "Santiago → Montevideo", 2, 4300, 8600, 26.05, 2240, 5495, 10990)],
+        history: [`${stamp()}: lista para enviar manualmente.`],
+        versions: [
+          { version: 1, status: "BORRADOR", reason: "Seed", createdAt: stamp() },
+          { version: 2, status: "EN_REVISION", reason: "Revisión costos", createdAt: stamp() },
+          { version: 3, status: "LISTA_PARA_ENVIAR", reason: "Aprobación interna pendiente", createdAt: stamp() }
+        ]
+      }),
+      agent5Quote({
+        id: "CQ-GEX-031",
+        client: "Grupo Exporta",
+        contact: "Mariana Gomez",
+        email: "exporta@grupoexporta.com",
+        phone: "+598 99 000 003",
+        routeIda: "Montevideo → São Paulo",
+        routeRetorno: "São Paulo → Montevideo",
+        service: "Exportación regional aprobada",
+        cargoType: "Paletizada",
+        units: 6,
+        currency: "USD",
+        providerCost: 12400,
+        margin: 3180,
+        additionalCosts: [{ label: "Documentación", amount: 110 }],
+        delayCost: 0,
+        waitingCost: 0,
+        tax: 0,
+        finalPrice: 15690,
+        status: "ENVIADA_MANUALMENTE",
+        version: 4,
+        validUntil: "2026-06-24",
+        conditions: "Enviada de forma manual para revisión humana.",
+        exclusions: "Sin extras no detallados.",
+        internalNotes: "Caso enviado manualmente.",
+        customerNotes: "Precio visible para el cliente sin costos internos.",
+        items: [agent5LineItem("IDA", "Montevideo → São Paulo", 6, 2066.67, 12400, 25.64, 3180, 2615, 15690)],
+        history: [`${stamp()}: marcada como enviada manualmente.`],
+        versions: [
+          { version: 1, status: "BORRADOR", reason: "Seed", createdAt: stamp() },
+          { version: 2, status: "EN_REVISION", reason: "Revisión costos", createdAt: stamp() },
+          { version: 3, status: "LISTA_PARA_ENVIAR", reason: "Lista para enviar", createdAt: stamp() },
+          { version: 4, status: "ENVIADA_MANUALMENTE", reason: "Envío humano", createdAt: stamp() }
+        ]
+      })
+    ]
+  };
+}
+
+function agent5Quote(payload) {
+  return {
+    id: payload.id,
+    client: payload.client,
+    contact: payload.contact,
+    email: payload.email,
+    phone: payload.phone,
+    routeIda: payload.routeIda,
+    routeRetorno: payload.routeRetorno,
+    service: payload.service,
+    cargoType: payload.cargoType,
+    units: payload.units,
+    currency: payload.currency,
+    providerCost: payload.providerCost,
+    margin: payload.margin,
+    additionalCosts: payload.additionalCosts || [],
+    delayCost: payload.delayCost || 0,
+    waitingCost: payload.waitingCost || 0,
+    tax: payload.tax || 0,
+    finalPrice: payload.finalPrice,
+    status: payload.status,
+    version: payload.version || 1,
+    validUntil: payload.validUntil || "",
+    conditions: payload.conditions || "",
+    exclusions: payload.exclusions || "",
+    internalNotes: payload.internalNotes || "",
+    customerNotes: payload.customerNotes || "",
+    items: payload.items || [],
+    history: payload.history || [],
+    versions: payload.versions || []
+  };
+}
+
+function agent5LineItem(direction, description, units, providerCostUnit, providerCostTotal, marginPercent, marginAmountTotal, visiblePriceUnit, visiblePriceTotal) {
+  return {
+    direction,
+    description,
+    units,
+    providerCostUnit,
+    providerCostTotal,
+    marginPercent,
+    marginAmountTotal,
+    visiblePriceUnit,
+    visiblePriceTotal
+  };
+}
+
+function task(id, title, client, quoteId, dueDate, status, note) {
+  return { id, title, client, quoteId, dueDate, status, note, observations: [], history: [`${stamp()}: tarea creada.`] };
+}
+
+function initialProviders() {
+  return [
+    { id: "PROV-001", name: "Transportes del Sur SRL", status: "HABILITADO", routes: "Uruguay / Argentina / Brasil", transportTypes: "Camion cerrado", cargoTypes: "Carga general", responsible: "Raul Pereira", taxData: "RUT demo 210000010012", availability: "Disponible" },
+    { id: "PROV-002", name: "Rutas Mercosur SA", status: "DOCUMENTACION_INCOMPLETA", routes: "Uruguay / Paraguay", transportTypes: "Camion abierto", cargoTypes: "General", responsible: "Mesa operativa", taxData: "RUT demo 210000020011", availability: "No asignable" },
+    { id: "PROV-003", name: "Frio Express Ltda", status: "HABILITADO", routes: "Brasil / Uruguay", transportTypes: "Refrigerado", cargoTypes: "Refrigerada", responsible: "Ana Costa", taxData: "RUT demo 210000030010", availability: "Disponible con alerta" }
+  ];
+}
+
+function initialDrivers() {
+  return [
+    { id: "DRV-001", name: "Martin Silva", status: "HABILITADO", provider: "Transportes del Sur SRL", vehicle: "ABC 1234", phone: "+598 99 100 001", documents: [{ name: "Libreta de conducir vigente", status: "VALIDADO" }, { name: "Documento de identidad", status: "VALIDADO" }] },
+    { id: "DRV-002", name: "Juan Perez", status: "PENDIENTE_APROBACION_PROVEEDOR", provider: "Transportes del Sur SRL", vehicle: "GHI 9012", phone: "+598 99 100 002", documents: [{ name: "Libreta de conducir vigente", status: "PENDIENTE" }, { name: "Documento de identidad", status: "PENDIENTE" }] },
+    { id: "DRV-003", name: "Ana Rodriguez", status: "DOCUMENTACION_POR_VENCER", provider: "Frio Express Ltda", vehicle: "DEF 5678", phone: "+598 99 100 003", documents: [{ name: "Libreta de conducir vigente", status: "OBSERVADO" }, { name: "Documento de identidad", status: "VALIDADO" }] }
+  ];
+}
+
+function initialVehicles() {
+  return [
+    { id: "VEH-001", plate: "ABC 1234", type: "Camion cerrado", status: "HABILITADO", insurance: "Seguro vigente", cargoType: "Carga general", capacity: "12 tn / 22 pallets", routes: "Uruguay / Argentina / Brasil", documents: [{ name: "Seguro vigente", status: "VALIDADO" }, { name: "Libreta de propiedad", status: "VALIDADO" }, { name: "Matricula", status: "VALIDADO" }] },
+    { id: "VEH-002", plate: "DEF 5678", type: "Refrigerado", status: "HABILITADO_CON_ALERTA", insurance: "Seguro por vencer", cargoType: "Refrigerada", capacity: "8 tn", routes: "Brasil / Uruguay", documents: [{ name: "Seguro vigente", status: "OBSERVADO" }, { name: "Libreta de propiedad", status: "VALIDADO" }, { name: "Matricula", status: "VALIDADO" }] },
+    { id: "VEH-003", plate: "GHI 9012", type: "Camion abierto", status: "NO_APTO", insurance: "Documentacion incompleta", cargoType: "General", capacity: "6 tn", routes: "Uruguay", documents: [{ name: "Seguro vigente", status: "PENDIENTE" }, { name: "Libreta de propiedad", status: "PENDIENTE" }, { name: "Matricula", status: "PENDIENTE" }] }
+  ];
+}
+
+function initialIncidents() {
+  return [
+    { id: "INC-0001", operationId: "OP-0004", type: "DEMORA", severity: "ALTA", status: "EN_REVISION", description: "Demora por bloqueo parcial de ruta.", observations: ["Cliente informado."], history: [`${stamp()}: incidencia inicial.`] },
+    { id: "INC-0002", operationId: "OP-0003", type: "DOCUMENTACION_FALTANTE", severity: "MEDIA", status: "ABIERTA", description: "DUA pendiente de validacion para despacho.", observations: [], history: [`${stamp()}: incidencia inicial.`] }
+  ];
+}
+
+function initialOperationDocuments() {
+  const docs = {};
+  ["OP-0001", "OP-0002", "OP-0003", "OP-0004", "OP-0005"].forEach((operationId) => {
+    docs[operationId] = REQUIRED_OPERATION_DOCS.map((name, index) => ({
+      id: `${operationId}-${name.toUpperCase().replaceAll(" ", "-")}`,
+      operationId,
+      name,
+      type: name,
+      status: ["PENDIENTE", "CARGADO", "VALIDADO", "OBSERVADO", "PENDIENTE"][index],
+      observations: [],
+      history: [`${stamp()}: ${name} inicializado.`]
+    }));
+  });
+  return docs;
+}
+
+function loadKey(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveOperational() {
+  localStorage.setItem(OPERATIONS_KEY, JSON.stringify(sharedState.operations));
+  localStorage.setItem(PROVIDERS_KEY, JSON.stringify(providersState));
+  localStorage.setItem(DRIVERS_KEY, JSON.stringify(driversState));
+  localStorage.setItem(VEHICLES_KEY, JSON.stringify(vehiclesState));
+  localStorage.setItem(INCIDENTS_KEY, JSON.stringify(incidentsState));
+  localStorage.setItem(OP_DOCS_KEY, JSON.stringify(opDocsState));
+  localStorage.setItem(TRACKING_KEY, JSON.stringify(Object.fromEntries(sharedState.operations.map((op) => [op.id, op.tracking || {}]))));
+  localStorage.setItem(OP_HISTORY_KEY, JSON.stringify(opHistoryState));
+  localStorage.setItem(ADMIN_NOTICES_KEY, JSON.stringify(adminNoticesState));
+  localStorage.setItem(AGENT6_KEY, JSON.stringify(agent6State));
+}
+
+function loadSharedState() {
+  try {
+    const stored = localStorage.getItem(SHARED_KEY);
+    const parsed = stored ? JSON.parse(stored) : initialSharedState();
+    ensureSharedData(parsed);
+    return parsed;
+  } catch {
+    return initialSharedState();
+  }
+}
+
+function loadCommercialState() {
+  try {
+    return JSON.parse(localStorage.getItem(COMMERCIAL_KEY)) || initialCommercialState();
+  } catch {
+    return initialCommercialState();
+  }
+}
+
+function ensureSharedData(state) {
+  const demo = initialSharedState();
+  demo.quotes.forEach((demoQuote) => {
+    const existing = state.quotes.find((item) => item.id === demoQuote.id);
+    if (!existing) state.quotes.push(demoQuote);
+  });
+  demo.operations.forEach((demoOperation) => {
+    if (!state.operations.find((item) => item.id === demoOperation.id)) state.operations.push(demoOperation);
+  });
+  ensureOperativeOperations(state);
+}
+
+function ensureOperativeOperations(state) {
+  const demoOps = [
+    opDemo("OP-0001", "Importaciones SA", "COT-0010", "Buenos Aires", "Montevideo", "COORDINACION_CARGA", "", "", "", "2026-06-01 12:00", "Burzaco", "Pendiente de coordinacion", "Origen destacado para coordinacion de carga", false, 10),
+    opDemo("OP-0002", "Grupo Exporta", "COT-0004", "Montevideo", "São Paulo", "EN_RUTA", "Transportes del Sur SRL", "Martin Silva", "ABC 1234", "2026-06-01 18:00", "Rivera", "En ruta", "Circulacion normal", false, 55),
+    opDemo("OP-0003", "LogiTrans SRL", "COT-0008", "Santiago", "Montevideo", "EN_FRONTERA", "Frio Express Ltda", "Ana Rodriguez", "DEF 5678", "2026-06-02 09:00", "Paso de frontera", "En frontera", "DUA pendiente de validacion", false, 72),
+    opDemo("OP-0004", "Alimentos Rio", "COT-DEMO-04", "Curitiba", "Montevideo", "DEMORADA", "Frio Express Ltda", "Ana Rodriguez", "DEF 5678", "2026-06-01 20:00", "Porto Alegre", "Demorada", "Demora por incidente de ruta", false, 45),
+    opDemo("OP-0005", "TecnoParts", "COT-DEMO-05", "Montevideo", "Asunción", "CARGA_ENTREGADA", "Transportes del Sur SRL", "Martin Silva", "ABC 1234", "Entregada 2026-06-01 10:20", "Asunción", "Entregado", "Destino completado", false, 100)
+  ];
+  demoOps.forEach((demo) => {
+    const existing = state.operations.find((item) => item.id === demo.id);
+    if (existing) {
+      Object.keys(demo).forEach((key) => {
+        if (existing[key] === undefined || existing[key] === "") existing[key] = demo[key];
+      });
+      existing.tracking = (existing.tracking || {}).manualUpdated
+        ? { ...demo.tracking, ...existing.tracking }
+        : { ...(existing.tracking || {}), ...demo.tracking };
+      existing.history = existing.history || demo.history;
+      existing.observations = existing.observations || [];
+    } else {
+      state.operations.push(demo);
+    }
+  });
+}
+
+function opDemo(id, client, quoteId, origin, destination, status, provider, driver, vehicle, eta, location, travelState, note, administracionNotificada, progress) {
+  return {
+    id,
+    quoteId,
+    client,
+    origin,
+    destination,
+    status,
+    provider,
+    driver,
+    vehicle,
+    eta,
+    administracionNotificada,
+    customsBroker: "Estudio Aduanero Sur",
+    customsStatus: status === "EN_FRONTERA" ? "Revision documental" : "Sin bloqueo aduanero",
+    customsObservations: [],
+    tracking: { origin, destination, location, updatedAt: stamp(), driver: driver || "Pendiente", state: travelState, note, progress, history: [`${stamp()}: tracking inicial ${location}.`] },
+    observations: [],
+    history: [`${stamp()}: operacion ${id} creada.`]
+  };
+}
+
+function saveShared() {
+  localStorage.setItem(SHARED_KEY, JSON.stringify(sharedState));
+}
+
+function saveCommercial() {
+  localStorage.setItem(COMMERCIAL_KEY, JSON.stringify(commercialState));
+}
+
+function saveAgent5() {
+  localStorage.setItem(AGENT5_KEY, JSON.stringify(agent5State));
+}
+
+function loadAgent6State() {
+  try {
+    const stored = localStorage.getItem(AGENT6_KEY);
+    return ensureAgent6State(stored ? JSON.parse(stored) : initialAgent6State());
+  } catch {
+    return initialAgent6State();
+  }
+}
+
+function initialAgent6State() {
+  return {
+    selectedOperationId: "BOOKSHOP-CTL-308869",
+    filters: {
+      operation: "",
+      type: "",
+      status: ""
+    },
+    operations: [
+      agent6Operation({
+        id: "OP 4480",
+        client: "Operacion demo OP 4480",
+        reference: "OP 4480",
+        modality: "Terrestre / regional",
+        origin: "Montevideo, Uruguay",
+        destination: "Buenos Aires, Argentina",
+        condition: "Flujo documental terrestre en demo",
+        volume: "Consolidado",
+        status: "PENDIENTE_REVISION",
+        nextAction: "Corregir DUA y validar reenvío",
+        suggestedRecipient: "operaciones-demo@joathiva.demo",
+        docs: [
+          agent6Document({ id: "OP-4480-HBL", name: "HBL actualizado", type: "HBL", status: "APROBADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-BL", name: "BL", type: "BL", status: "RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-CRT", name: "CRT actualizado", type: "CRT", status: "APROBADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-MIC", name: "MIC", type: "MIC", status: "CLASIFICADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-DUA", name: "DUA", type: "DUA", status: "PENDIENTE_REVISION", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-FACTURA-COMERCIAL", name: "Factura comercial", type: "FACTURA_COMERCIAL", status: "CORREGIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-FACTURA-FLETE", name: "Factura de flete", type: "FACTURA_FLETE", status: "RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-PACKING-LIST", name: "Packing List", type: "PACKING_LIST", status: "RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-SEGURO", name: "Seguro", type: "SEGURO", status: "APROBADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-NCM", name: "NCM", type: "NCM", status: "CLASIFICADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "OP-4480-AVISO-SALIDA", name: "Aviso de salida", type: "AVISO_SALIDA", status: "RECIBIDO", receivedAt: "2026-06-01" })
+        ],
+        resendTemplate: {
+          recipient: "operaciones-demo@joathiva.demo",
+          subject: "OP 4480 — Documentacion actualizada para revision",
+          body: [
+            "Estimados,",
+            "",
+            "Adjuntamos documentación actualizada correspondiente a la operación OP 4480.",
+            "",
+            "Documentos incluidos:",
+            "",
+            "- CRT actualizado",
+            "- MIC",
+            "- DUA",
+            "- Factura comercial",
+            "",
+            "Quedamos atentos a cualquier observación.",
+            "",
+            "Saludos,",
+            "Joathi Logística"
+          ].join("\n"),
+          includedDocs: ["CRT actualizado", "MIC", "DUA", "Factura comercial"]
+        },
+        resend: agent6Draft({
+          id: "OP-4480-REENVIO-001",
+          operationId: "OP 4480",
+          status: "PENDIENTE_APROBACION",
+          recipient: "operaciones-demo@joathiva.demo",
+          subject: "OP 4480 — Documentacion actualizada para revision",
+          body: [
+            "Estimados,",
+            "",
+            "Adjuntamos documentación actualizada correspondiente a la operación OP 4480.",
+            "",
+            "Documentos incluidos:",
+            "",
+            "- CRT actualizado",
+            "- MIC",
+            "- DUA",
+            "- Factura comercial",
+            "",
+            "Quedamos atentos a cualquier observación.",
+            "",
+            "Saludos,",
+            "Joathi Logística"
+          ].join("\n"),
+          includedDocs: ["CRT actualizado", "MIC", "DUA", "Factura comercial"],
+          approvalRequired: true,
+          history: [`${stamp()}: borrador inicial de OP 4480 cargado en demo.`]
+        }),
+        history: [
+          `${stamp()}: OP 4480 inicializada con documentación terrestre/regional.`,
+          `${stamp()}: reenvío demo listo para revisión humana.`
+        ]
+      }),
+      agent6Operation({
+        id: "BOOKSHOP-CTL-308869",
+        client: "BookShop Uruguay",
+        reference: "CTL 308869",
+        modality: "Importacion maritima LCL",
+        origin: "Shenzhen, China",
+        destination: "Montevideo, Uruguay",
+        condition: "FOB Shenzhen",
+        volume: "2 CBM",
+        pol: "Shenzhen",
+        pod: "Montevideo",
+        carrier: "HPL",
+        vessel: "ONE PARANA",
+        voyage: "2623W",
+        cfsCut: "5-Jun",
+        siCut: "5-Jun",
+        etd: "13-Jun",
+        eta: "21-Jul",
+        transitTime: "38 dias",
+        status: "DRAFT_RECIBIDO",
+        nextAction: "Validar HBL Draft y confirmar instrucciones",
+        suggestedRecipient: "docs-bookshop@joathiva.demo",
+        docs: [
+          agent6Document({ id: "BOOKSHOP-HBL-DRAFT", name: "HBL Draft", type: "HBL_DRAFT", status: "DRAFT_RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-BOOKING", name: "Booking", type: "BOOKING", status: "CLASIFICADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-SI", name: "Shipping Instructions", type: "SHIPPING_INSTRUCTIONS", status: "RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-VESSEL", name: "Vessel / Voyage", type: "VESSEL_VOYAGE", status: "CLASIFICADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-COMMERCIAL-INVOICE", name: "Commercial Invoice", type: "COMMERCIAL_INVOICE", status: "RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-PACKING-LIST", name: "Packing List", type: "PACKING_LIST", status: "RECIBIDO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-SHIPPER", name: "Shipper Contact", type: "SHIPPER_CONTACT", status: "CLASIFICADO", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-CFS", name: "CFS Cut-off", type: "CFS_CUT_OFF", status: "PENDIENTE_SALIDA", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-ARRIVAL", name: "Arrival Notice", type: "ARRIVAL_NOTICE", status: "PENDIENTE_REVISION", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-HOUSE-BL", name: "House BL", type: "HOUSE_BL", status: "PENDIENTE_REVISION", receivedAt: "2026-06-01" }),
+          agent6Document({ id: "BOOKSHOP-MASTER-BL", name: "Master BL", type: "MASTER_BL", status: "RECIBIDO", receivedAt: "2026-06-01" })
+        ],
+        resendTemplate: {
+          recipient: "docs-bookshop@joathiva.demo",
+          subject: "BOOKSHOP / CTL 308869 — Revision HBL Draft / FOB Shenzhen",
+          body: [
+            "Estimados,",
+            "",
+            "Compartimos documentación y datos operativos correspondientes a la importación BOOKSHOP / CTL 308869.",
+            "",
+            "Datos principales:",
+            "",
+            "- POL: Shenzhen",
+            "- POD: Montevideo",
+            "- Carrier: HPL",
+            "- Vessel: ONE PARANA",
+            "- Voyage: 2623W",
+            "- ETD: 13-Jun",
+            "- ETA: 21-Jul",
+            "",
+            "Solicitamos confirmar si el draft se encuentra correcto o si requiere observaciones.",
+            "",
+            "Saludos,",
+            "Joathi Logística"
+          ].join("\n"),
+          includedDocs: ["HBL Draft", "Booking", "Shipping Instructions", "Vessel / Voyage"]
+        },
+        resend: agent6Draft({
+          id: "BOOKSHOP-REENVIO-001",
+          operationId: "BOOKSHOP-CTL-308869",
+          status: "PENDIENTE_APROBACION",
+          recipient: "docs-bookshop@joathiva.demo",
+          subject: "BOOKSHOP / CTL 308869 — Revision HBL Draft / FOB Shenzhen",
+          body: [
+            "Estimados,",
+            "",
+            "Compartimos documentación y datos operativos correspondientes a la importación BOOKSHOP / CTL 308869.",
+            "",
+            "Datos principales:",
+            "",
+            "- POL: Shenzhen",
+            "- POD: Montevideo",
+            "- Carrier: HPL",
+            "- Vessel: ONE PARANA",
+            "- Voyage: 2623W",
+            "- ETD: 13-Jun",
+            "- ETA: 21-Jul",
+            "",
+            "Solicitamos confirmar si el draft se encuentra correcto o si requiere observaciones.",
+            "",
+            "Saludos,",
+            "Joathi Logística"
+          ].join("\n"),
+          includedDocs: ["HBL Draft", "Booking", "Shipping Instructions", "Vessel / Voyage"],
+          approvalRequired: true,
+          history: [`${stamp()}: borrador inicial de BookShop cargado en demo.`]
+        }),
+        history: [
+          `${stamp()}: BOOKSHOP-CTL-308869 inicializada con flujo maritimo LCL.`,
+          `${stamp()}: draft HBL recibido y listo para revision humana.`
+        ]
+      })
+    ],
+    history: [`${stamp()}: Gestor Documental Operativo inicializado.`],
+    lastUpdated: stamp()
+  };
+}
+
+function ensureAgent6State(state) {
+  const seed = initialAgent6State();
+  if (!state || typeof state !== "object") return seed;
+  const operations = seed.operations.map((seedOperation) => {
+    const existing = Array.isArray(state.operations) ? state.operations.find((item) => item.id === seedOperation.id) : null;
+    if (!existing) return seedOperation;
+    const docs = seedOperation.docs.map((seedDoc) => {
+      const current = Array.isArray(existing.docs) ? existing.docs.find((doc) => doc.id === seedDoc.id || doc.name === seedDoc.name) : null;
+      if (!current) return seedDoc;
+      return {
+        ...seedDoc,
+        ...current,
+        history: Array.isArray(current.history) && current.history.length ? current.history : seedDoc.history,
+        observations: Array.isArray(current.observations) ? current.observations : []
+      };
+    });
+    const resend = existing.resend ? {
+      ...seedOperation.resend,
+      ...existing.resend,
+      history: Array.isArray(existing.resend.history) && existing.resend.history.length ? existing.resend.history : seedOperation.resend?.history || [],
+      observations: Array.isArray(existing.resend.observations) ? existing.resend.observations : []
+    } : seedOperation.resend;
+    return {
+      ...seedOperation,
+      ...existing,
+      docs,
+      resend,
+      history: Array.isArray(existing.history) && existing.history.length ? existing.history : seedOperation.history
+    };
+  });
+  const selectedOperationId = state.selectedOperationId && operations.some((item) => item.id === state.selectedOperationId)
+    ? state.selectedOperationId
+    : seed.selectedOperationId;
+  return {
+    selectedOperationId,
+    filters: {
+      operation: state.filters?.operation || "",
+      type: state.filters?.type || "",
+      status: state.filters?.status || ""
+    },
+    operations,
+    history: Array.isArray(state.history) && state.history.length ? state.history : seed.history,
+    lastUpdated: state.lastUpdated || seed.lastUpdated
+  };
+}
+
+function agent6Operation(payload) {
+  return {
+    id: payload.id,
+    client: payload.client,
+    reference: payload.reference || payload.id,
+    modality: payload.modality,
+    origin: payload.origin || "",
+    destination: payload.destination || "",
+    condition: payload.condition || "",
+    volume: payload.volume || "",
+    pol: payload.pol || "",
+    pod: payload.pod || "",
+    carrier: payload.carrier || "",
+    vessel: payload.vessel || "",
+    voyage: payload.voyage || "",
+    cfsCut: payload.cfsCut || "",
+    siCut: payload.siCut || "",
+    etd: payload.etd || "",
+    eta: payload.eta || "",
+    transitTime: payload.transitTime || "",
+    status: payload.status,
+    nextAction: payload.nextAction || "",
+    suggestedRecipient: payload.suggestedRecipient || "",
+    resendTemplate: payload.resendTemplate || { recipient: "", subject: "", body: "", includedDocs: [] },
+    docs: (payload.docs || []).map((doc) => agent6Document(doc)),
+    resend: payload.resend ? agent6Draft(payload.resend) : null,
+    history: payload.history || []
+  };
+}
+
+function agent6Document(payload) {
+  return {
+    id: payload.id || payload.name,
+    name: payload.name,
+    type: payload.type || payload.name,
+    status: payload.status || "RECIBIDO",
+    receivedAt: payload.receivedAt || stamp(),
+    observations: payload.observations || [],
+    history: payload.history || [`${stamp()}: ${payload.name} inicializado.`]
+  };
+}
+
+function agent6Draft(payload) {
+  return {
+    id: payload.id || `${payload.operationId}-REENVIO`,
+    operationId: payload.operationId,
+    status: payload.status || "BORRADOR_PREPARADO",
+    recipient: payload.recipient || "",
+    subject: payload.subject || "",
+    body: payload.body || "",
+    includedDocs: payload.includedDocs || [],
+    approvalRequired: payload.approvalRequired !== undefined ? payload.approvalRequired : true,
+    observations: payload.observations || [],
+    history: payload.history || [`${stamp()}: borrador documental creado.`]
+  };
+}
+
+function saveAgent6() {
+  agent6State.lastUpdated = stamp();
+  saveOperational();
+}
+
+function agent6Module() {
+  const operation = agent6SelectedOperation();
+  const metrics = agent6Metrics();
+  return `
+    <section class="agent6-workbench">
+      <div class="section-title-row agent6-header">
+        <div>
+          <span class="eyebrow">Agente 6</span>
+          <h2>Gestor Documental Operativo</h2>
+          <p class="agent6-lead">Workbench demo/localStorage para clasificar, revisar y preparar reenvíos sin tocar backend, correo real ni servicios externos.</p>
+        </div>
+        <div class="agent6-meta">
+          <span class="agent6-chip">Demo localStorage</span>
+          <span class="agent6-chip">Sin fetch</span>
+          <span class="agent6-chip">Sin correo real</span>
+        </div>
+      </div>
+      <section class="agent6-kpi-grid">
+        ${kpi("Operaciones con documentación", metrics.operations, "OP 4480 y BookShop")}
+        ${kpi("Documentos pendientes", metrics.pendingDocs, "revisión o corrección")}
+        ${kpi("Reenvíos preparados", metrics.preparedResends, "borradores demo")}
+        ${kpi("Pendientes de aprobación", metrics.pendingApprovals, "aprobación humana")}
+        ${kpi("Documentos observados", metrics.observedDocs, "requieren revisión")}
+      </section>
+      <section class="agent6-grid">
+        <article class="web-panel agent6-selector-panel">
+          <div class="section-title-row">
+            <h3>Operaciones demo</h3>
+            <div class="filter-pills">
+              <button data-agent6-filter="operation:">Todas</button>
+              ${agent6State.operations.map((item) => `<button class="${agent6State.selectedOperationId === item.id ? "active" : ""}" data-agent6-operation="${item.id}">${item.id}</button>`).join("")}
+            </div>
+          </div>
+          <div class="agent6-op-grid">
+            ${agent6State.operations.map((item) => agent6OperationCard(item)).join("")}
+          </div>
+        </article>
+        <article class="web-panel agent6-resend-panel">
+          <div class="section-title-row">
+            <h3>Panel de reenvío preparado</h3>
+            ${badge(agent6ResendStatus(operation))}
+          </div>
+          ${agent6ResendPanel(operation)}
+        </article>
+      </section>
+      <article class="web-panel agent6-doc-panel">
+        <div class="section-title-row">
+          <h3>Documentos recibidos</h3>
+          <div class="filter-pills">
+            <select data-agent6-filter-select="operation">
+              <option value="">Todas las operaciones</option>
+              ${agent6State.operations.map((item) => `<option value="${item.id}" ${agent6State.filters.operation === item.id ? "selected" : ""}>${item.id}</option>`).join("")}
+            </select>
+            <select data-agent6-filter-select="type">
+              <option value="">Todos los tipos</option>
+              ${agent6TypeOptions().map((type) => `<option value="${type}" ${agent6State.filters.type === type ? "selected" : ""}>${agent6DocTypeLabel(type)}</option>`).join("")}
+            </select>
+            <select data-agent6-filter-select="status">
+              <option value="">Todos los estados</option>
+              ${agent6StatusOptions().map((status) => `<option value="${status}" ${agent6State.filters.status === status ? "selected" : ""}>${labelState(status)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        ${agent6DocumentsTable()}
+      </article>
+      <article class="web-panel agent6-history-panel">
+        <div class="section-title-row">
+          <h3>Historial documental</h3>
+          <span class="readonly-note agent6-history-note">Última actualización ${agent6State.lastUpdated || "sin registrar"}</span>
+        </div>
+        ${notes(agent6Timeline())}
+      </article>
+    </section>
+  `;
+}
+
+function documentationModule() {
+  return agent6Module();
+}
+
+function agent6SelectedOperation() {
+  return agent6OperationById(agent6State.selectedOperationId) || agent6State.operations[0] || null;
+}
+
+function agent6OperationById(id) {
+  return agent6State.operations.find((item) => item.id === id) || null;
+}
+
+function agent6DraftForOperation(operation) {
+  return operation?.resend || null;
+}
+
+function agent6OperationStatus(operation) {
+  if (!operation) return "RECIBIDO";
+  const statuses = operation.docs.map((doc) => doc.status);
+  if (operation.resend?.status === "ENVIADO_MANUALMENTE") return "DOCUMENTACION_COMPLETA";
+  if (statuses.some((status) => status === "OBSERVADO")) return "OBSERVADO";
+  if (statuses.some((status) => status === "DRAFT_RECIBIDO")) return "DRAFT_RECIBIDO";
+  if (statuses.some((status) => status === "PENDIENTE_SALIDA")) return "PENDIENTE_SALIDA";
+  if (statuses.some((status) => status === "EN_TRANSITO")) return "EN_TRANSITO";
+  if (statuses.some((status) => status === "ARRIBADO")) return "ARRIBADO";
+  if (statuses.some((status) => status === "PENDIENTE_REVISION")) return "PENDIENTE_REVISION";
+  if (statuses.some((status) => status === "REENVIO_PREPARADO")) return "REENVIO_PREPARADO";
+  if (statuses.some((status) => status === "LISTO_PARA_REENVIAR")) return "LISTO_PARA_REENVIAR";
+  if (statuses.some((status) => status === "CORREGIDO")) return "CORREGIDO";
+  if (statuses.every((status) => ["APROBADO", "CLASIFICADO", "RECIBIDO", "ENVIADO_MANUALMENTE", "DOCUMENTACION_COMPLETA"].includes(status))) return "DOCUMENTACION_COMPLETA";
+  if (statuses.some((status) => status === "APROBADO")) return "APROBADO";
+  if (statuses.some((status) => status === "CLASIFICADO")) return "CLASIFICADO";
+  return operation.status || "RECIBIDO";
+}
+
+function agent6ResendStatus(operation) {
+  return operation?.resend?.status || "SIN_BORRADOR";
+}
+
+function agent6Metrics() {
+  const docs = agent6AllDocs();
+  return {
+    operations: agent6State.operations.length,
+    pendingDocs: docs.filter((item) => ["PENDIENTE_REVISION", "OBSERVADO", "DRAFT_RECIBIDO", "PENDIENTE_SALIDA"].includes(item.doc.status)).length,
+    preparedResends: agent6State.operations.filter((item) => item.resend && ["BORRADOR_PREPARADO", "PENDIENTE_APROBACION", "APROBADO_PARA_ENVIO"].includes(item.resend.status)).length,
+    pendingApprovals: agent6State.operations.filter((item) => item.resend && item.resend.status === "PENDIENTE_APROBACION").length,
+    observedDocs: docs.filter((item) => item.doc.status === "OBSERVADO").length
+  };
+}
+
+function agent6AttentionCount() {
+  return agent6Metrics().pendingDocs + agent6Metrics().pendingApprovals;
+}
+
+function agent6OperationCard(operation) {
+  const isSelected = agent6State.selectedOperationId === operation.id;
+  const status = agent6OperationStatus(operation);
+  const draft = agent6DraftForOperation(operation);
+  return `
+    <article class="agent6-op-card ${isSelected ? "is-selected" : ""}">
+      <div class="detail-heading">
+        <div>
+          <span class="record-id">${operation.id}</span>
+          <h4>${operation.client}</h4>
+          <p>${operation.reference} · ${operation.modality}</p>
+        </div>
+        ${badge(status)}
+      </div>
+      ${details([
+        ["Origen", operation.origin || "Pendiente"],
+        ["Destino", operation.destination || "Pendiente"],
+        ["Estado documental", status],
+        ["Próxima acción", operation.nextAction || "Sin definir"],
+        ["Reenvío", draft ? draft.status : "Sin borrador"]
+      ])}
+      <div class="agent6-doc-tags">
+        ${operation.docs.slice(0, 4).map((doc) => `<span>${doc.name} · ${doc.status}</span>`).join("")}
+      </div>
+      <div class="detail-actions">
+        <button data-agent6-operation="${operation.id}">Seleccionar</button>
+        <button data-agent6-prepare="${operation.id}">Preparar reenvío</button>
+      </div>
+    </article>
+  `;
+}
+
+function agent6TypeOptions() {
+  return [...new Set(agent6AllDocs().map((item) => item.doc.type))].sort((a, b) => agent6DocTypeLabel(a).localeCompare(agent6DocTypeLabel(b)));
+}
+
+function agent6StatusOptions() {
+  return [...new Set(agent6AllDocs().map((item) => item.doc.status))].sort((a, b) => labelState(a).localeCompare(labelState(b)));
+}
+
+function agent6DocTypeLabel(type) {
+  const labels = {
+    HBL_DRAFT: "HBL Draft",
+    SHIPPING_INSTRUCTIONS: "Shipping Instructions",
+    VESSEL_VOYAGE: "Vessel / Voyage",
+    COMMERCIAL_INVOICE: "Commercial Invoice",
+    PACKING_LIST: "Packing List",
+    SHIPPER_CONTACT: "Shipper Contact",
+    CFS_CUT_OFF: "CFS Cut-off",
+    ARRIVAL_NOTICE: "Arrival Notice",
+    HOUSE_BL: "House BL",
+    MASTER_BL: "Master BL",
+    FACTURA_COMERCIAL: "Factura comercial",
+    FACTURA_FLETE: "Factura de flete",
+    AVISO_SALIDA: "Aviso de salida"
+  };
+  return labels[type] || labelState(type);
+}
+
+function agent6AllDocs() {
+  return agent6State.operations.flatMap((operation) => operation.docs.map((doc) => ({ operation, doc })));
+}
+
+function agent6VisibleDocs() {
+  return agent6AllDocs().filter(({ operation, doc }) => {
+    if (agent6State.filters.operation && operation.id !== agent6State.filters.operation) return false;
+    if (agent6State.filters.type && doc.type !== agent6State.filters.type) return false;
+    if (agent6State.filters.status && doc.status !== agent6State.filters.status) return false;
+    return true;
+  });
+}
+
+function agent6DocumentsTable() {
+  const docs = agent6VisibleDocs();
+  if (!docs.length) return empty("Sin documentos para los filtros seleccionados.");
+  return `
+    <table class="data-table agent6-table">
+      <thead><tr><th>Documento</th><th>Tipo</th><th>Operacion</th><th>Estado</th><th>Fecha demo</th><th>Observacion</th><th>Acciones</th></tr></thead>
+      <tbody>${docs.map(({ operation, doc }) => `
+        <tr>
+          <td><strong>${doc.name}</strong></td>
+          <td>${agent6DocTypeLabel(doc.type)}</td>
+          <td>${operation.id}<br>${operation.client}</td>
+          <td>${badge(doc.status)}</td>
+          <td>${doc.receivedAt}</td>
+          <td>${doc.observations.slice(-1)[0] || "Sin observaciones"}</td>
+          <td class="table-actions">${agent6DocumentActions(operation, doc)}</td>
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+}
+
+function agent6DocumentActions(operation, doc) {
+  const actions = [
+    `<button data-agent6-doc-detail="${operation.id}:${doc.id}">Detalle</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:CLASIFICADO">Clasificar</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:PENDIENTE_REVISION">Revisar</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:OBSERVADO">Observar</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:CORREGIDO">Corregir</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:APROBADO">Aprobar</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:LISTO_PARA_REENVIAR">Listo para reenvío</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:REENVIO_PREPARADO">Reenvío preparado</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:ENVIADO_MANUALMENTE">Enviado manual</button>`,
+    `<button data-agent6-doc-status="${operation.id}:${doc.id}:DESCARTADO">Descartar</button>`,
+    `<button data-agent6-doc-observe="${operation.id}:${doc.id}">Agregar observación</button>`
+  ];
+  return actions.join("");
+}
+
+function agent6ResendPanel(operation) {
+  if (!operation) return empty("Selecciona una operación para ver el reenvío.");
+  const draft = agent6DraftForOperation(operation);
+  const preview = draft || operation.resendTemplate;
+  return `
+    <div class="agent6-resend-stack">
+      ${details([
+        ["Destinatario sugerido", preview.recipient || operation.suggestedRecipient || "Pendiente"],
+        ["Asunto sugerido", preview.subject || operation.resendTemplate.subject],
+        ["Estado del reenvío", draft ? draft.status : "SIN_BORRADOR"],
+        ["Aprobación humana", "Requerida"]
+      ])}
+      <div class="agent6-body-block">
+        <h4>Cuerpo sugerido</h4>
+        <pre>${preview.body || operation.resendTemplate.body}</pre>
+      </div>
+      <div class="agent6-doc-tags">
+        <strong>Documentos incluidos</strong>
+        ${(draft?.includedDocs || preview.includedDocs || []).map((item) => `<span>${item}</span>`).join("")}
+      </div>
+      <div class="detail-actions">
+        <button data-agent6-prepare="${operation.id}">Preparar reenvío</button>
+        <button data-agent6-draft-status="${operation.id}:PENDIENTE_APROBACION">Marcar pendiente de aprobación humana</button>
+        <button data-agent6-draft-status="${operation.id}:APROBADO_PARA_ENVIO">Aprobar para envío</button>
+        <button data-agent6-draft-status="${operation.id}:ENVIADO_MANUALMENTE">Marcar como reenviado manualmente</button>
+        <button data-agent6-draft-status="${operation.id}:CANCELADO">Cancelar borrador</button>
+        <button data-agent6-draft-observe="${operation.id}">Agregar observación</button>
+      </div>
+    </div>
+  `;
+}
+
+function agent6BuildDraft(operation) {
+  if (!operation) return null;
+  return agent6Draft({
+    id: `${operation.id}-REENVIO-001`,
+    operationId: operation.id,
+    status: "BORRADOR_PREPARADO",
+    recipient: operation.suggestedRecipient,
+    subject: operation.resendTemplate.subject,
+    body: operation.resendTemplate.body,
+    includedDocs: operation.resendTemplate.includedDocs,
+    approvalRequired: true,
+    history: [`${stamp()}: borrador preparado para ${operation.id}.`]
+  });
+}
+
+function agent6SelectOperation(operationId) {
+  const operation = agent6OperationById(operationId);
+  if (!operation) return;
+  agent6State.selectedOperationId = operationId;
+  agent6State.history.unshift(`${stamp()}: seleccionada la operación ${operationId}.`);
+  saveAgent6();
+  showToast(`Operacion ${operationId} seleccionada.`);
+}
+
+function agent6SetDocStatus(operationId, docId, status) {
+  const operation = agent6OperationById(operationId);
+  if (!operation) return;
+  const doc = operation.docs.find((item) => item.id === docId);
+  if (!doc) return;
+  if (doc.status === status) {
+    showToast(`El documento ${doc.name} ya estaba en ${status}.`);
+    return;
+  }
+  doc.status = status;
+  doc.history.unshift(`${stamp()}: estado actualizado a ${status}.`);
+  operation.history.unshift(`${stamp()}: documento ${doc.name} actualizado a ${status}.`);
+  agent6State.history.unshift(`${stamp()}: ${operationId} · ${doc.name} pasó a ${status}.`);
+  agent6State.selectedOperationId = operationId;
+  saveAgent6();
+  showToast(`Documento ${doc.name} actualizado.`);
+}
+
+function agent6PrepareResend(operationId) {
+  const operation = agent6OperationById(operationId);
+  if (!operation) return;
+  const draft = agent6BuildDraft(operation);
+  draft.status = "BORRADOR_PREPARADO";
+  draft.history.unshift(`${stamp()}: borrador preparado desde la operación ${operationId}.`);
+  operation.resend = draft;
+  operation.history.unshift(`${stamp()}: borrador de reenvío preparado.`);
+  agent6State.history.unshift(`${stamp()}: preparado reenvío para ${operationId}.`);
+  agent6State.selectedOperationId = operationId;
+  saveAgent6();
+  showToast(`Reenvío preparado para ${operationId}.`);
+}
+
+function agent6SetDraftStatus(operationId, status) {
+  const operation = agent6OperationById(operationId);
+  if (!operation) return;
+  if (!operation.resend) operation.resend = agent6BuildDraft(operation);
+  const draft = operation.resend;
+  draft.status = status;
+  draft.history.unshift(`${stamp()}: estado actualizado a ${status}.`);
+  operation.history.unshift(`${stamp()}: reenvío ${status}.`);
+  agent6State.history.unshift(`${stamp()}: ${operationId} reenvío ${status}.`);
+  agent6State.selectedOperationId = operationId;
+  saveAgent6();
+  showToast(`Reenvío ${status.toLowerCase().replaceAll("_", " ")}.`);
+}
+
+function agent6AddObservation(form) {
+  const data = new FormData(form);
+  const text = String(data.get("observation") || "").trim();
+  if (!text) return;
+  const context = modal?.target || "";
+  const operationId = modal?.operationId;
+  if (!operationId) return;
+  const operation = agent6OperationById(operationId);
+  if (!operation) return;
+  if (context === "doc") {
+    const doc = operation.docs.find((item) => item.id === modal.docId);
+    if (!doc) return;
+    doc.observations.push(`${stamp()}: ${text}`);
+    doc.history.unshift(`${stamp()}: observación agregada.`);
+    operation.history.unshift(`${stamp()}: observación documental en ${doc.name}.`);
+    agent6State.history.unshift(`${stamp()}: observación agregada a ${operationId} / ${doc.name}.`);
+  } else {
+    if (!operation.resend) operation.resend = agent6BuildDraft(operation);
+    operation.resend.observations.push(`${stamp()}: ${text}`);
+    operation.resend.history.unshift(`${stamp()}: observación agregada.`);
+    operation.history.unshift(`${stamp()}: observación agregada al reenvío.`);
+    agent6State.history.unshift(`${stamp()}: observación agregada al reenvío de ${operationId}.`);
+  }
+  modal = null;
+  saveAgent6();
+  showToast("Observacion documental guardada.");
+}
+
+function agent6DocDetail(operationId, docId) {
+  const operation = agent6OperationById(operationId);
+  const doc = operation?.docs.find((item) => item.id === docId);
+  if (!doc || !operation) return empty("Documento no encontrado.");
+  return modalShell("Detalle documental", `
+    <div class="agent6-detail">
+      <div class="detail-heading">
+        <div>
+          <span class="record-id">${operation.id}</span>
+          <h3>${doc.name}</h3>
+          <p>${operation.client} · ${agent6DocTypeLabel(doc.type)}</p>
+        </div>
+        ${badge(doc.status)}
+      </div>
+      ${details([
+        ["Operacion", operation.id],
+        ["Referencia", operation.reference],
+        ["Fecha demo", doc.receivedAt],
+        ["Observación reciente", doc.observations.slice(-1)[0] || "Sin observaciones"]
+      ])}
+      <h4>Historial documental</h4>
+      ${notes(doc.history)}
+      <h4>Observaciones</h4>
+      ${notes(doc.observations)}
+      <div class="modal-actions"><button type="button" data-close>Cerrar</button></div>
+    </div>
+  `);
+}
+
+function agent6Timeline() {
+  const items = [
+    ...agent6State.history.map((entry) => `Agente 6: ${entry}`),
+    ...agent6State.operations.flatMap((operation) => [
+      ...operation.history.map((entry) => `${operation.id}: ${entry}`),
+      ...operation.docs.flatMap((doc) => doc.history.map((entry) => `${operation.id} / ${doc.name}: ${entry}`)),
+      ...(operation.resend ? operation.resend.history.map((entry) => `${operation.id} / Reenvío: ${entry}`) : [])
+    ])
+  ];
+  return items.length ? items : ["Sin registros documentales."];
+}
+
+function render() {
+  if (portal === "cliente") root.innerHTML = renderClientPortal();
+  else if (portal === "operaciones") root.innerHTML = renderOperativePortal();
+  else root.innerHTML = renderCommercialPortal();
+}
+
+function renderCommercialPortal() {
+  return `
+    <div class="webapp-shell">
+      ${sidebar()}
+      <main class="webapp-main">
+        ${topbar("Ejecutivo Comercial", "Pipeline comercial demo/offline")}
+        ${selected ? renderDetail() : renderModule()}
+      </main>
+      ${modalMarkup()}
+      ${toastMarkup()}
+    </div>
+  `;
+}
+
+function sidebar() {
+  const modules = portal === "operaciones" ? OPERATIVE_MODULES : COMMERCIAL_MODULES;
+  return `
+    <aside class="webapp-sidebar">
+      <a class="webapp-logo" href="index.html"><img src="assets/logo_joathiva.png" alt="JoathiVA"></a>
+      <nav>
+        ${modules.map(([id, label]) => `<button class="${activeModule === id ? "active" : ""}" data-module="${id}">${label}</button>`).join("")}
+      </nav>
+      <a class="sidebar-link" href="../">Regresar a Joathi Logistica</a>
+    </aside>
+  `;
+}
+
+function topbar(title, subtitle) {
+  const actions = portal === "operaciones"
+    ? `<a class="btn btn-light" href="comercial.html">Ejecutivo Comercial</a><a class="btn btn-light" href="cliente.html">Cliente</a><a class="btn btn-primary" href="index.html">Login</a>`
+    : `<a class="btn btn-light" href="cliente.html">Vista Cliente</a><a class="btn btn-primary" href="index.html">Login</a>`;
+  return `
+    <header class="webapp-topbar">
+      <div><span class="eyebrow">Portal JoathiVA</span><h1>${title}</h1><p>${subtitle}</p></div>
+      <div class="topbar-actions">${actions}</div>
+    </header>
+  `;
+}
+
+function renderModule() {
+  if (activeModule === "dashboard") return dashboard();
+  if (activeModule === "solicitudes") return requestsModule();
+  if (activeModule === "cotizaciones") return quotesModule();
+  if (activeModule === "agente5") return agent5Module();
+  if (activeModule === "agente1") return agent1Module();
+  if (activeModule === "clientes") return clientsModule();
+  if (activeModule === "seguimiento") return followModule();
+  if (activeModule === "posventa") return postSaleModule();
+  if (activeModule === "tareas") return tasksModule();
+  if (activeModule === "historial") return historyModule();
+  return empty("Modulo no disponible");
+}
+
+function dashboard() {
+  const pending = quotesBy("PENDIENTE");
+  const review = quotesBy("EN_REVISION");
+  const answered = quotesBy("RESPONDIDA");
+  const approved = quotesBy("APROBADA");
+  const agent5Ready = agent5State.quotes.filter((item) => item.status === "LISTA_PARA_ENVIAR").length;
+  const conversion = answered.length + approved.length ? Math.round((approved.length / (answered.length + approved.length)) * 100) : 0;
+  const openTasks = commercialState.tasks.filter((item) => item.status !== "COMPLETADA");
+  const alerts = [
+    ...pending.map((item) => `${item.id}: nueva solicitud sin revisar`),
+    ...approved.map((item) => `${item.id}: cotizacion aprobada lista para Operaciones`),
+    ...agent5State.quotes.filter((item) => item.status === "LISTA_PARA_ENVIAR").map((item) => `${item.id}: Agente 5 lista para enviar`),
+    ...commercialState.tasks.filter((item) => item.status === "VENCIDA").map((item) => `${item.id}: seguimiento vencido`)
+  ];
+  return `
+    <section class="dashboard-grid">
+      <div class="kpi-column">
+        ${kpi("Solicitudes nuevas hoy", pending.length, "recibidas")}
+        ${kpi("Cotizaciones en revision", review.length, "validando costos")}
+        ${kpi("Cotizaciones respondidas", answered.length, "con precio formal")}
+        ${kpi("Aprobadas esta semana", approved.length, "convertidas")}
+        ${kpi("Conversion demo", `${conversion}%`, "aprobadas/respondidas")}
+        ${kpi("Agente 5", agent5Ready, "listas para enviar", { module: "agente5", filter: "LISTA_PARA_ENVIAR" })}
+      </div>
+      <section class="web-panel">
+        <h2>Actividad reciente</h2>
+        ${[...pending.slice(0, 2), ...answered.slice(0, 2)].map(activityRow).join("")}
+        <h2>Seguimientos pendientes</h2>
+        ${openTasks.slice(0, 3).map(taskRow).join("")}
+      </section>
+      <section class="web-panel">
+        <h2>Alertas y tareas</h2>
+        ${alerts.map((item) => `<article class="alert-line">${item}</article>`).join("") || empty("Sin alertas comerciales.")}
+        <h2>Tareas del dia</h2>
+        ${openTasks.slice(0, 3).map(taskRow).join("")}
+      </section>
+    </section>
+  `;
+}
+
+function requestsModule() {
+  return panel("Solicitudes nuevas", quotesTable(quotesBy("PENDIENTE"), ["review", "observe", "contact"]));
+}
+
+function quotesModule() {
+  const states = quoteFilter ? [quoteFilter] : ["EN_REVISION", "RESPONDIDA", "APROBADA", "CANCELADA", "VENCIDA"];
+  return `
+    <section class="web-panel">
+      <div class="section-title-row"><h2>Cotizaciones</h2><div class="filter-pills"><button data-filter="">Todas</button>${QUOTE_STATES.filter((s) => s !== "PENDIENTE").map((state) => `<button data-filter="${state}">${labelState(state)}</button>`).join("")}</div></div>
+      ${states.map((state) => `<h3>${labelState(state)}</h3>${quotesTable(quotesBy(state), ["quoteActions"])}`).join("")}
+    </section>
+  `;
+}
+
+function clientsModule() {
+  return panel("Clientes", `
+    <table class="data-table">
+      <thead><tr><th>Empresa</th><th>Cotizaciones activas</th><th>Operaciones en curso</th><th>Contacto</th><th>Accion</th></tr></thead>
+      <tbody>${customers().map((customer) => {
+        const quotes = sharedState.quotes.filter((item) => item.company === customer.company);
+        const ops = sharedState.operations.filter((op) => quotes.some((quoteItem) => quoteItem.id === op.quoteId) && op.status !== "CARGA_ENTREGADA");
+        return `<tr><td>${customer.company}</td><td>${quotes.filter((q) => !["CANCELADA", "VENCIDA"].includes(q.status)).length}</td><td>${ops.length}</td><td>${customer.email}<br>${customer.phone}</td><td><button data-client="${encodeURIComponent(customer.company)}">Ver detalle</button></td></tr>`;
+      }).join("")}</tbody>
+    </table>
+  `);
+}
+
+function followModule() {
+  const openQuotes = sharedState.quotes.filter((item) => ["PENDIENTE", "EN_REVISION", "RESPONDIDA"].includes(item.status));
+  return `
+    ${panel("Cotizaciones sin cierre", quotesTable(openQuotes, ["quoteActions"]))}
+    ${panel("Tareas de seguimiento", tasksTable(commercialState.tasks.filter((item) => item.status !== "COMPLETADA")))}
+  `;
+}
+
+function postSaleModule() {
+  const delivered = sharedState.operations.filter((item) => item.status === "CARGA_ENTREGADA");
+  return panel("Posventa", `
+    <table class="data-table">
+      <thead><tr><th>Operacion</th><th>Cliente</th><th>Fecha entrega</th><th>Satisfaccion</th><th>Acciones</th></tr></thead>
+      <tbody>${delivered.map((op) => `<tr><td>${op.id}</td><td>${op.client}</td><td>${op.deliveredAt || op.eta}</td><td>${op.satisfaction}</td><td><button data-contact="${op.quoteId}:email">Contactar</button><button data-postsale="${op.id}">Agregar nota</button></td></tr>`).join("")}</tbody>
+    </table>
+  `);
+}
+
+function tasksModule() {
+  return panel("Tareas", `<div class="section-title-row"><span></span><button class="btn btn-primary" data-new-task>Crear tarea</button></div>${tasksTable(commercialState.tasks)}`);
+}
+
+function historyModule() {
+  const entries = [
+    ...commercialState.history,
+    ...sharedState.quotes.flatMap((quoteItem) => (quoteItem.history || []).map((item) => `${quoteItem.id}: ${item}`)),
+    ...commercialState.tasks.flatMap((taskItem) => (taskItem.history || []).map((item) => `${taskItem.id}: ${item}`))
+  ];
+  return panel("Historial comercial", `<div class="timeline">${entries.map((item) => `<article>${item}</article>`).join("")}</div>`);
+}
+
+function agent5Module() {
+  const quote = activeAgent5Quote();
+  const visibleQuotes = agent5Filter ? agent5State.quotes.filter((item) => item.status === agent5Filter) : agent5State.quotes;
+  const counts = agent5StatusCounts();
+  return `
+    <section class="agent5-workbench">
+      <div class="section-title-row">
+        <div>
+          <span class="eyebrow">Agente 5</span>
+          <h2>Cotización Comercial</h2>
+          <p class="agent5-lead">Costeo interno, margen Joathi y vista cliente separada en modo demo/offline.</p>
+        </div>
+        <div class="filter-pills"><button data-agent5-status-filter="">Todas</button>${Object.keys(counts).map((status) => `<button data-agent5-status-filter="${status}">${labelState(status)} (${counts[status]})</button>`).join("")}</div>
+      </div>
+      <section class="agent5-summary-grid">
+        <article class="web-panel agent5-hero">
+          <div class="detail-heading">
+            <div>
+              <span class="record-id">${quote.id}</span>
+              <h2>${quote.client}</h2>
+              <p>${quote.routeIda}</p>
+            </div>
+            ${badge(quote.status)}
+          </div>
+          ${details([
+            ["Contacto", `${quote.contact} · ${quote.email}`],
+            ["Ruta retorno", quote.routeRetorno],
+            ["Servicio", quote.service],
+            ["Carga", `${quote.cargoType} · ${quote.units} unidades`],
+            ["Vigencia", quote.validUntil],
+            ["Version", `V${quote.version}`]
+          ])}
+          <div class="agent5-route-strip">
+            <span><strong>Origen</strong>Burzaco</span>
+            <span><strong>Centro</strong>Punta del Este</span>
+            <span><strong>Retorno</strong>Burzaco</span>
+          </div>
+          <div class="detail-actions">${agent5Actions(quote)}</div>
+        </article>
+        <article class="web-panel agent5-cost-card">
+          <h3>Costeo interno</h3>
+          ${details([
+            ["Costo proveedor", money(quote.providerCost, quote.currency)],
+            ["Margen Joathi", money(quote.margin, quote.currency)],
+            ["Adicionales", money(agent5AdditionalTotal(quote), quote.currency)],
+            ["Demora", money(quote.delayCost, quote.currency)],
+            ["Estadia", money(quote.waitingCost, quote.currency)],
+            ["Impuestos", money(quote.tax, quote.currency)],
+            ["Total comercial", money(quote.finalPrice, quote.currency)]
+          ])}
+          <h3>Lineas de la cotizacion</h3>
+          ${agent5ItemsTable(quote)}
+        </article>
+        <article class="web-panel agent5-preview-card">
+          <h3>Vista cliente</h3>
+          ${agent5ClientPreviewCard(quote)}
+        </article>
+      </section>
+      ${panel("Cotizaciones demo", agent5QuotesTable(visibleQuotes))}
+      ${panel("Versiones y trazabilidad", agent5VersionTimeline(quote))}
+      ${panel("Historial operativo del Agente 5", notes(agent5State.history))}
+    </section>
+  `;
+}
+
+function agent5Detail(quote) {
+  if (!quote) return empty("Cotizacion de Agente 5 no encontrada.");
+  return `
+    <section class="detail-layout">
+      <button class="btn btn-light" data-back>Volver</button>
+      <article class="web-panel">
+        <div class="detail-heading">
+          <div>
+            <span class="record-id">${quote.id}</span>
+            <h2>${quote.client}</h2>
+            <p class="agent5-lead">${quote.routeIda} · ${quote.service}</p>
+          </div>
+          ${badge(quote.status)}
+        </div>
+        ${details([
+          ["Contacto", `${quote.contact} · ${quote.email} · ${quote.phone}`],
+          ["Ruta ida", quote.routeIda],
+          ["Ruta retorno", quote.routeRetorno],
+          ["Carga", `${quote.cargoType} · ${quote.units} unidades`],
+          ["Vigencia", quote.validUntil],
+          ["Version", `V${quote.version}`],
+          ["Total comercial", money(quote.finalPrice, quote.currency)]
+        ])}
+        <div class="agent5-detail-grid">
+          <section>
+            <h3>Costeo interno</h3>
+            ${details([
+              ["Costo proveedor", money(quote.providerCost, quote.currency)],
+              ["Margen Joathi", money(quote.margin, quote.currency)],
+              ["Adicionales", money(agent5AdditionalTotal(quote), quote.currency)],
+              ["Demora", money(quote.delayCost, quote.currency)],
+              ["Estadia", money(quote.waitingCost, quote.currency)],
+              ["Impuestos", money(quote.tax, quote.currency)]
+            ])}
+          </section>
+          <section>
+            <h3>Vista cliente</h3>
+            ${agent5ClientPreviewCard(quote)}
+          </section>
+        </div>
+        <h3>Lineas y rutas</h3>
+        ${agent5ItemsTable(quote)}
+        <h3>Acciones</h3>
+        <div class="detail-actions">${agent5Actions(quote)}</div>
+        <h3>Versiones</h3>
+        ${agent5VersionTimeline(quote)}
+        <h3>Historial</h3>
+        ${notes(quote.history)}
+      </article>
+    </section>
+  `;
+}
+
+function agent5StatusCounts() {
+  return agent5State.quotes.reduce((acc, quote) => {
+    acc[quote.status] = (acc[quote.status] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function activeAgent5Quote() {
+  const filtered = agent5Filter ? agent5State.quotes.filter((item) => item.status === agent5Filter) : agent5State.quotes;
+  return findAgent5Quote(agent5State.activeQuoteId)
+    || filtered[0]
+    || agent5State.quotes[0];
+}
+
+function findAgent5Quote(id) {
+  return agent5State.quotes.find((item) => item.id === id);
+}
+
+function agent5AdditionalTotal(quote) {
+  return (quote.additionalCosts || []).reduce((sum, item) => sum + Number(item.amount || 0), 0);
+}
+
+function agent5ClientPreview(quote) {
+  return {
+    quoteCode: quote.id,
+    client: quote.client,
+    route: `${quote.routeIda} / ${quote.routeRetorno}`,
+    service: quote.service,
+    cargoType: quote.cargoType,
+    units: quote.units,
+    currency: quote.currency,
+    finalPrice: quote.finalPrice,
+    validUntil: quote.validUntil,
+    conditions: quote.conditions,
+    exclusions: quote.exclusions,
+    visibleLineItems: quote.items.map((item) => ({
+      direction: item.direction,
+      description: item.description,
+      units: item.units,
+      visiblePriceUnit: item.visiblePriceUnit,
+      visiblePriceTotal: item.visiblePriceTotal
+    })),
+    nextSteps: ["Revisión humana obligatoria", "No se envía automáticamente", "Pendiente de aprobación comercial"]
+  };
+}
+
+function agent5ClientPreviewCard(quote) {
+  const preview = agent5ClientPreview(quote);
+  return `
+    <div class="agent5-preview">
+      <div class="agent5-preview-head">
+        <strong>${preview.quoteCode}</strong>
+        ${badge(quote.status)}
+      </div>
+      ${details([
+        ["Cliente", preview.client],
+        ["Ruta", preview.route],
+        ["Servicio", preview.service],
+        ["Precio visible", money(preview.finalPrice, preview.currency)],
+        ["Vigencia", preview.validUntil]
+      ])}
+      <h4>Lineas visibles</h4>
+      <ul class="agent5-list">
+        ${preview.visibleLineItems.map((item) => `<li>${item.direction} · ${item.description} · ${item.units} un. · ${money(item.visiblePriceTotal, preview.currency)}</li>`).join("")}
+      </ul>
+      <p class="readonly-note">La vista cliente no expone costo proveedor ni margen interno.</p>
+      <div class="detail-actions">
+        <button data-agent5-preview="${quote.id}">Ver preview completo</button>
+      </div>
+    </div>
+  `;
+}
+
+function agent5ItemsTable(quote) {
+  return `
+    <table class="data-table compact-table">
+      <thead><tr><th>Tramo</th><th>Descripcion</th><th>Unidades</th><th>Proveedor</th><th>Margen</th><th>Visible</th></tr></thead>
+      <tbody>${quote.items.map((item) => `
+        <tr>
+          <td>${item.direction}</td>
+          <td>${item.description}</td>
+          <td>${item.units}</td>
+          <td>${money(item.providerCostTotal, quote.currency)}</td>
+          <td>${money(item.marginAmountTotal, quote.currency)}</td>
+          <td class="formal-price">${money(item.visiblePriceTotal, quote.currency)}</td>
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+}
+
+function agent5QuotesTable(quotes) {
+  return `
+    <table class="data-table">
+      <thead><tr><th>Cotizacion</th><th>Cliente</th><th>Ruta</th><th>Estado</th><th>Final</th><th>Version</th><th>Acciones</th></tr></thead>
+      <tbody>${quotes.map((quote) => `
+        <tr class="${quote.id === activeAgent5Quote().id ? 'row-highlight' : ''}">
+          <td>${quote.id}</td>
+          <td>${quote.client}</td>
+          <td>${quote.routeIda}</td>
+          <td>${badge(quote.status)}</td>
+          <td class="formal-price">${money(quote.finalPrice, quote.currency)}</td>
+          <td>V${quote.version}</td>
+          <td class="table-actions">
+            <button data-agent5-detail="${quote.id}">Ver detalle</button>
+            <button data-agent5-preview="${quote.id}">Vista cliente</button>
+          </td>
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+}
+
+function agent5VersionTimeline(quote) {
+  return `
+    <div class="timeline">
+      ${quote.versions.map((version) => `<article><strong>V${version.version}</strong> · ${version.status}<br>${version.reason}<br><small>${version.createdAt}</small></article>`).join("")}
+    </div>
+  `;
+}
+
+function agent5Actions(quote) {
+  return `
+    <div class="detail-actions">
+      <button data-agent5-preview="${quote.id}">Preview cliente</button>
+      <button data-agent5-status="${quote.id}:BORRADOR">Borrador</button>
+      <button data-agent5-status="${quote.id}:EN_REVISION">En revision</button>
+      <button data-agent5-status="${quote.id}:LISTA_PARA_ENVIAR">Lista para enviar</button>
+      <button data-agent5-status="${quote.id}:ENVIADA_MANUALMENTE">Enviada manualmente</button>
+      <button data-agent5-status="${quote.id}:APROBADA">Aprobada</button>
+      <button data-agent5-status="${quote.id}:CANCELADA">Cancelada</button>
+      <button data-agent5-status="${quote.id}:VENCIDA">Vencida</button>
+      <button data-agent5-duplicate="${quote.id}">Duplicar version</button>
+    </div>
+  `;
+}
+
+function agent5UpdateStatus(id, status) {
+  const quote = findAgent5Quote(id);
+  if (!quote) return;
+  quote.status = status;
+  quote.version += 1;
+  quote.versions.unshift({
+    version: quote.version,
+    status,
+    reason: `Cambio manual a ${status}`,
+    createdAt: stamp()
+  });
+  quote.history.unshift(`${stamp()}: estado actualizado a ${status}.`);
+  agent5State.history.unshift(`${stamp()}: ${id} cambió a ${status}.`);
+  agent5State.activeQuoteId = id;
+  saveAgent5();
+  showToast(`Cotizacion ${id} actualizada a ${status}.`);
+}
+
+function agent5Duplicate(id) {
+  const quote = findAgent5Quote(id);
+  if (!quote) return;
+  const copyIndex = agent5State.quotes.length + 1;
+  const nextId = `CQ-COPY-${String(copyIndex).padStart(3, "0")}`;
+  const duplicate = {
+    ...quote,
+    id: nextId,
+    status: "BORRADOR",
+    version: 1,
+    history: [`${stamp()}: duplicada desde ${id}.`],
+    versions: [{ version: 1, status: "BORRADOR", reason: `Duplicada desde ${id}`, createdAt: stamp() }]
+  };
+  agent5State.quotes.unshift(duplicate);
+  agent5State.activeQuoteId = nextId;
+  agent5State.history.unshift(`${stamp()}: ${id} duplicada como ${nextId}.`);
+  saveAgent5();
+  showToast("Version duplicada.");
+  render();
+}
+
+function quotesTable(quotes, actions) {
+  if (!quotes.length) return empty("Sin registros.");
+  return `
+    <table class="data-table">
+      <thead><tr><th>Folio</th><th>Cliente</th><th>Ruta</th><th>Estado</th><th>Precio estimado</th><th>Precio formal</th><th>Dias activa</th><th>Ultima actualizacion</th><th>Ejecutivo</th><th>Acciones</th></tr></thead>
+      <tbody>${quotes.map((quoteItem) => `
+        <tr>
+          <td>${quoteItem.id}</td><td>${quoteItem.company}</td><td>${quoteItem.origin} a ${quoteItem.destination}</td><td>${badge(quoteItem.status)}</td><td>${quoteItem.priceEstimate}</td><td class="formal-price">${quoteItem.formalPrice || "Pendiente"}</td><td>${daysActive(quoteItem.updatedAt)}</td><td>${quoteItem.updatedAt}</td><td>${quoteItem.executive}</td>
+          <td class="table-actions">${rowActions(quoteItem, actions)}</td>
+        </tr>`).join("")}</tbody>
+    </table>
+  `;
+}
+
+function rowActions(quoteItem, actions) {
+  const base = [`<button data-quote="${quoteItem.id}">Ver detalle</button>`];
+  const statusActions = quoteActions(quoteItem);
+  if (actions.includes("review") && quoteItem.status === "PENDIENTE") base.push(`<button data-review="${quoteItem.id}">Marcar en revision</button>`);
+  if (actions.includes("observe")) base.push(`<button data-observe="${quoteItem.id}">Observacion</button>`);
+  if (actions.includes("contact")) base.push(`<button data-contact="${quoteItem.id}:email">Contactar</button>`);
+  if (actions.includes("quoteActions")) base.push(statusActions);
+  return base.join("");
+}
+
+function quoteActions(quoteItem) {
+  if (quoteItem.status === "PENDIENTE") return `<button data-review="${quoteItem.id}">Marcar en revision</button><button data-observe="${quoteItem.id}">Observacion</button><button data-contact="${quoteItem.id}:email">Contactar</button>`;
+  if (quoteItem.status === "EN_REVISION") return `<button data-respond="${quoteItem.id}">Responder</button><button data-observe="${quoteItem.id}">Observacion</button><button data-follow="${quoteItem.id}">Seguimiento</button><button data-cancel="${quoteItem.id}">Cancelar</button>`;
+  if (quoteItem.status === "RESPONDIDA") return `<button data-follow="${quoteItem.id}">Seguimiento</button><button data-contact="${quoteItem.id}:email">Contactar</button>`;
+  if (quoteItem.status === "APROBADA") return `<button data-operation="${quoteItem.operationId || operationForQuote(quoteItem.id)?.id || ""}">Ver operacion</button><button data-module="posventa">Pasar a posventa</button><button data-client="${encodeURIComponent(quoteItem.company)}">Ver cliente</button>`;
+  return `<button data-observe="${quoteItem.id}">Observacion interna</button>`;
+}
+
+function tasksTable(tasks) {
+  if (!tasks.length) return empty("Sin tareas.");
+  return `
+    <table class="data-table">
+      <thead><tr><th>Cotizacion / tarea</th><th>Cliente</th><th>Fecha limite</th><th>Estado</th><th>Nota</th><th>Acciones</th></tr></thead>
+      <tbody>${tasks.map((item) => `<tr class="${item.status === "VENCIDA" ? "row-danger" : ""}"><td>${item.quoteId || item.id}<br>${item.title}</td><td>${item.client}</td><td>${item.dueDate}</td><td>${badge(item.status)}</td><td>${item.note || ""}</td><td class="table-actions"><button data-complete-task="${item.id}">Completar</button><button data-task-status="${item.id}:EN_CURSO">En curso</button><button data-task-observe="${item.id}">Observacion</button><button data-contact="${item.quoteId}:email">Contactar</button></td></tr>`).join("")}</tbody>
+    </table>
+  `;
+}
+
+function renderDetail() {
+  const [type, rawId] = selected.split(":");
+  const id = decodeURIComponent(rawId || "");
+  if (type === "quote") return quoteDetail(findQuote(id));
+  if (type === "agent5") return agent5Detail(findAgent5Quote(id));
+  if (type === "client") return clientDetail(id);
+  if (type === "operation") return operationDetail(findOperation(id));
+  if (type === "op") return operativeOperationDetail(findOperation(id));
+  if (type === "provider") return providerDetail(findProvider(id));
+  if (type === "driver") return driverDetail(findDriver(id));
+  if (type === "vehicle") return vehicleDetail(findVehicle(id));
+  if (type === "incident") return incidentDetail(findIncident(id));
+  return empty("Detalle no encontrado.");
+}
+
+function quoteDetail(quoteItem) {
+  if (!quoteItem) return empty("Cotizacion no encontrada.");
+  return `
+    <section class="detail-layout">
+      <button class="btn btn-light" data-back>Volver</button>
+      <article class="web-panel">
+        <div class="detail-heading"><div><span class="record-id">${quoteItem.id}</span><h2>${quoteItem.company}</h2></div>${badge(quoteItem.status)}</div>
+        ${details([
+          ["Contacto", `${quoteItem.requester} · ${quoteItem.email} · ${quoteItem.phone}`],
+          ["Origen / destino", `${quoteItem.origin} a ${quoteItem.destination}`],
+          ["Direcciones", `${quoteItem.originAddress} / ${quoteItem.destinationAddress}`],
+          ["Carga", `${quoteItem.cargoType} · ${quoteItem.cargoCondition} · ${quoteItem.weight}`],
+          ["Valor estimado", quoteItem.estimatedValue],
+          ["Precio preliminar", quoteItem.priceEstimate],
+          ["Precio formal", quoteItem.formalPrice || "Pendiente"],
+          ["Condiciones", quoteItem.commercialTerms || "Pendiente"]
+        ])}
+        <p>${quoteItem.detail}</p>
+        <h3>Observaciones del cliente</h3>${notes(quoteItem.clientObservations)}
+        <h3>Observaciones comerciales</h3>${notes(quoteItem.commercialObservations)}
+        <h3>Historial</h3>${notes(quoteItem.history)}
+        <h3>Contacto cliente</h3>${contactActions(quoteItem)}
+        <div class="detail-actions">${quoteActions(quoteItem)}</div>
+      </article>
+    </section>
+  `;
+}
+
+function clientDetail(company) {
+  const customer = customers().find((item) => item.company === company);
+  const quotes = sharedState.quotes.filter((item) => item.company === company);
+  const operations = sharedState.operations.filter((op) => quotes.some((q) => q.id === op.quoteId));
+  const tasks = commercialState.tasks.filter((item) => item.client === company && item.status !== "COMPLETADA");
+  if (!customer) return empty("Cliente no encontrado.");
+  return `
+    <section class="detail-layout">
+      <button class="btn btn-light" data-back>Volver</button>
+      <article class="web-panel">
+        <h2>${customer.company}</h2>
+        ${details([["Email", customer.email], ["Telefono", customer.phone], ["Cotizaciones", quotes.length], ["Operaciones", operations.length], ["Tareas pendientes", tasks.length]])}
+        <h3>Cotizaciones asociadas</h3>${quotesTable(quotes, ["quoteActions"])}
+        <h3>Operaciones asociadas</h3>${operations.map(operationCard).join("") || empty("Sin operaciones.")}
+        <h3>Historial de comunicacion</h3>${notes(quotes.flatMap((item) => item.history || []))}
+      </article>
+    </section>
+  `;
+}
+
+function operationDetail(operation) {
+  if (!operation) return empty("Operacion no encontrada.");
+  return `
+    <section class="detail-layout">
+      <button class="btn btn-light" data-back>Volver</button>
+      <article class="web-panel">
+        <div class="detail-heading"><div><span class="record-id">${operation.id}</span><h2>${operation.client}</h2></div>${badge(operation.status)}</div>
+        ${details([["ID operacion", operation.id], ["Estado actual", operation.status], ["Cliente", operation.client], ["Origen", operation.origin], ["Destino", operation.destination], ["Transportista", operation.carrier || "Pendiente"], ["ETA", operation.eta]])}
+        <p class="readonly-note">La gestion operativa corresponde al Ejecutivo Operativo.</p>
+      </article>
+    </section>
+  `;
+}
+
+function renderOperativePortal() {
+  return `
+    <div class="webapp-shell">
+      ${sidebar()}
+      <main class="webapp-main">
+        ${topbar("Ejecutivo Operativo", "Coordinacion operativa demo/offline")}
+        ${selected ? renderDetail() : renderOperativeModule()}
+      </main>
+      ${modalMarkup()}
+      ${toastMarkup()}
+    </div>
+  `;
+}
+
+function renderOperativeModule() {
+  if (activeModule === "dashboard") return operativeDashboard();
+  if (activeModule === "operaciones") return operationsModule();
+  if (activeModule === "asignaciones") return assignmentsModule();
+  if (activeModule === "tracking") return trackingModule();
+  if (activeModule === "documentacion") return documentationModule();
+  if (activeModule === "agente6") return agent6Module();
+  if (activeModule === "incidencias") return incidentsModule();
+  if (activeModule === "proveedores") return providersModule();
+  if (activeModule === "despacho") return dispatchModule();
+  if (activeModule === "contactos") return contactsModule();
+  if (activeModule === "administracion") return adminNoticesModule();
+  if (activeModule === "historial") return operativeHistoryModule();
+  return empty("Modulo no disponible");
+}
+
+function operativeDashboard() {
+  const ops = operativeOps();
+  const active = ops.filter((op) => !["CARGA_ENTREGADA", "CERRADA"].includes(op.status));
+  const pendingDocs = Object.values(opDocsState).flat().filter((doc) => doc.status !== "VALIDADO");
+  const alerts = [
+    ...ops.filter((op) => op.status === "DEMORADA").map((op) => `${op.id}: operacion demorada`),
+    ...ops.filter((op) => op.status === "CARGA_ENTREGADA" && !op.administracionNotificada).map((op) => `${op.id}: entrega pendiente de aviso a Administración`),
+    ...incidentsState.filter((item) => ["ALTA", "CRITICA"].includes(item.severity) && item.status !== "RESUELTA").map((item) => `${item.id}: incidencia ${item.severity}`),
+    ...driversState.filter((driver) => driver.status === "DOCUMENTACION_POR_VENCER").map((driver) => `${driver.name}: documentacion por vencer`),
+    ...vehiclesState.filter((vehicle) => vehicle.status === "NO_APTO").map((vehicle) => `${vehicle.plate}: vehiculo no apto`)
+  ];
+  return `
+    <section class="dashboard-grid">
+      <div class="kpi-column">
+        ${kpi("Operaciones activas", active.length, "sin cerrar", { module: "operaciones", filter: "" })}
+        ${kpi("En ruta / frontera", ops.filter((op) => ["EN_RUTA", "EN_FRONTERA"].includes(op.status)).length, "con tracking demo", { module: "tracking", filter: "" })}
+        ${kpi("Demoradas", ops.filter((op) => op.status === "DEMORADA").length, "requieren seguimiento", { module: "operaciones", filter: "DEMORADA" })}
+        ${kpi("Docs pendientes", pendingDocs.length, "checklist operativo", { module: "documentacion", filter: "" })}
+        ${kpi("Gestor documental", agent6AttentionCount(), "OP 4480 y BOOKSHOP", { module: "agente6", filter: "" })}
+        ${kpi("Avisos admin", adminNoticesState.filter((item) => item.status === "PENDIENTE").length, "pendientes", { module: "administracion", filter: "" })}
+      </div>
+      <section class="web-panel">
+        <h2>Actividad operativa reciente</h2>
+        ${ops.slice(0, 5).map((op) => `<article class="activity-row"><strong>${op.id} · ${op.client}</strong><span>${op.origin} a ${op.destination} · ${op.tracking?.location || "Sin tracking"}</span>${badge(op.status)}</article>`).join("")}
+        <h2>Vencimientos proximos</h2>
+        ${[...driversState.filter((item) => item.status === "DOCUMENTACION_POR_VENCER").map((item) => `${item.name}: libreta observada`), ...vehiclesState.filter((item) => item.status === "HABILITADO_CON_ALERTA").map((item) => `${item.plate}: seguro por vencer`)].map((item) => `<article class="alert-line">${item}</article>`).join("") || empty("Sin vencimientos proximos.")}
+      </section>
+      <section class="web-panel">
+        <h2>Alertas</h2>
+        ${alerts.map((item) => `<article class="alert-line">${item}</article>`).join("") || empty("Sin alertas operativas.")}
+      </section>
+    </section>
+  `;
+}
+
+function operationsModule() {
+  const ops = opFilter ? operativeOps().filter((op) => op.status === opFilter) : operativeOps();
+  return `
+    <section class="web-panel">
+      <div class="section-title-row">
+        <h2>Operaciones</h2>
+        <div class="filter-pills"><button data-op-filter="">Todas</button>${OP_STATES.map((state) => `<button data-op-filter="${state}">${labelState(state)}</button>`).join("")}</div>
+      </div>
+      ${operationsTable(ops)}
+    </section>
+  `;
+}
+
+function operationsTable(ops) {
+  if (!ops.length) return empty("Sin operaciones.");
+  return `
+    <table class="data-table">
+      <thead><tr><th>Operacion</th><th>Cliente</th><th>Ruta</th><th>Estado</th><th>Proveedor</th><th>Chofer / vehiculo</th><th>ETA</th><th>Acciones</th></tr></thead>
+      <tbody>${ops.map((op) => `
+        <tr>
+          <td>${op.id}</td><td>${op.client}</td><td>${op.origin} a ${op.destination}</td><td>${badge(op.status)}</td><td>${op.provider || op.carrier || "Pendiente"}</td><td>${op.driver || "Pendiente"}<br>${op.vehicle || "Sin vehiculo"}</td><td>${op.eta}</td>
+          <td class="table-actions">${operationActions(op)}</td>
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+}
+
+function operationActions(op) {
+  const actions = [`<button data-op-detail="${op.id}">Ver detalle</button>`, `<button data-open-map="${op.id}">Tracking</button>`];
+  if (!isOperationAssigned(op)) actions.push(`<button data-assign-op="${op.id}">Asignar</button>`);
+  if (!op.administracionNotificada) actions.push(`<button data-op-deliver="${op.id}">Confirmar entrega</button>`);
+  return actions.join("");
+}
+
+function detailOperationActions(op) {
+  const actions = [`<button data-op-status="${op.id}">Actualizar estado manual</button>`, `<button data-track="${op.id}">Actualizar ubicación demo</button>`];
+  if (!isOperationAssigned(op)) actions.push(`<button data-assign-op="${op.id}">Asignar</button>`);
+  if (!op.administracionNotificada) actions.push(`<button data-op-deliver="${op.id}">Confirmar entrega</button>`);
+  return actions.join("");
+}
+
+function isOperationAssigned(op) {
+  return Boolean((op.provider || op.carrier) && op.driver && op.vehicle);
+}
+
+function assignmentsModule() {
+  return panel("Asignaciones", `
+    ${operationsTable(operativeOps().filter((op) => op.status !== "CERRADA"))}
+    <h3>Recursos asignables</h3>
+    <div class="card-grid">${providersState.map(providerMiniCard).join("")}${driversState.map(driverMiniCard).join("")}${vehiclesState.map(vehicleMiniCard).join("")}</div>
+  `);
+}
+
+function trackingModule() {
+  return panel("Tracking demo", `
+    <div class="route-grid">
+      ${operativeOps().map((op) => routeVisual(op)).join("")}
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Operacion</th><th>Estado</th><th>Ubicacion</th><th>Chofer</th><th>Actualizado</th><th>Nota</th><th>Acciones</th></tr></thead>
+      <tbody>${operativeOps().map((op) => `<tr><td>${op.id}</td><td>${badge(op.status)}</td><td>${trackingData(op).location}</td><td>${trackingData(op).driver}</td><td>${trackingData(op).updatedAt}</td><td>${trackingData(op).note}</td><td class="table-actions"><button data-track="${op.id}">Actualizar ubicación demo</button><button data-op-detail="${op.id}">Ver operacion</button></td></tr>`).join("")}</tbody>
+    </table>
+    <p class="readonly-note">Tracking simulado. No usa GPS real ni solicita permisos.</p>
+  `);
+}
+
+function documentationModule() {
+  return `
+    <section class="web-panel">
+      <h2>Documentacion operativa</h2>
+      ${operativeOps().map((op) => `
+        <article class="doc-block">
+          <div class="section-title-row"><h3>${op.id} · ${op.client}</h3>${badge(op.status)}</div>
+          ${documentChecklist(op.id)}
+        </article>
+      `).join("")}
+    </section>
+  `;
+}
+
+function documentChecklist(operationId) {
+  ensureOpDocs(operationId);
+  return `
+    <table class="data-table compact-table">
+      <thead><tr><th>Documento</th><th>Estado</th><th>Observaciones</th><th>Accion demo</th></tr></thead>
+      <tbody>${opDocsState[operationId].map((doc, index) => `<tr><td>${doc.name}</td><td>${badge(doc.status)}</td><td>${doc.observations.slice(-1)[0] || "Sin observaciones"}</td><td class="table-actions"><button data-doc-detail="${operationId}:${index}">Ver detalle</button><button data-doc-status="${operationId}:${index}:CARGADO">Marcar como cargado</button><button data-doc-status="${operationId}:${index}:VALIDADO">Validar</button><button data-doc-status="${operationId}:${index}:OBSERVADO">Observar</button><button data-doc-observe="${operationId}:${index}">Agregar observacion</button></td></tr>`).join("")}</tbody>
+    </table>
+  `;
+}
+
+function incidentsModule() {
+  return panel("Incidencias", `
+    <div class="section-title-row"><span></span><button class="btn btn-primary" data-new-incident>Crear incidencia</button></div>
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Operacion</th><th>Tipo</th><th>Severidad</th><th>Estado</th><th>Descripcion</th><th>Acciones</th></tr></thead>
+      <tbody>${incidentsState.map((item) => `<tr><td>${item.id}</td><td>${item.operationId}</td><td>${item.type}</td><td>${badge(item.severity)}</td><td>${badge(item.status)}</td><td>${item.description}</td><td class="table-actions"><button data-incident="${item.id}">Ver detalle</button><button data-incident-status="${item.id}:EN_REVISION">En revision</button><button data-incident-status="${item.id}:RESUELTA">Resolver</button><button data-incident-observe="${item.id}">Observacion</button></td></tr>`).join("")}</tbody>
+    </table>
+  `);
+}
+
+function providersModule() {
+  return panel("Proveedores, choferes y vehiculos", `
+    <h3>Proveedores</h3>${providerTable()}
+    <h3>Choferes</h3>${driverTable()}
+    <h3>Vehiculos</h3>${vehicleTable()}
+  `);
+}
+
+function providerTable() {
+  return `<table class="data-table"><thead><tr><th>Proveedor</th><th>Estado</th><th>Transporte</th><th>Carga</th><th>Paises / rutas</th><th>Disponibilidad</th><th>Acciones</th></tr></thead><tbody>${providersState.map((item) => `<tr><td>${item.name}</td><td>${badge(item.status)}</td><td>${item.transportTypes}</td><td>${item.cargoTypes}</td><td>${item.routes}</td><td>${item.availability}</td><td class="table-actions"><button data-provider="${item.id}">Ver documentacion</button><button data-view-pending>Ver documentacion pendiente</button></td></tr>`).join("")}</tbody></table>`;
+}
+
+function driverTable() {
+  return `<table class="data-table"><thead><tr><th>Chofer</th><th>Proveedor</th><th>Vehiculo</th><th>Estado</th><th>Docs obligatorios</th><th>Acciones</th></tr></thead><tbody>${driversState.map((item) => `<tr><td>${item.name}</td><td>${item.provider}</td><td>${item.vehicle || "Pendiente"}</td><td>${badge(item.status)}</td><td>${item.documents.map((doc) => `${doc.name}: ${doc.status}`).join("<br>")}</td><td class="table-actions"><button data-driver="${item.id}">Ver detalle</button><button data-view-pending>Ver documentacion pendiente</button></td></tr>`).join("")}</tbody></table>`;
+}
+
+function vehicleTable() {
+  return `<table class="data-table"><thead><tr><th>Matricula</th><th>Tipo</th><th>Estado</th><th>Seguro</th><th>Capacidad / carga</th><th>Paises / rutas</th><th>Acciones</th></tr></thead><tbody>${vehiclesState.map((item) => `<tr><td>${item.plate}</td><td>${item.type}</td><td>${badge(item.status)}</td><td>${item.insurance}</td><td>${item.capacity}<br>${item.cargoType}</td><td>${item.routes}</td><td class="table-actions"><button data-vehicle="${item.id}">Ver documentacion</button><button data-view-pending>Ver documentacion pendiente</button></td></tr>`).join("")}</tbody></table>`;
+}
+
+function dispatchModule() {
+  return panel("Despacho", `
+    <table class="data-table">
+      <thead><tr><th>Operacion</th><th>Despachante</th><th>Estado despacho</th><th>Documentacion</th><th>Observaciones</th><th>Acciones</th></tr></thead>
+      <tbody>${operativeOps().map((op) => `<tr><td>${op.id}</td><td>${op.customsBroker}</td><td>${op.customsStatus}</td><td>${documentSummary(op.id)}</td><td>${(op.customsObservations || []).slice(-1)[0] || "Sin observaciones"}</td><td class="table-actions"><button data-op-detail="${op.id}">Ver operacion</button><button data-dispatch="${op.id}">Actualizar despacho</button></td></tr>`).join("")}</tbody>
+    </table>
+  `);
+}
+
+function contactsModule() {
+  const contacts = [
+    ["Administración Joathi", "rhernandez@joathilogistica.com", "+59897971122"],
+    ["Transportes del Sur SRL", "operaciones@transportesdelsur.demo", "+598 99 200 001"],
+    ["Frio Express Ltda", "trafico@frioexpress.demo", "+598 99 200 002"],
+    ["Estudio Aduanero Sur", "despacho@aduanasur.demo", "+598 99 200 003"]
+  ];
+  return panel("Contactos operativos", `<table class="data-table"><thead><tr><th>Contacto</th><th>Email</th><th>Telefono</th><th>Acciones</th></tr></thead><tbody>${contacts.map(([name, email, phone]) => `<tr><td>${name}</td><td>${email}</td><td>${phone}</td><td class="table-actions"><button data-direct-contact="${encodeURIComponent(name)}|${email}|email">Email</button><button data-direct-contact="${encodeURIComponent(name)}|${phone}|call">Llamada</button><button data-direct-contact="${encodeURIComponent(name)}|${phone}|whatsapp">WhatsApp</button><button data-direct-contact="${encodeURIComponent(name)}|${email}|chat">Chat demo</button></td></tr>`).join("")}</tbody></table>`);
+}
+
+function adminNoticesModule() {
+  return panel("Avisos a Administración", `
+    <table class="data-table">
+      <thead><tr><th>ID</th><th>Operacion</th><th>Tipo</th><th>Estado</th><th>Cliente</th><th>Creado por</th><th>Fecha</th><th>Mensaje</th><th>Acciones</th></tr></thead>
+      <tbody>${adminNoticesState.map((item) => `<tr><td>${item.id}</td><td>${item.operationId}</td><td>${item.type}</td><td>${badge(item.status)}</td><td>${item.client}</td><td>${item.createdBy}</td><td>${item.createdAt}</td><td>${item.message}</td><td class="table-actions"><button data-op-detail="${item.operationId}">Ver operacion</button><button data-admin-seen="${item.id}">Marcar revisado</button></td></tr>`).join("") || `<tr><td colspan="9">${empty("Sin avisos enviados.")}</td></tr>`}</tbody>
+    </table>
+  `);
+}
+
+function operativeHistoryModule() {
+  const entries = [
+    ...opHistoryState,
+    ...agent6State.history.map((entry) => `Agente 6: ${entry}`),
+    ...operativeOps().flatMap((op) => (op.history || []).map((item) => `${op.id}: ${item}`)),
+    ...incidentsState.flatMap((item) => (item.history || []).map((entry) => `${item.id}: ${entry}`))
+  ];
+  return panel("Historial operativo", `<div class="timeline">${entries.map((item) => `<article>${item}</article>`).join("")}</div>`);
+}
+
+function operativeOperationDetail(operation) {
+  if (!operation) return empty("Operacion no encontrada.");
+  return `
+    <section class="detail-layout">
+      <button class="btn btn-light" data-back>Volver</button>
+      <article class="web-panel">
+        <div class="detail-heading"><div><span class="record-id">${operation.id}</span><h2>${operation.client}</h2></div>${badge(operation.status)}</div>
+        ${details([["Ruta", `${operation.origin} a ${operation.destination}`], ["Proveedor", operation.provider || operation.carrier || "Pendiente"], ["Chofer", operation.driver || "Pendiente"], ["Vehiculo", operation.vehicle || "Pendiente"], ["ETA", operation.eta], ["Tracking", `${operation.tracking?.location || "Pendiente"} · ${operation.tracking?.state || ""}`], ["Despacho", operation.customsStatus], ["Administración", operation.administracionNotificada ? "Administración notificada" : "Pendiente de aviso"]])}
+        <h3>Mapa visual simulado</h3>${routeVisual(operation, "large")}
+        <div class="detail-actions">${detailOperationActions(operation)}</div>
+        <h3>Checklist documental</h3>${documentChecklist(operation.id)}
+        <h3>Incidencias asociadas</h3>${incidentsState.filter((item) => item.operationId === operation.id).map((item) => `<article class="activity-row"><strong>${item.id} · ${item.type}</strong><span>${item.description}</span>${badge(item.status)}</article>`).join("") || empty("Sin incidencias.")}
+        <h3>Historial</h3>${notes(operation.history || [])}
+      </article>
+    </section>
+  `;
+}
+
+function providerDetail(provider) {
+  if (!provider) return empty("Proveedor no encontrado.");
+  const relatedDrivers = driversState.filter((item) => item.provider === provider.name);
+  return detailShell(provider.name, badge(provider.status), details([["Responsable", provider.responsible], ["Datos fiscales/empresa", provider.taxData], ["Tipo transporte", provider.transportTypes], ["Tipo carga", provider.cargoTypes], ["Paises / rutas", provider.routes], ["Disponibilidad", provider.availability]]) + `<h3>Choferes asociados</h3>${relatedDrivers.map(driverMiniCard).join("") || empty("Sin choferes.")}<h3>Documentacion proveedor</h3>${notes(["Fiscales/empresa: Pendiente de revision Joathi", "Responsable operativo: Validado", "Rutas y transportes: Validado", "Documentacion general: Pendiente de revision Joathi"])}`);
+}
+
+function driverDetail(driver) {
+  if (!driver) return empty("Chofer no encontrado.");
+  return detailShell(driver.name, badge(driver.status), details([["Proveedor", driver.provider], ["Vehiculo", driver.vehicle || "Pendiente"], ["Telefono", driver.phone]]) + docsList(driver.documents));
+}
+
+function vehicleDetail(vehicle) {
+  if (!vehicle) return empty("Vehiculo no encontrado.");
+  return detailShell(vehicle.plate, badge(vehicle.status), details([["Tipo vehiculo", vehicle.type], ["Seguro", vehicle.insurance], ["Capacidad / tipo carga", `${vehicle.capacity} · ${vehicle.cargoType}`], ["Paises / rutas", vehicle.routes]]) + docsList(vehicle.documents));
+}
+
+function incidentDetail(incident) {
+  if (!incident) return empty("Incidencia no encontrada.");
+  return detailShell(incident.id, badge(incident.status), details([["Operacion", incident.operationId], ["Tipo", incident.type], ["Severidad", incident.severity], ["Descripcion", incident.description]]) + `<div class="detail-actions"><button data-incident-status="${incident.id}:EN_REVISION">En revision</button><button data-incident-status="${incident.id}:RESUELTA">Resolver</button><button data-incident-observe="${incident.id}">Observacion</button></div><h3>Observaciones</h3>${notes(incident.observations)}<h3>Historial</h3>${notes(incident.history)}`);
+}
+
+function detailShell(title, status, content) {
+  return `<section class="detail-layout"><button class="btn btn-light" data-back>Volver</button><article class="web-panel"><div class="detail-heading"><h2>${title}</h2>${status}</div>${content}</article></section>`;
+}
+
+function docsList(documents) {
+  return `<h3>Documentacion obligatoria</h3>${notes(documents.map((doc) => `${doc.name}: ${doc.status}`))}`;
+}
+
+function providerMiniCard(item) {
+  return `<article class="mini-card"><strong>${item.name}</strong>${badge(item.status)}<span>${item.transportTypes} · ${item.routes}</span><button data-provider="${item.id}">Ver detalle</button></article>`;
+}
+
+function driverMiniCard(item) {
+  return `<article class="mini-card"><strong>${item.name}</strong>${badge(item.status)}<span>${item.provider} · ${item.vehicle || "Sin vehiculo"}</span><button data-driver="${item.id}">Ver detalle</button></article>`;
+}
+
+function vehicleMiniCard(item) {
+  return `<article class="mini-card"><strong>${item.plate}</strong>${badge(item.status)}<span>${item.type} · ${item.capacity}</span><button data-vehicle="${item.id}">Ver detalle</button></article>`;
+}
+
+function routeVisual(operation, size = "") {
+  const data = trackingData(operation);
+  const progress = clampProgress(data.progress);
+  const currentX = 28 + (progress * 2.64);
+  const alertClass = operation.status === "DEMORADA" ? " route-alert" : "";
+  const deliveredClass = operation.status === "CARGA_ENTREGADA" ? " route-delivered" : "";
+  const originClass = operation.status === "COORDINACION_CARGA" ? " route-origin-active" : "";
+  return `
+    <article class="route-visual ${size}${alertClass}${deliveredClass}${originClass}">
+      <div class="route-header">
+        <div><span class="record-id">${operation.id}</span><strong>${operation.client}</strong></div>
+        ${badge(operation.status)}
+      </div>
+      <div class="route-canvas" aria-label="Mapa visual simulado de ${operation.id}">
+        <svg viewBox="0 0 320 150" role="img" aria-label="Ruta ${data.origin} a ${data.destination}">
+          <defs>
+            <linearGradient id="route-bg-${operation.id}" x1="0" x2="1">
+              <stop offset="0%" stop-color="#f8fbf4"></stop>
+              <stop offset="100%" stop-color="#eaf3ef"></stop>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="320" height="150" rx="14" fill="url(#route-bg-${operation.id})"></rect>
+          <path d="M36 118 C84 40, 124 118, 168 72 S248 32, 286 92" fill="none" stroke="#d7e2dc" stroke-width="26" stroke-linecap="round"></path>
+          <path d="M36 118 C84 40, 124 118, 168 72 S248 32, 286 92" fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-dasharray="5 12"></path>
+          <line x1="28" y1="116" x2="292" y2="86" stroke="#0E3B2E" stroke-width="5" stroke-linecap="round" opacity=".28"></line>
+          <line x1="28" y1="116" x2="${currentX}" y2="${116 - (progress * 0.3)}" stroke="${operation.status === "DEMORADA" ? "#c0392b" : "#F2B200"}" stroke-width="6" stroke-linecap="round"></line>
+          <circle class="route-dot origin" cx="28" cy="116" r="8"></circle>
+          <circle class="route-dot current" cx="${currentX}" cy="${116 - (progress * 0.3)}" r="10"></circle>
+          <circle class="route-dot destination" cx="292" cy="86" r="8"></circle>
+          <text x="28" y="138">${data.origin}</text>
+          <text x="${Math.max(54, Math.min(236, currentX - 28))}" y="${Math.max(26, 104 - (progress * 0.3))}">${data.location}</text>
+          <text x="214" y="72">${data.destination}</text>
+        </svg>
+      </div>
+      <div class="route-meta">
+        <span><strong>Origen</strong>${data.origin}</span>
+        <span><strong>Actual</strong>${data.location}</span>
+        <span><strong>Destino</strong>${data.destination}</span>
+        <span><strong>Chofer</strong>${data.driver}</span>
+        <span><strong>ETA</strong>${operation.eta}</span>
+        <span><strong>Actualizado</strong>${data.updatedAt}</span>
+      </div>
+      <div class="route-progress"><span style="width:${progress}%"></span></div>
+      <small>${data.state} · ${progress}%</small>
+    </article>
+  `;
+}
+
+function trackingData(operation) {
+  const progress = operation.tracking?.progress ?? progressByStatus(operation.status);
+  return {
+    origin: operation.tracking?.origin || shortPlace(operation.origin),
+    destination: operation.tracking?.destination || shortPlace(operation.destination),
+    location: operation.tracking?.location || currentPlaceByStatus(operation),
+    updatedAt: operation.tracking?.updatedAt || stamp(),
+    driver: operation.tracking?.driver || operation.driver || "Pendiente",
+    state: operation.tracking?.state || stateText(operation.status),
+    note: operation.tracking?.note || "",
+    progress
+  };
+}
+
+function progressByStatus(status) {
+  if (status === "CREADA") return 0;
+  if (status === "COORDINACION_CARGA") return 10;
+  if (status === "EN_RUTA") return 50;
+  if (status === "EN_FRONTERA") return 70;
+  if (status === "CARGA_ENTREGADA") return 100;
+  if (status === "DEMORADA") return 45;
+  return 0;
+}
+
+function stateText(status) {
+  if (status === "CREADA") return "Pendiente de coordinacion";
+  if (status === "COORDINACION_CARGA") return "Pendiente de coordinacion";
+  if (status === "EN_RUTA") return "En ruta";
+  if (status === "EN_FRONTERA") return "En frontera";
+  if (status === "CARGA_ENTREGADA") return "Entregado";
+  if (status === "DEMORADA") return "Demorada";
+  return labelState(status);
+}
+
+function currentPlaceByStatus(operation) {
+  if (operation.status === "CARGA_ENTREGADA") return shortPlace(operation.destination);
+  if (operation.status === "CREADA") return "Pendiente";
+  return shortPlace(operation.origin);
+}
+
+function shortPlace(value = "") {
+  return String(value).split(",")[0].trim() || "Pendiente";
+}
+
+function clampProgress(value) {
+  const numeric = Number(value);
+  if (Number.isNaN(numeric)) return 0;
+  return Math.max(0, Math.min(100, numeric));
+}
+
+function operativeOps() {
+  return [...sharedState.operations].sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function ensureOpDocs(operationId) {
+  const current = opDocsState[operationId] || [];
+  opDocsState[operationId] = REQUIRED_OPERATION_DOCS.map((name) => current.find((doc) => doc.name === name) || {
+    id: `${operationId}-${name.toUpperCase()}`,
+    operationId,
+    name,
+    type: name,
+    status: "PENDIENTE",
+    observations: [],
+    history: [`${stamp()}: ${name} inicializado.`]
+  });
+}
+
+function documentSummary(operationId) {
+  ensureOpDocs(operationId);
+  const valid = opDocsState[operationId].filter((doc) => doc.status === "VALIDADO").length;
+  return `${valid}/${REQUIRED_OPERATION_DOCS.length} validados`;
+}
+
+function findProvider(id) {
+  return providersState.find((item) => item.id === id);
+}
+
+function findDriver(id) {
+  return driversState.find((item) => item.id === id);
+}
+
+function findVehicle(id) {
+  return vehiclesState.find((item) => item.id === id);
+}
+
+function findIncident(id) {
+  return incidentsState.find((item) => item.id === id);
+}
+
+function money(value, currency = "USD") {
+  const numeric = Number(value || 0);
+  try {
+    return new Intl.NumberFormat("es-UY", {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number.isFinite(numeric) ? numeric : 0);
+  } catch {
+    return `${currency} ${Number.isFinite(numeric) ? numeric.toFixed(2) : "0.00"}`;
+  }
+}
+
+function providerByName(name) {
+  return providersState.find((item) => item.name === name);
+}
+
+function driverByName(name) {
+  return driversState.find((item) => item.name === name);
+}
+
+function vehicleByPlate(plate) {
+  return vehiclesState.find((item) => item.plate === plate);
+}
+
+function renderClientPortal() {
+  const quotes = sharedState.quotes.filter((item) => ["Importaciones SA", "Grupo Exporta", "LogiTrans SRL"].includes(item.company));
+  return `
+    <div class="client-shell">
+      <header class="webapp-topbar">
+        <div><span class="eyebrow">Portal JoathiVA</span><h1>Cliente Corporativo</h1><p>Vista demo con cotizaciones compartidas con Ejecutivo Comercial.</p></div>
+        <div class="topbar-actions"><a class="btn btn-light" href="index.html">Login</a><a class="btn btn-primary" href="comercial.html">Ejecutivo Comercial</a></div>
+      </header>
+      <main class="webapp-main client-main">
+        ${panel("Cotizaciones compartidas", clientQuotesTable(quotes))}
+      </main>
+      ${modalMarkup()}
+      ${toastMarkup()}
+    </div>
+  `;
+}
+
+function clientQuotesTable(quotes) {
+  return `
+    <table class="data-table">
+      <thead><tr><th>Folio</th><th>Cliente</th><th>Ruta</th><th>Estado</th><th>Precio formal</th><th>Acciones</th></tr></thead>
+      <tbody>${quotes.map((item) => `<tr><td>${item.id}</td><td>${item.company}</td><td>${item.origin} a ${item.destination}</td><td>${badge(item.status)}</td><td>${item.formalPrice || "Pendiente"}</td><td class="table-actions">${item.status === "RESPONDIDA" ? `<button data-client-accept="${item.id}">Aceptar</button><button data-cancel="${item.id}">Cancelar</button>` : `<button data-quote="${item.id}">Ver detalle</button>`}</td></tr>`).join("")}</tbody>
+    </table>
+  `;
+}
+
+function activityRow(item) {
+  return `<article class="activity-row"><strong>${item.id} · ${item.company}</strong><span>${item.origin} a ${item.destination}</span>${badge(item.status)}</article>`;
+}
+
+function taskRow(item) {
+  return `<article class="activity-row"><strong>${item.title}</strong><span>${item.client} · vence ${item.dueDate}</span>${badge(item.status)}</article>`;
+}
+
+function contactActions(quoteItem) {
+  return `
+    <div class="detail-actions">
+      <button data-contact="${quoteItem.id}:chat">Chat demo</button>
+      <button data-contact="${quoteItem.id}:email">Email</button>
+      <button data-contact="${quoteItem.id}:whatsapp">WhatsApp</button>
+      <button data-contact="${quoteItem.id}:call">Llamada</button>
+    </div>
+  `;
+}
+
+function operationCard(op) {
+  return `<article class="activity-row"><strong>${op.id} · ${op.status}</strong><span>${op.origin} a ${op.destination} · ETA ${op.eta}</span></article>`;
+}
+
+function panel(title, content) {
+  return `<section class="web-panel"><h2>${title}</h2>${content}</section>`;
+}
+
+function kpi(label, value, note, action = null) {
+  const actionAttrs = action ? ` role="button" tabindex="0" data-dashboard-module="${action.module}" data-dashboard-filter="${action.filter ?? ""}"` : "";
+  const actionClass = action ? " kpi-clickable" : "";
+  return `<article class="kpi-card${actionClass}"${actionAttrs}><span>${label}</span><strong>${value}</strong><small>${note}</small></article>`;
+}
+
+function badge(status) {
+  return `<span class="badge badge-${status}">${status}</span>`;
+}
+
+function details(rows) {
+  return `<dl class="detail-list">${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}</dl>`;
+}
+
+function notes(items = []) {
+  return `<div class="timeline">${items.length ? items.map((item) => `<article>${item}</article>`).join("") : "<article>Sin registros.</article>"}</div>`;
+}
+
+function empty(text) {
+  return `<article class="empty-state">${text}</article>`;
+}
+
+function modalMarkup() {
+  if (!modal) return "";
+  if (modal.type === "agent1Note") {
+    const prospect = agent1Find(modal.id);
+    return modalShell("Nota comercial", `
+      <p class="readonly-note">${prospect ? `${prospect.company_name}` : "Prospecto"}</p>
+      <form class="modal-form" data-agent1-note-form>
+        <label>Nota interna<textarea name="note" rows="4" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "agent6Observe") {
+    const operation = agent6OperationById(modal.operationId);
+    const doc = modal.target === "doc" ? operation?.docs.find((item) => item.id === modal.docId) : null;
+    return modalShell("Agregar observación", `
+      <p class="readonly-note">${modal.target === "doc"
+        ? `${operation?.id || ""} · ${doc?.name || "Documento"}`
+        : `${operation?.id || ""} · Reenvío preparado`}</p>
+      <form class="modal-form" data-agent6-observe-form>
+        <label>Observacion<textarea name="observation" rows="4" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "respond") {
+    return modalShell("Responder cotizacion", `
+      <form class="modal-form" data-respond-form>
+        <label>Precio formal<input name="formalPrice" required></label>
+        <label>Condiciones comerciales<input name="commercialTerms"></label>
+        <label>Observacion comercial<textarea name="observation" rows="4"></textarea></label>
+        <p class="form-error" id="modal-error"></p>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Responder</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "observe") {
+    return modalShell("Agregar observacion comercial", `
+      <form class="modal-form" data-observe-form>
+        <label>Observacion<textarea name="observation" rows="5" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "follow") {
+    return modalShell("Marcar seguimiento", `
+      <form class="modal-form" data-follow-form>
+        <label>Fecha de seguimiento<input type="date" name="dueDate" required></label>
+        <label>Nota<input name="note"></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Crear</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "task") {
+    return modalShell("Crear tarea", `
+      <form class="modal-form" data-task-form>
+        <label>Descripcion<input name="title" required></label>
+        <label>Cliente<input name="client" required></label>
+        <label>Cotizacion<input name="quoteId"></label>
+        <label>Fecha limite<input type="date" name="dueDate" required></label>
+        <label>Nota<input name="note"></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Crear</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "postSale") {
+    return modalShell("Nota posventa", `
+      <form class="modal-form" data-postsale-form>
+        <label>Nota<textarea name="note" rows="5" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "observeTask") {
+    return modalShell("Observacion de tarea", `
+      <form class="modal-form" data-task-observe-form>
+        <label>Observacion<textarea name="observation" rows="5" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "chat") {
+    return modalShell("Chat demo", `<div class="chat-demo"><p>Canal demo preparado con ${modal.client}. No se envia ningun mensaje automaticamente.</p><button data-close>Cerrar</button></div>`);
+  }
+  if (modal.type === "opStatus") {
+    return modalShell("Cambiar estado operativo", `
+      <form class="modal-form" data-op-status-form>
+        <label>Estado<select name="status">${OP_STATES.map((state) => `<option value="${state}">${labelState(state)}</option>`).join("")}</select></label>
+        <label>Observacion<textarea name="note" rows="4"></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Actualizar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "assign") {
+    return modalShell("Asignar proveedor, chofer y vehiculo", `
+      <form class="modal-form" data-assign-form>
+        <label>Proveedor<select name="provider">${providersState.map((item) => `<option value="${item.name}">${item.name} · ${item.status}</option>`).join("")}</select></label>
+        <label>Chofer<select name="driver">${driversState.map((item) => `<option value="${item.name}">${item.name} · ${item.status}</option>`).join("")}</select></label>
+        <label>Vehiculo<select name="vehicle">${vehiclesState.map((item) => `<option value="${item.plate}">${item.plate} · ${item.status}</option>`).join("")}</select></label>
+        <p class="form-error" id="modal-error"></p>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Asignar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "blockedAssignment") {
+    return modalShell("Asignacion bloqueada", `<p class="readonly-note">No se puede asignar. El proveedor, chofer o vehículo no cumple con la documentación obligatoria vigente.</p><div class="modal-actions"><button type="button" data-close>Cerrar</button><button type="button" data-view-pending>Ver documentación pendiente</button></div>`);
+  }
+  if (modal.type === "track") {
+    const op = findOperation(modal.id);
+    const track = op ? trackingData(op) : {};
+    return modalShell("Actualizar tracking demo", `
+      <form class="modal-form" data-track-form>
+        <label>Ubicación actual<input name="location" value="${track.location || ""}" required></label>
+        <label>Estado de viaje<input name="state" value="${track.state || ""}" required></label>
+        <label>Progreso demo<input type="number" name="progress" min="0" max="100" value="${track.progress ?? 0}" required></label>
+        <label>Nota<textarea name="note" rows="4">${track.note || ""}</textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Actualizar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "confirmDelivery") {
+    return modalShell("Confirmar entrega", `<p class="readonly-note">¿Confirmar entrega y notificar a Administración para facturación?</p><div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="button" data-confirm-delivery="${modal.id}">Confirmar</button></div>`);
+  }
+  if (modal.type === "agent6DocDetail") {
+    return agent6DocDetail(modal.operationId, modal.docId);
+  }
+  if (modal.type === "docDetail") {
+    const doc = opDocsState[modal.operationId]?.[modal.index];
+    return modalShell("Detalle documental", `<div class="chat-demo"><p><strong>${modal.operationId} · ${doc?.name}</strong></p><p>Estado: ${doc ? badge(doc.status) : ""}</p><p>Observaciones: ${(doc?.observations || []).join(" / ") || "Sin observaciones"}</p><button data-close>Cerrar</button></div>`);
+  }
+  if (modal.type === "docObserve") {
+    return modalShell("Agregar observación documental", `
+      <form class="modal-form" data-doc-observe-form>
+        <label>Observacion<textarea name="observation" rows="5" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "incident") {
+    return modalShell("Crear incidencia", `
+      <form class="modal-form" data-incident-form>
+        <label>Operacion<select name="operationId">${operativeOps().map((op) => `<option value="${op.id}">${op.id} · ${op.client}</option>`).join("")}</select></label>
+        <label>Tipo<input name="type" required></label>
+        <label>Severidad<select name="severity">${INCIDENT_SEVERITIES.map((severity) => `<option value="${severity}">${severity}</option>`).join("")}</select></label>
+        <label>Descripcion<textarea name="description" rows="4" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Crear</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "incidentObserve") {
+    return modalShell("Observacion de incidencia", `
+      <form class="modal-form" data-incident-observe-form>
+        <label>Observacion<textarea name="observation" rows="5" required></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Guardar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "dispatch") {
+    const op = findOperation(modal.id);
+    return modalShell("Actualizar despacho", `
+      <form class="modal-form" data-dispatch-form>
+        <label>Despachante<input name="broker" value="${op?.customsBroker || ""}" required></label>
+        <label>Estado despacho<input name="status" value="${op?.customsStatus || ""}" required></label>
+        <label>Observacion<textarea name="observation" rows="4"></textarea></label>
+        <div class="modal-actions"><button type="button" data-close>Cancelar</button><button type="submit">Actualizar</button></div>
+      </form>
+    `);
+  }
+  if (modal.type === "agent5Preview") {
+    const quote = findAgent5Quote(modal.id);
+    if (!quote) return "";
+    const preview = agent5ClientPreview(quote);
+    return modalShell("Preview cliente Agente 5", `
+      <div class="agent5-preview">
+        <div class="agent5-preview-head">
+          <strong>${preview.quoteCode}</strong>
+          ${badge(quote.status)}
+        </div>
+        ${details([
+          ["Cliente", preview.client],
+          ["Ruta", preview.route],
+          ["Servicio", preview.service],
+          ["Carga", preview.cargoType],
+          ["Unidades", preview.units],
+          ["Precio visible", money(preview.finalPrice, preview.currency)],
+          ["Vigencia", preview.validUntil]
+        ])}
+        <h3>Lineas visibles</h3>
+        <ul class="agent5-list">
+          ${preview.visibleLineItems.map((item) => `<li>${item.direction} · ${item.description} · ${item.units} un. · ${money(item.visiblePriceTotal, preview.currency)}</li>`).join("")}
+        </ul>
+        <h3>Siguiente pasos</h3>
+        ${notes(preview.nextSteps)}
+        <div class="modal-actions"><button type="button" data-close>Cerrar</button></div>
+      </div>
+    `);
+  }
+  return "";
+}
+
+function modalShell(title, content) {
+  return `<div class="web-modal"><div class="web-modal-card"><h2>${title}</h2>${content}</div></div>`;
+}
+
+function toastMarkup() {
+  return toast ? `<div class="web-toast">${toast}</div>` : "";
+}
+
+function showToast(message) {
+  toast = message;
+  render();
+  setTimeout(() => {
+    toast = "";
+    render();
+  }, 1800);
+}
+
+root.addEventListener("keydown", (event) => {
+  if (!["Enter", " "].includes(event.key)) return;
+  const target = event.target.closest("[data-dashboard-module]");
+  if (!target) return;
+  event.preventDefault();
+  openDashboardTarget(target);
+});
+
+root.addEventListener("click", (event) => {
+  const dashboardTarget = event.target.closest("[data-dashboard-module]");
+  if (dashboardTarget) {
+    openDashboardTarget(dashboardTarget);
+    return;
+  }
+  const target = event.target.closest("button,a");
+  if (!target || target.tagName === "A") return;
+  if (target.dataset.module) {
+    activeModule = target.dataset.module;
+    selected = null;
+    render();
+    return;
+  }
+  if (target.hasAttribute("data-filter")) {
+    quoteFilter = target.dataset.filter;
+    activeModule = "cotizaciones";
+    selected = null;
+    render();
+    return;
+  }
+  if (target.hasAttribute("data-op-filter")) {
+    opFilter = target.dataset.opFilter;
+    activeModule = "operaciones";
+    selected = null;
+    render();
+    return;
+  }
+  if (target.dataset.quote) {
+    selected = `quote:${target.dataset.quote}`;
+    render();
+    return;
+  }
+  if (target.dataset.agent5Detail) {
+    selected = `agent5:${target.dataset.agent5Detail}`;
+    render();
+    return;
+  }
+  if (target.dataset.agent5Preview) {
+    modal = { type: "agent5Preview", id: target.dataset.agent5Preview };
+    render();
+    return;
+  }
+  if (target.dataset.agent5StatusFilter !== undefined) {
+    agent5Filter = target.dataset.agent5StatusFilter || "";
+    activeModule = "agente5";
+    selected = null;
+    if (agent5Filter) {
+      const firstMatch = agent5State.quotes.find((item) => item.status === agent5Filter);
+      if (firstMatch) agent5State.activeQuoteId = firstMatch.id;
+    }
+    render();
+    return;
+  }
+  if (target.dataset.agent5Status) {
+    const [id, status] = target.dataset.agent5Status.split(":");
+    agent5UpdateStatus(id, status);
+    return;
+  }
+  if (target.dataset.agent5Duplicate) {
+    agent5Duplicate(target.dataset.agent5Duplicate);
+    return;
+  }
+  if (target.dataset.opDetail) {
+    selected = `op:${target.dataset.opDetail}`;
+    render();
+    return;
+  }
+  if (target.dataset.openMap) {
+    selected = `op:${target.dataset.openMap}`;
+    render();
+    return;
+  }
+  if (target.dataset.provider) {
+    selected = `provider:${target.dataset.provider}`;
+    render();
+    return;
+  }
+  if (target.dataset.driver) {
+    selected = `driver:${target.dataset.driver}`;
+    render();
+    return;
+  }
+  if (target.dataset.vehicle) {
+    selected = `vehicle:${target.dataset.vehicle}`;
+    render();
+    return;
+  }
+  if (target.dataset.incident) {
+    selected = `incident:${target.dataset.incident}`;
+    render();
+    return;
+  }
+  if (target.dataset.client) {
+    selected = `client:${target.dataset.client}`;
+    render();
+    return;
+  }
+  if (target.dataset.operation) {
+    selected = `operation:${target.dataset.operation}`;
+    render();
+    return;
+  }
+  if (target.hasAttribute("data-back")) {
+    selected = null;
+    render();
+    return;
+  }
+  if (target.dataset.review) {
+    markReview(target.dataset.review);
+    return;
+  }
+  if (target.dataset.respond) {
+    modal = { type: "respond", id: target.dataset.respond };
+    render();
+    return;
+  }
+  if (target.dataset.observe) {
+    modal = { type: "observe", id: target.dataset.observe };
+    render();
+    return;
+  }
+  if (target.dataset.follow) {
+    modal = { type: "follow", id: target.dataset.follow };
+    render();
+    return;
+  }
+  if (target.dataset.cancel) {
+    cancelQuote(target.dataset.cancel);
+    return;
+  }
+  if (target.dataset.clientAccept) {
+    acceptQuote(target.dataset.clientAccept);
+    return;
+  }
+  if (target.dataset.contact) {
+    openContact(target.dataset.contact);
+    return;
+  }
+  if (target.dataset.completeTask) {
+    setTaskStatus(target.dataset.completeTask, "COMPLETADA");
+    return;
+  }
+  if (target.dataset.taskStatus) {
+    const [id, status] = target.dataset.taskStatus.split(":");
+    setTaskStatus(id, status);
+    return;
+  }
+  if (target.dataset.taskObserve) {
+    modal = { type: "observeTask", id: target.dataset.taskObserve };
+    render();
+    return;
+  }
+  if (target.hasAttribute("data-new-task")) {
+    modal = { type: "task" };
+    render();
+    return;
+  }
+  if (target.dataset.postsale) {
+    modal = { type: "postSale", id: target.dataset.postsale };
+    render();
+    return;
+  }
+  if (target.dataset.opStatus) {
+    modal = { type: "opStatus", id: target.dataset.opStatus };
+    render();
+    return;
+  }
+  if (target.dataset.assignOp) {
+    modal = { type: "assign", id: target.dataset.assignOp };
+    render();
+    return;
+  }
+  if (target.dataset.track) {
+    modal = { type: "track", id: target.dataset.track };
+    render();
+    return;
+  }
+  if (target.dataset.opDeliver) {
+    requestDelivery(target.dataset.opDeliver);
+    return;
+  }
+  if (target.dataset.confirmDelivery) {
+    confirmDelivery(target.dataset.confirmDelivery);
+    return;
+  }
+  if (target.dataset.docDetail) {
+    const [operationId, index] = target.dataset.docDetail.split(":");
+    modal = { type: "docDetail", operationId, index: Number(index) };
+    render();
+    return;
+  }
+  if (target.dataset.docStatus) {
+    const [operationId, index, status] = target.dataset.docStatus.split(":");
+    setDocumentStatus(operationId, Number(index), status);
+    return;
+  }
+  if (target.dataset.docObserve) {
+    const [operationId, index] = target.dataset.docObserve.split(":");
+    modal = { type: "docObserve", operationId, index: Number(index) };
+    render();
+    return;
+  }
+  if (target.hasAttribute("data-new-incident")) {
+    modal = { type: "incident" };
+    render();
+    return;
+  }
+  if (target.dataset.incidentStatus) {
+    const [id, status] = target.dataset.incidentStatus.split(":");
+    setIncidentStatus(id, status);
+    return;
+  }
+  if (target.dataset.incidentObserve) {
+    modal = { type: "incidentObserve", id: target.dataset.incidentObserve };
+    render();
+    return;
+  }
+  if (target.dataset.dispatch) {
+    modal = { type: "dispatch", id: target.dataset.dispatch };
+    render();
+    return;
+  }
+  if (target.dataset.adminSeen) {
+    markAdminNotice(target.dataset.adminSeen);
+    return;
+  }
+  if (target.hasAttribute("data-view-pending")) {
+    activeModule = "documentacion";
+    selected = null;
+    modal = null;
+    render();
+    return;
+  }
+  if (target.dataset.directContact) {
+    openDirectContact(target.dataset.directContact);
+    return;
+  }
+  if (target.dataset.agent6Operation) {
+    agent6SelectOperation(target.dataset.agent6Operation);
+    return;
+  }
+  if (target.dataset.agent6Filter) {
+    const [field, value] = target.dataset.agent6Filter.split(":");
+    agent6State.filters[field] = value || "";
+    saveAgent6();
+    render();
+    return;
+  }
+  if (target.dataset.agent6DocDetail) {
+    const [operationId, docId] = target.dataset.agent6DocDetail.split(":");
+    modal = { type: "agent6DocDetail", operationId, docId };
+    render();
+    return;
+  }
+  if (target.dataset.agent6DocStatus) {
+    const [operationId, docId, status] = target.dataset.agent6DocStatus.split(":");
+    agent6SetDocStatus(operationId, docId, status);
+    return;
+  }
+  if (target.dataset.agent6DocObserve) {
+    const [operationId, docId] = target.dataset.agent6DocObserve.split(":");
+    modal = { type: "agent6Observe", target: "doc", operationId, docId };
+    render();
+    return;
+  }
+  if (target.dataset.agent6Prepare) {
+    agent6PrepareResend(target.dataset.agent6Prepare);
+    return;
+  }
+  if (target.dataset.agent6DraftStatus) {
+    const [id, status] = target.dataset.agent6DraftStatus.split(":");
+    agent6SetDraftStatus(id, status);
+    return;
+  }
+  if (target.dataset.agent6DraftObserve) {
+    modal = { type: "agent6Observe", target: "draft", operationId: target.dataset.agent6DraftObserve };
+    render();
+    return;
+  }
+  if (target.dataset.agent1Select) {
+    agent1State.selectedId = target.dataset.agent1Select;
+    saveAgent1();
+    render();
+    return;
+  }
+  if (target.dataset.agent1Filter) {
+    const [field, value] = target.dataset.agent1Filter.split(":");
+    agent1State.filters[field] = value || "";
+    saveAgent1();
+    render();
+    return;
+  }
+  if (target.dataset.agent1Action) {
+    const [id, action] = target.dataset.agent1Action.split(":");
+    agent1Action(id, action);
+    return;
+  }
+  if (target.dataset.agent1Note) {
+    modal = { type: "agent1Note", id: target.dataset.agent1Note };
+    render();
+    return;
+  }
+  if (target.hasAttribute("data-close")) {
+    modal = null;
+    render();
+  }
+});
+
+root.addEventListener("change", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLSelectElement)) return;
+  if (target.hasAttribute("data-agent6-filter-select")) {
+    const field = target.dataset.agent6FilterSelect;
+    if (!field) return;
+    agent6State.filters[field] = target.value;
+    saveAgent6();
+    render();
+  }
+});
+
+function openDashboardTarget(target) {
+  activeModule = target.dataset.dashboardModule;
+  opFilter = target.dataset.dashboardFilter || "";
+  quoteFilter = "";
+  selected = null;
+  modal = null;
+  render();
+}
+
+root.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.target;
+  if (form.hasAttribute("data-respond-form")) return respondQuote(form);
+  if (form.hasAttribute("data-observe-form")) return addObservation(form);
+  if (form.hasAttribute("data-follow-form")) return createFollow(form);
+  if (form.hasAttribute("data-task-form")) return createTask(form);
+  if (form.hasAttribute("data-postsale-form")) return addPostSale(form);
+  if (form.hasAttribute("data-task-observe-form")) return addTaskObservation(form);
+  if (form.hasAttribute("data-op-status-form")) return updateOperationStatus(form);
+  if (form.hasAttribute("data-assign-form")) return assignOperation(form);
+  if (form.hasAttribute("data-track-form")) return updateTracking(form);
+  if (form.hasAttribute("data-doc-observe-form")) return addDocumentObservation(form);
+  if (form.hasAttribute("data-incident-form")) return createIncident(form);
+  if (form.hasAttribute("data-incident-observe-form")) return addIncidentObservation(form);
+  if (form.hasAttribute("data-dispatch-form")) return updateDispatch(form);
+  if (form.hasAttribute("data-agent6-observe-form")) return agent6AddObservation(form);
+  if (form.hasAttribute("data-agent1-add-form")) return agent1AddProspect(form);
+  if (form.hasAttribute("data-agent1-note-form")) return agent1AddNote(form);
+});
+
+function markReview(id) {
+  const item = findQuote(id);
+  if (!item) return;
+  item.status = "EN_REVISION";
+  item.updatedAt = today();
+  item.history.push(`${stamp()}: Ejecutivo Comercial marco la cotizacion en revision.`);
+  commercialState.history.unshift(`${stamp()}: ${id} paso a EN_REVISION.`);
+  saveShared();
+  saveCommercial();
+  showToast("Cotizacion marcada en revision.");
+}
+
+function respondQuote(form) {
+  const item = findQuote(modal.id);
+  const data = new FormData(form);
+  const price = String(data.get("formalPrice") || "").trim();
+  if (!price) {
+    document.getElementById("modal-error").textContent = "El precio formal es obligatorio.";
+    return;
+  }
+  item.status = "RESPONDIDA";
+  item.formalPrice = price;
+  item.commercialTerms = data.get("commercialTerms") || "";
+  item.updatedAt = today();
+  const note = data.get("observation");
+  if (note) item.commercialObservations.push(`${stamp()}: Ejecutivo Comercial - ${note}`);
+  item.history.push(`${stamp()}: cotizacion respondida con precio formal ${price}.`);
+  commercialState.history.unshift(`${stamp()}: ${item.id} respondida. El cliente podra aprobar o cancelar.`);
+  modal = null;
+  saveShared();
+  saveCommercial();
+  showToast("Cotizacion respondida. El cliente podra aprobar o cancelar.");
+}
+
+function addObservation(form) {
+  const item = findQuote(modal.id);
+  const text = new FormData(form).get("observation");
+  item.commercialObservations.push(`${stamp()}: Ejecutivo Comercial - ${text}`);
+  item.history.push(`${stamp()}: observacion comercial agregada.`);
+  commercialState.history.unshift(`${stamp()}: observacion comercial en ${item.id}.`);
+  modal = null;
+  saveShared();
+  saveCommercial();
+  showToast("Observacion guardada.");
+}
+
+function createFollow(form) {
+  const item = findQuote(modal.id);
+  const data = new FormData(form);
+  const id = `COM-T${String(commercialState.nextTaskNumber++).padStart(3, "0")}`;
+  commercialState.tasks.unshift(task(id, `Seguimiento ${item.id}`, item.company, item.id, data.get("dueDate"), "PENDIENTE", data.get("note") || "Seguimiento comercial."));
+  item.history.push(`${stamp()}: seguimiento creado para ${data.get("dueDate")}.`);
+  commercialState.history.unshift(`${stamp()}: seguimiento ${id} creado para ${item.id}.`);
+  modal = null;
+  saveShared();
+  saveCommercial();
+  showToast("Seguimiento creado.");
+}
+
+function createTask(form) {
+  const data = new FormData(form);
+  const id = `COM-T${String(commercialState.nextTaskNumber++).padStart(3, "0")}`;
+  commercialState.tasks.unshift(task(id, data.get("title"), data.get("client"), data.get("quoteId"), data.get("dueDate"), "PENDIENTE", data.get("note") || ""));
+  commercialState.history.unshift(`${stamp()}: tarea ${id} creada.`);
+  modal = null;
+  saveCommercial();
+  showToast("Tarea creada.");
+}
+
+function addPostSale(form) {
+  const text = new FormData(form).get("note");
+  commercialState.postSaleNotes.unshift({ operationId: modal.id, note: text, createdAt: stamp() });
+  commercialState.history.unshift(`${stamp()}: nota posventa agregada para ${modal.id}.`);
+  modal = null;
+  saveCommercial();
+  showToast("Nota posventa guardada.");
+}
+
+function addTaskObservation(form) {
+  const item = commercialState.tasks.find((taskItem) => taskItem.id === modal.id);
+  if (!item) return;
+  const text = new FormData(form).get("observation");
+  item.observations.push(`${stamp()}: Ejecutivo Comercial - ${text}`);
+  item.history.push(`${stamp()}: observacion agregada.`);
+  commercialState.history.unshift(`${stamp()}: observacion en tarea ${item.id}.`);
+  modal = null;
+  saveCommercial();
+  showToast("Observacion de tarea guardada.");
+}
+
+function setTaskStatus(id, status) {
+  const item = commercialState.tasks.find((taskItem) => taskItem.id === id);
+  if (!item) return;
+  item.status = status;
+  item.history.push(`${stamp()}: estado actualizado a ${status}.`);
+  commercialState.history.unshift(`${stamp()}: tarea ${id} actualizada a ${status}.`);
+  saveCommercial();
+  showToast("Tarea actualizada.");
+}
+
+function cancelQuote(id) {
+  const item = findQuote(id);
+  if (!item) return;
+  item.status = "CANCELADA";
+  item.updatedAt = today();
+  item.history.push(`${stamp()}: cotizacion cancelada en modo demo.`);
+  commercialState.history.unshift(`${stamp()}: ${id} cancelada.`);
+  saveShared();
+  saveCommercial();
+  showToast("Cotizacion cancelada.");
+}
+
+function acceptQuote(id) {
+  const item = findQuote(id);
+  if (!item) return;
+  item.status = "APROBADA";
+  item.updatedAt = today();
+  let operation = operationForQuote(id);
+  if (!operation) {
+    const opId = `OP-${String(sharedState.nextOperationNumber++).padStart(4, "0")}`;
+    operation = { id: opId, quoteId: id, client: item.company, origin: item.originAddress, destination: item.destinationAddress, status: "COORDINACION_CARGA", carrier: "Pendiente", eta: "A confirmar", deliveredAt: "", satisfaction: "Pendiente", history: [`${stamp()}: operacion creada desde ${id}.`] };
+    sharedState.operations.unshift(operation);
+  }
+  item.operationId = operation.id;
+  item.history.push(`${stamp()}: cliente aprobo la cotizacion. Operacion ${operation.id} creada.`);
+  saveShared();
+  showToast("Cotizacion aprobada. Comercial la vera como APROBADA.");
+}
+
+function openContact(payload) {
+  const [id, channel] = payload.split(":");
+  const item = findQuote(id) || { company: "Cliente", email: "contacto@importacionessa.com", phone: "+598 99 000 001" };
+  commercialState.history.unshift(`${stamp()}: contacto ${channel} preparado para ${item.company}.`);
+  saveCommercial();
+  if (channel === "chat") {
+    modal = { type: "chat", client: item.company };
+    render();
+    return;
+  }
+  if (channel === "email") window.location.href = `mailto:${item.email}?subject=Seguimiento%20JoathiVA`;
+  if (channel === "whatsapp") window.location.href = `https://wa.me/${item.phone.replace(/[^0-9]/g, "")}`;
+  if (channel === "call") window.location.href = `tel:${item.phone.replaceAll(" ", "")}`;
+}
+
+function openDirectContact(payload) {
+  const [rawName, value, channel] = payload.split("|");
+  const name = decodeURIComponent(rawName);
+  opHistoryState.unshift(`${stamp()}: contacto ${channel} preparado para ${name}.`);
+  saveOperational();
+  if (channel === "chat") {
+    modal = { type: "chat", client: name };
+    render();
+    return;
+  }
+  if (channel === "email") window.location.href = `mailto:${value}?subject=Seguimiento%20operativo%20JoathiVA`;
+  if (channel === "whatsapp") window.location.href = name === "Administración Joathi" ? "https://wa.me/message/7GEKEMVKDBSRE1" : `https://wa.me/${value.replace(/[^0-9]/g, "")}`;
+  if (channel === "call") window.location.href = `tel:${value.replace(/[^+0-9]/g, "")}`;
+}
+
+function updateOperationStatus(form) {
+  const op = findOperation(modal.id);
+  if (!op) return;
+  const data = new FormData(form);
+  const nextStatus = data.get("status");
+  if (nextStatus === "CARGA_ENTREGADA") {
+    modal = { type: "confirmDelivery", id: op.id };
+    render();
+    return;
+  }
+  op.status = nextStatus;
+  op.tracking = {
+    ...(op.tracking || {}),
+    origin: op.tracking?.origin || shortPlace(op.origin),
+    destination: op.tracking?.destination || shortPlace(op.destination),
+    location: nextStatus === "CARGA_ENTREGADA" ? shortPlace(op.destination) : (op.tracking?.location || currentPlaceByStatus(op)),
+    state: stateText(nextStatus),
+    progress: progressByStatus(nextStatus),
+    updatedAt: stamp(),
+    driver: op.driver || op.tracking?.driver || "Pendiente",
+    history: [...(op.tracking?.history || []), `${stamp()}: estado visual actualizado a ${nextStatus}.`]
+  };
+  if (data.get("note")) op.observations.push(`${stamp()}: Ejecutivo Operativo - ${data.get("note")}`);
+  op.history.push(`${stamp()}: estado actualizado a ${nextStatus}.`);
+  opHistoryState.unshift(`${stamp()}: ${op.id} actualizado a ${nextStatus}.`);
+  modal = null;
+  saveShared();
+  saveOperational();
+  showToast("Estado operativo actualizado.");
+}
+
+function requestDelivery(id) {
+  const op = findOperation(id);
+  if (!op) return;
+  if (op.administracionNotificada) {
+    showToast("Administración notificada");
+    return;
+  }
+  modal = { type: "confirmDelivery", id };
+  render();
+}
+
+function confirmDelivery(id) {
+  const op = findOperation(id);
+  if (!op) return;
+  if (op.administracionNotificada) {
+    modal = null;
+    showToast("Administración notificada");
+    return;
+  }
+  op.status = "CARGA_ENTREGADA";
+  op.deliveredAt = today();
+  op.administracionNotificada = true;
+  op.tracking = {
+    ...(op.tracking || {}),
+    origin: op.tracking?.origin || shortPlace(op.origin),
+    destination: op.tracking?.destination || shortPlace(op.destination),
+    location: shortPlace(op.destination),
+    state: "Entregado",
+    progress: 100,
+    updatedAt: stamp(),
+    driver: op.driver || op.tracking?.driver || "Pendiente",
+    history: [...(op.tracking?.history || []), `${stamp()}: destino completado.`]
+  };
+  op.history.push(`${stamp()}: carga entregada y Administración notificada para facturación.`);
+  const noticeType = "OPERACION_ENTREGADA_PENDIENTE_FACTURAR";
+  if (!adminNoticesState.some((item) => item.operationId === op.id && item.type === noticeType)) {
+    adminNoticesState.unshift({
+      id: `ADM-${String(adminNoticesState.length + 1).padStart(4, "0")}`,
+      operationId: op.id,
+      type: noticeType,
+      status: "PENDIENTE",
+      client: op.client,
+      createdBy: "Ejecutivo Operativo",
+      createdAt: stamp(),
+      message: "Operación entregada. Administración debe emitir factura."
+    });
+  }
+  opHistoryState.unshift(`${stamp()}: ${op.id} entregada. Administración notificada para emitir factura.`);
+  modal = null;
+  saveShared();
+  saveOperational();
+  showToast("Administración fue notificada para emitir la factura.");
+}
+
+function assignOperation(form) {
+  const op = findOperation(modal.id);
+  if (!op) return;
+  const data = new FormData(form);
+  const provider = providerByName(data.get("provider"));
+  const driver = driverByName(data.get("driver"));
+  const vehicle = vehicleByPlate(data.get("vehicle"));
+  const assignable = provider?.status === "HABILITADO"
+    && ["HABILITADO", "DOCUMENTACION_POR_VENCER"].includes(driver?.status)
+    && ["HABILITADO", "HABILITADO_CON_ALERTA"].includes(vehicle?.status);
+  if (!assignable) {
+    modal = { type: "blockedAssignment" };
+    render();
+    return;
+  }
+  op.provider = provider.name;
+  op.carrier = provider.name;
+  op.driver = driver.name;
+  op.vehicle = vehicle.plate;
+  op.tracking = { ...(op.tracking || {}), driver: driver.name, updatedAt: stamp() };
+  op.history.push(`${stamp()}: asignado ${provider.name}, ${driver.name}, ${vehicle.plate}.`);
+  opHistoryState.unshift(`${stamp()}: ${op.id} asignado a ${provider.name}.`);
+  modal = null;
+  saveShared();
+  saveOperational();
+  showToast("Asignacion demo actualizada.");
+}
+
+function updateTracking(form) {
+  const op = findOperation(modal.id);
+  if (!op) return;
+  const data = new FormData(form);
+  const progress = clampProgress(data.get("progress"));
+  op.tracking = {
+    ...(op.tracking || {}),
+    origin: op.tracking?.origin || shortPlace(op.origin),
+    destination: op.tracking?.destination || shortPlace(op.destination),
+    location: data.get("location"),
+    state: data.get("state"),
+    note: data.get("note"),
+    progress,
+    updatedAt: stamp(),
+    driver: op.driver || op.tracking?.driver || "Pendiente",
+    manualUpdated: true,
+    history: [...(op.tracking?.history || []), `${stamp()}: tracking actualizado a ${data.get("location")} con progreso ${progress}%.`]
+  };
+  op.history.push(`${stamp()}: tracking actualizado a ${data.get("location")} (${progress}%).`);
+  opHistoryState.unshift(`${stamp()}: tracking ${op.id} actualizado a ${data.get("location")} (${progress}%).`);
+  modal = null;
+  saveShared();
+  saveOperational();
+  showToast("Tracking demo actualizado.");
+}
+
+function setDocumentStatus(operationId, index, status) {
+  ensureOpDocs(operationId);
+  const doc = opDocsState[operationId][index];
+  if (!doc || !DOC_STATES.includes(status)) return;
+  doc.status = status;
+  doc.history.push(`${stamp()}: estado actualizado a ${status}.`);
+  const op = findOperation(operationId);
+  if (op) op.history.push(`${stamp()}: documento ${doc.name} actualizado a ${status}.`);
+  opHistoryState.unshift(`${stamp()}: ${operationId} documento ${doc.name} en ${status}.`);
+  saveShared();
+  saveOperational();
+  showToast("Documento actualizado.");
+}
+
+function addDocumentObservation(form) {
+  const doc = opDocsState[modal.operationId]?.[modal.index];
+  if (!doc) return;
+  const text = new FormData(form).get("observation");
+  doc.observations.push(`${stamp()}: Ejecutivo Operativo - ${text}`);
+  doc.history.push(`${stamp()}: observacion agregada.`);
+  opHistoryState.unshift(`${stamp()}: observacion documental en ${modal.operationId} ${doc.name}.`);
+  modal = null;
+  saveOperational();
+  showToast("Observacion documental guardada.");
+}
+
+function createIncident(form) {
+  const data = new FormData(form);
+  const id = `INC-${String(incidentsState.length + 1).padStart(4, "0")}`;
+  const incident = {
+    id,
+    operationId: data.get("operationId"),
+    type: String(data.get("type")).toUpperCase().replaceAll(" ", "_"),
+    severity: data.get("severity"),
+    status: "ABIERTA",
+    description: data.get("description"),
+    observations: [],
+    history: [`${stamp()}: incidencia creada por Ejecutivo Operativo.`]
+  };
+  incidentsState.unshift(incident);
+  const op = findOperation(incident.operationId);
+  if (op) op.history.push(`${stamp()}: incidencia ${id} creada.`);
+  opHistoryState.unshift(`${stamp()}: incidencia ${id} creada para ${incident.operationId}.`);
+  modal = null;
+  saveShared();
+  saveOperational();
+  showToast("Incidencia creada.");
+}
+
+function setIncidentStatus(id, status) {
+  const incident = findIncident(id);
+  if (!incident) return;
+  incident.status = status;
+  incident.history.push(`${stamp()}: estado actualizado a ${status}.`);
+  opHistoryState.unshift(`${stamp()}: ${id} actualizado a ${status}.`);
+  saveOperational();
+  showToast("Incidencia actualizada.");
+}
+
+function addIncidentObservation(form) {
+  const incident = findIncident(modal.id);
+  if (!incident) return;
+  const text = new FormData(form).get("observation");
+  incident.observations.push(`${stamp()}: Ejecutivo Operativo - ${text}`);
+  incident.history.push(`${stamp()}: observacion agregada.`);
+  opHistoryState.unshift(`${stamp()}: observacion agregada a ${incident.id}.`);
+  modal = null;
+  saveOperational();
+  showToast("Observacion de incidencia guardada.");
+}
+
+function updateDispatch(form) {
+  const op = findOperation(modal.id);
+  if (!op) return;
+  const data = new FormData(form);
+  op.customsBroker = data.get("broker");
+  op.customsStatus = data.get("status");
+  if (data.get("observation")) op.customsObservations.push(`${stamp()}: ${data.get("observation")}`);
+  op.history.push(`${stamp()}: despacho actualizado.`);
+  opHistoryState.unshift(`${stamp()}: despacho ${op.id} actualizado.`);
+  modal = null;
+  saveShared();
+  saveOperational();
+  showToast("Despacho actualizado.");
+}
+
+function markAdminNotice(id) {
+  const notice = adminNoticesState.find((item) => item.id === id);
+  if (!notice) return;
+  notice.status = "REVISADO";
+  opHistoryState.unshift(`${stamp()}: aviso ${id} marcado como revisado en demo.`);
+  saveOperational();
+  showToast("Aviso marcado como revisado.");
+}
+
+function findQuote(id) {
+  return sharedState.quotes.find((item) => item.id === id);
+}
+
+function findOperation(id) {
+  return sharedState.operations.find((item) => item.id === id);
+}
+
+function operationForQuote(id) {
+  return sharedState.operations.find((item) => item.quoteId === id);
+}
+
+function quotesBy(status) {
+  return sharedState.quotes.filter((item) => item.status === status);
+}
+
+function customers() {
+  const base = [
+    { company: "Importaciones SA", email: "contacto@importacionessa.com", phone: "+598 99 000 001" },
+    { company: "LogiTrans SRL", email: "logitrans@email.com", phone: "+598 99 000 002" },
+    { company: "Grupo Exporta", email: "exporta@grupoexporta.com", phone: "+598 99 000 003" }
+  ];
+  sharedState.quotes.forEach((item) => {
+    if (!base.some((customer) => customer.company === item.company)) base.push({ company: item.company, email: item.email, phone: item.phone });
+  });
+  return base;
+}
+
+function labelState(status) {
+  return status.replaceAll("_", " ");
+}
+
+function daysActive(date) {
+  return Math.max(0, Math.ceil((new Date(`${today()}T00:00:00`) - new Date(`${date}T00:00:00`)) / 86400000));
+}
+
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function stamp() {
+  return new Date().toLocaleString("es-UY", { dateStyle: "short", timeStyle: "short" });
+}
+
+function addDays(days) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+/* ===== Agente 1 - Prospector Comercial (demo / localStorage) ===== */
+
+function agent1Score(p) {
+  let s = 0;
+  const ind = (p.industry || "").toLowerCase();
+  if (/(import|export|comercio exterior|aduana|logist)/.test(ind)) s += 26;
+  else if (/(manufactura|industria|agro|automotriz|retail|aliment|quimic|frigor)/.test(ind)) s += 18;
+  else s += 8;
+  if (p.route_interest) s += 12;
+  if (p.cargo_type) s += 10;
+  if (p.estimated_volume) s += 8;
+  const freq = (p.estimated_frequency || "").toLowerCase();
+  if (/(semanal|mensual|recurrente|quincenal)/.test(freq)) s += 12; else if (freq) s += 6;
+  const size = (p.company_size || "").toLowerCase();
+  if (/(grande|corporativ|\+?200|500)/.test(size)) s += 14; else if (/(median|50|100)/.test(size)) s += 9; else if (size) s += 4;
+  const src = (p.lead_source || "").toLowerCase();
+  if (/(referido|referral)/.test(src)) s += 12; else if (/(evento|feria)/.test(src)) s += 10; else if (/(web|inbound)/.test(src)) s += 8; else if (src) s += 4;
+  if (p.email) s += 4;
+  if (p.phone) s += 4;
+  if (p.website) s += 3;
+  if (p.city) s += 2;
+  return Math.max(0, Math.min(100, Math.round(s)));
+}
+
+function agent1Priority(score) {
+  if (score >= 70) return "A";
+  if (score >= 45) return "B";
+  return "C";
+}
+
+function agent1Label(score) {
+  if (score >= 70) return "Alta prioridad";
+  if (score >= 45) return "Prioridad media";
+  return "Prioridad baja";
+}
+
+function agent1Draft(p) {
+  const focus = p.route_interest || p.industry || "su operativa de comercio exterior";
+  const subject = `Joathi Logistica - ${p.company_name}: acompanamiento en ${focus}`;
+  const message = [
+    "Borrador interno (no se envia automaticamente).",
+    "",
+    `Empresa: ${p.company_name}`,
+    `Rubro: ${p.industry}${p.country ? ` · ${p.country}` : ""}`,
+    p.route_interest ? `Ruta de interes: ${p.route_interest}` : "",
+    p.cargo_type ? `Carga: ${p.cargo_type}${p.estimated_volume ? ` · ${p.estimated_volume}` : ""}` : "",
+    "",
+    `Angulo sugerido: presentar a Joathi como operador para ${focus}, destacando coordinacion y trazabilidad.`,
+    `Proxima accion humana: ${p.next_action || "definir contacto y validar fit comercial"}.`
+  ].filter(Boolean).join("\n");
+  return { subject, message };
+}
+
+function agent1Prospect(p) {
+  const base = {
+    id: p.id,
+    source: p.source || "EXTERNAL_DEMO",
+    external_id: p.external_id || p.id,
+    company_name: p.company_name,
+    industry: p.industry || "otros",
+    country: p.country || "",
+    city: p.city || "",
+    website: p.website || "",
+    email: p.email || "",
+    phone: p.phone || "",
+    company_size: p.company_size || "",
+    lead_source: p.lead_source || "",
+    source_detail: p.source_detail || "",
+    route_interest: p.route_interest || "",
+    cargo_type: p.cargo_type || "",
+    estimated_volume: p.estimated_volume || "",
+    estimated_frequency: p.estimated_frequency || "",
+    status: AGENT1_STATUSES.includes(p.status) ? p.status : "NUEVO",
+    next_action: p.next_action || "",
+    next_action_due_at: p.next_action_due_at || "",
+    commercial_notes: p.commercial_notes || "",
+    last_contact_at: p.last_contact_at || "",
+    history: p.history || [`${stamp()}: prospecto registrado en modo demo.`]
+  };
+  const score = agent1Score(base);
+  base.commercial_fit_score = score;
+  base.priority = agent1Priority(score);
+  base.commercial_fit_label = agent1Label(score);
+  base.last_scored_at = p.last_scored_at || stamp();
+  const draft = agent1Draft(base);
+  base.draft_subject = p.draft_subject || draft.subject;
+  base.draft_message = p.draft_message || draft.message;
+  base.contact_draft = base.draft_message;
+  return base;
+}
+
+function initialAgent1State() {
+  const seeds = [
+    { id: "PRJ-0001", company_name: "Andes Importaciones SA", industry: "importacion", country: "Chile", city: "Santiago", website: "andesimport.cl", email: "compras@andesimport.cl", phone: "+56 2 2000 1001", company_size: "mediana", lead_source: "referido", route_interest: "Santiago - Montevideo", cargo_type: "Carga general", estimated_volume: "12 tn / mes", estimated_frequency: "mensual", status: "EN_CONTACTO", next_action: "Llamar para coordinar primera cotizacion", next_action_due_at: addDays(2) },
+    { id: "PRJ-0002", company_name: "Pacifico Comex", industry: "comercio exterior", country: "Peru", city: "Lima", website: "pacificocomex.pe", email: "info@pacificocomex.pe", phone: "+51 1 500 2002", company_size: "grande", lead_source: "evento", route_interest: "Callao - Montevideo", cargo_type: "Contenedor FCL", estimated_volume: "4 FCL / mes", estimated_frequency: "recurrente", status: "CALIFICADO", next_action: "Enviar propuesta formal de servicio", next_action_due_at: addDays(5) },
+    { id: "PRJ-0003", company_name: "AgroSur Export", industry: "agro / exportacion", country: "Argentina", city: "Rosario", website: "agrosur.com.ar", email: "logistica@agrosur.com.ar", phone: "+54 341 400 3003", company_size: "grande", lead_source: "web", route_interest: "Rosario - Santos", cargo_type: "Granos / a granel", estimated_volume: "30 tn / semana", estimated_frequency: "semanal", status: "SEGUIMIENTO", next_action: "Reagendar reunion tecnica", next_action_due_at: addDays(-3) },
+    { id: "PRJ-0004", company_name: "Retail Norte", industry: "retail", country: "Uruguay", city: "Salto", email: "compras@retailnorte.uy", phone: "+598 47 30 4004", company_size: "mediana", lead_source: "web", route_interest: "Montevideo - Salto", cargo_type: "Paletizada", estimated_volume: "6 tn", status: "NUEVO" },
+    { id: "PRJ-0005", company_name: "Manufacturas Lima", industry: "manufactura", country: "Peru", city: "Lima", website: "manufacturaslima.pe", email: "ventas@manufacturaslima.pe", phone: "+51 1 600 5005", company_size: "mediana", lead_source: "feria", route_interest: "Lima - Montevideo", cargo_type: "Carga general", estimated_frequency: "mensual", status: "EN_ANALISIS", next_action: "Validar volumenes y estacionalidad", next_action_due_at: addDays(1) },
+    { id: "PRJ-0006", company_name: "Quimica Plata", industry: "quimica", country: "Argentina", city: "La Plata", website: "quimicaplata.com.ar", email: "operaciones@quimicaplata.com.ar", phone: "+54 221 700 6006", company_size: "mediana", lead_source: "referido", route_interest: "La Plata - Montevideo", cargo_type: "Carga peligrosa (IMO)", estimated_volume: "8 tn", estimated_frequency: "quincenal", status: "SEGUIMIENTO", next_action: "Confirmar requisitos de carga IMO", next_action_due_at: addDays(-7) },
+    { id: "PRJ-0007", company_name: "Servicios Varios SRL", industry: "servicios", country: "Uruguay", city: "Montevideo", email: "contacto@serviciosvarios.uy", phone: "+598 2 900 7007", company_size: "pequena", lead_source: "frio", status: "NO_CALIFICA", commercial_notes: "Sin necesidad logistica internacional por ahora." },
+    { id: "PRJ-0008", company_name: "Mini Tienda Express", industry: "otros", country: "Uruguay", city: "Canelones", email: "info@minitienda.uy", company_size: "pequena", lead_source: "frio", status: "DESCARTADO", commercial_notes: "Volumen no rentable para servicio internacional." },
+    { id: "PRJ-0009", company_name: "Global Foods", industry: "alimentos / exportacion", country: "Brasil", city: "Sao Paulo", website: "globalfoods.com.br", email: "supply@globalfoods.com.br", phone: "+55 11 800 9009", company_size: "grande", lead_source: "referido", route_interest: "Sao Paulo - Montevideo", cargo_type: "Refrigerada", estimated_volume: "5 FCL / mes", estimated_frequency: "recurrente", status: "CONVERTIDO", next_action: "Onboarding operativo con Ejecutivo Operativo", last_contact_at: stamp() },
+    { id: "PRJ-0010", company_name: "TecnoParts", industry: "automotriz", country: "Argentina", city: "Cordoba", website: "tecnoparts.com.ar", email: "compras@tecnoparts.com.ar", phone: "+54 351 100 1010", company_size: "mediana", lead_source: "web", route_interest: "Cordoba - Asuncion", cargo_type: "Autopartes", status: "NUEVO" },
+    { id: "PRJ-0011", company_name: "Frigorifico Sur", industry: "alimentos / frigorifico", country: "Uruguay", city: "Colonia", website: "frigorificosur.uy", email: "logistica@frigorificosur.uy", phone: "+598 45 20 1111", company_size: "grande", lead_source: "evento", route_interest: "Colonia - Buenos Aires", cargo_type: "Refrigerada", estimated_volume: "10 tn / semana", estimated_frequency: "semanal", status: "EN_CONTACTO", next_action: "Coordinar visita comercial", next_action_due_at: addDays(4) },
+    { id: "PRJ-0012", company_name: "Consultora X", industry: "consultoria", country: "Uruguay", city: "Montevideo", email: "hola@consultorax.uy", company_size: "pequena", lead_source: "inbound", status: "NUEVO" }
+  ];
+  const prospects = seeds.map((seed) => agent1Prospect(seed));
+  return {
+    selectedId: prospects[0].id,
+    filters: { priority: "", status: "" },
+    history: [`${stamp()}: Agente 1 (Prospector Comercial) inicializado en modo demo/local.`],
+    prospects
+  };
+}
+
+function saveAgent1() {
+  localStorage.setItem(AGENT1_KEY, JSON.stringify(agent1State));
+}
+
+function agent1Find(id) {
+  return agent1State.prospects.find((p) => p.id === id);
+}
+
+function agent1Selected() {
+  return agent1Find(agent1State.selectedId) || agent1State.prospects[0];
+}
+
+function agent1Filtered() {
+  const f = agent1State.filters;
+  return agent1State.prospects.filter((p) =>
+    (!f.priority || p.priority === f.priority) &&
+    (!f.status || p.status === f.status));
+}
+
+function agent1IsOverdue(p) {
+  return p.next_action_due_at && !AGENT1_TERMINAL.includes(p.status) && p.next_action_due_at < today();
+}
+
+function agent1Metrics() {
+  const list = agent1State.prospects;
+  const active = list.filter((p) => !AGENT1_TERMINAL.includes(p.status));
+  const avg = list.length ? Math.round(list.reduce((sum, p) => sum + (p.commercial_fit_score || 0), 0) / list.length) : 0;
+  return {
+    total: list.length,
+    avg,
+    priorityA: list.filter((p) => p.priority === "A").length,
+    overdue: list.filter(agent1IsOverdue).length,
+    noNext: active.filter((p) => !p.next_action).length
+  };
+}
+
+function agent1Module() {
+  const m = agent1Metrics();
+  const p = agent1Selected();
+  return `
+    <section class="agent1-workbench">
+      <div class="section-title-row">
+        <div>
+          <span class="eyebrow">Agente 1</span>
+          <h2>Prospector Comercial</h2>
+          <p class="agent1-lead">Cartera B2B priorizada por score comercial. Modo demo/offline: no contacta, no envia, no automatiza ventas.</p>
+        </div>
+      </div>
+      <div class="agent1-kpi-grid">
+        ${kpi("Prospectos", m.total, "en cartera")}
+        ${kpi("Score promedio", m.avg, "fit comercial 0-100")}
+        ${kpi("Prioridad A", m.priorityA, "foco comercial")}
+        ${kpi("Seguimientos vencidos", m.overdue, "proxima accion pasada")}
+        ${kpi("Sin proxima accion", m.noNext, "definir paso humano")}
+      </div>
+      <div class="agent1-grid">
+        <section class="web-panel">
+          <div class="section-title-row">
+            <h3>Cartera de prospectos</h3>
+            <div class="filter-pills">
+              <button class="${agent1State.filters.priority ? "" : "active"}" data-agent1-filter="priority:">Prioridad: todas</button>
+              ${["A", "B", "C"].map((pr) => `<button class="${agent1State.filters.priority === pr ? "active" : ""}" data-agent1-filter="priority:${pr}">${pr}</button>`).join("")}
+            </div>
+          </div>
+          <div class="filter-pills agent1-status-pills">
+            <button class="${agent1State.filters.status ? "" : "active"}" data-agent1-filter="status:">Estado: todos</button>
+            ${AGENT1_STATUSES.map((st) => `<button class="${agent1State.filters.status === st ? "active" : ""}" data-agent1-filter="status:${st}">${labelState(st)}</button>`).join("")}
+          </div>
+          ${agent1Table(agent1Filtered())}
+        </section>
+        <aside class="web-panel">
+          ${agent1Detail(p)}
+        </aside>
+      </div>
+      ${panel("Alta manual de prospecto", agent1AddForm())}
+      ${panel("Historial del Agente 1", notes(agent1State.history))}
+    </section>
+  `;
+}
+
+function agent1Table(list) {
+  if (!list.length) return empty("Sin prospectos con el filtro actual.");
+  return `
+    <table class="data-table">
+      <thead><tr><th>Empresa</th><th>Rubro</th><th>Ruta</th><th>Score</th><th>Prioridad</th><th>Estado</th><th>Proxima accion</th><th>Acciones</th></tr></thead>
+      <tbody>${list.map((p) => `
+        <tr class="${p.id === agent1State.selectedId ? "row-highlight" : ""}">
+          <td>${p.company_name}</td>
+          <td>${p.industry}</td>
+          <td>${p.route_interest || "-"}</td>
+          <td><strong>${p.commercial_fit_score}</strong></td>
+          <td><span class="badge badge-${p.priority}">${p.priority}</span></td>
+          <td>${badge(p.status)}</td>
+          <td>${p.next_action ? `${p.next_action}${agent1IsOverdue(p) ? ' <span class="badge badge-DESCARTADO">vencida</span>' : ""}` : "Sin definir"}</td>
+          <td class="table-actions">
+            <button data-agent1-select="${p.id}">Ver</button>
+            <button data-agent1-action="${p.id}:score">Recalcular</button>
+            <button data-agent1-action="${p.id}:qualify">Calificar</button>
+            <button data-agent1-action="${p.id}:followup">Seguimiento</button>
+            <button data-agent1-action="${p.id}:convert">Convertir</button>
+            <button data-agent1-action="${p.id}:discard">Descartar</button>
+          </td>
+        </tr>
+      `).join("")}</tbody>
+    </table>
+  `;
+}
+
+function agent1Detail(p) {
+  if (!p) return empty("Selecciona un prospecto.");
+  return `
+    <div class="detail-heading">
+      <div>
+        <span class="record-id">${p.id}</span>
+        <h3>${p.company_name}</h3>
+        <p class="meta">${p.industry}${p.country ? ` · ${p.country}` : ""}${p.city ? `, ${p.city}` : ""}</p>
+      </div>
+      <span class="badge badge-${p.priority}">${p.priority}</span>
+    </div>
+    ${details([
+      ["Score comercial", `${p.commercial_fit_score} / 100 · ${p.commercial_fit_label}`],
+      ["Estado", badge(p.status)],
+      ["Ruta de interes", p.route_interest || "-"],
+      ["Carga", `${p.cargo_type || "-"}${p.estimated_volume ? ` · ${p.estimated_volume}` : ""}${p.estimated_frequency ? ` · ${p.estimated_frequency}` : ""}`],
+      ["Tamano", p.company_size || "-"],
+      ["Fuente", `${p.lead_source || "-"}${p.source_detail ? ` · ${p.source_detail}` : ""}`],
+      ["Contacto", `${p.email || "-"}${p.phone ? ` · ${p.phone}` : ""}${p.website ? ` · ${p.website}` : ""}`],
+      ["Proxima accion", `${p.next_action || "Sin definir"}${p.next_action_due_at ? ` (${p.next_action_due_at})` : ""}`],
+      ["Ultimo score", p.last_scored_at || "-"]
+    ])}
+    ${p.commercial_notes ? `<p class="obs">Nota: ${p.commercial_notes}</p>` : ""}
+    <h4>Borrador interno (no se envia)</h4>
+    <p class="meta"><strong>${p.draft_subject}</strong></p>
+    <pre class="agent1-body">${p.draft_message}</pre>
+    <div class="detail-actions">
+      <button data-agent1-action="${p.id}:score">Recalcular score</button>
+      <button data-agent1-action="${p.id}:draft">Regenerar borrador</button>
+      <button data-agent1-action="${p.id}:qualify">Calificar</button>
+      <button data-agent1-action="${p.id}:followup">Seguimiento</button>
+      <button data-agent1-action="${p.id}:convert">Convertir</button>
+      <button data-agent1-action="${p.id}:discard">Descartar</button>
+      <button data-agent1-note="${p.id}">Agregar nota</button>
+    </div>
+    <h4>Historial</h4>
+    ${notes(p.history)}
+  `;
+}
+
+function agent1AddForm() {
+  return `
+    <form class="form-grid compact" data-agent1-add-form>
+      <input name="company_name" placeholder="Empresa *" required>
+      <input name="industry" placeholder="Rubro (ej. importacion)">
+      <input name="country" placeholder="Pais">
+      <input name="city" placeholder="Ciudad">
+      <input name="email" placeholder="Email">
+      <input name="phone" placeholder="Telefono">
+      <input name="website" placeholder="Web">
+      <input name="company_size" placeholder="Tamano (pequena/mediana/grande)">
+      <input name="lead_source" placeholder="Fuente (referido/web/evento/frio)">
+      <input name="route_interest" placeholder="Ruta de interes">
+      <input name="cargo_type" placeholder="Tipo de carga">
+      <input name="estimated_frequency" placeholder="Frecuencia (mensual/semanal...)">
+      <button class="btn btn-primary" type="submit">Registrar y puntuar</button>
+    </form>
+    <p class="readonly-note">Alta local. El score y la prioridad se calculan automaticamente. No se contacta a nadie.</p>
+  `;
+}
+
+function agent1Action(id, action) {
+  const p = agent1Find(id);
+  if (!p) return;
+  const now = stamp();
+  if (action === "score") {
+    p.commercial_fit_score = agent1Score(p);
+    p.priority = agent1Priority(p.commercial_fit_score);
+    p.commercial_fit_label = agent1Label(p.commercial_fit_score);
+    p.last_scored_at = now;
+    const draft = agent1Draft(p);
+    p.draft_subject = draft.subject;
+    p.draft_message = draft.message;
+    p.contact_draft = draft.message;
+    p.history.unshift(`${now}: score recalculado a ${p.commercial_fit_score} (prioridad ${p.priority}).`);
+    agent1State.history.unshift(`${now}: ${p.company_name} re-puntuado (${p.commercial_fit_score}).`);
+    showToast(`Score actualizado: ${p.commercial_fit_score} (${p.priority}).`);
+  } else if (action === "draft") {
+    const draft = agent1Draft(p);
+    p.draft_subject = draft.subject;
+    p.draft_message = draft.message;
+    p.contact_draft = draft.message;
+    p.history.unshift(`${now}: borrador interno regenerado.`);
+    agent1State.history.unshift(`${now}: ${p.company_name} borrador regenerado.`);
+    showToast("Borrador interno regenerado.");
+  } else {
+    const map = { qualify: "CALIFICADO", followup: "SEGUIMIENTO", convert: "CONVERTIDO", discard: "DESCARTADO" };
+    const status = map[action];
+    if (!status) return;
+    p.status = status;
+    if (status === "CONVERTIDO" || status === "DESCARTADO") { p.next_action = ""; p.next_action_due_at = ""; }
+    if (status === "SEGUIMIENTO" && !p.next_action_due_at) p.next_action_due_at = addDays(3);
+    p.last_contact_at = now;
+    p.history.unshift(`${now}: estado -> ${status}.`);
+    agent1State.history.unshift(`${now}: ${p.company_name} -> ${status}.`);
+    showToast(`${p.company_name}: ${labelState(status)}.`);
+  }
+  agent1State.selectedId = id;
+  saveAgent1();
+}
+
+function agent1AddProspect(form) {
+  const data = Object.fromEntries(new FormData(form).entries());
+  const name = String(data.company_name || "").trim();
+  if (!name) return;
+  const seq = String(agent1State.prospects.length + 1).padStart(4, "0");
+  const id = `PRJ-${seq}`;
+  const prospect = agent1Prospect({ ...data, id, source: "MANUAL_DEMO", external_id: id });
+  agent1State.prospects.unshift(prospect);
+  agent1State.selectedId = id;
+  agent1State.history.unshift(`${stamp()}: alta manual ${prospect.company_name} (score ${prospect.commercial_fit_score}).`);
+  saveAgent1();
+  showToast(`Prospecto ${prospect.company_name} registrado (${prospect.priority}).`);
+}
+
+function agent1AddNote(form) {
+  const text = String(new FormData(form).get("note") || "").trim();
+  const p = agent1Find(modal.id);
+  if (p && text) {
+    const now = stamp();
+    p.commercial_notes = text;
+    p.history.unshift(`${now}: nota - ${text}`);
+    agent1State.history.unshift(`${now}: nota en ${p.company_name}.`);
+  }
+  modal = null;
+  saveAgent1();
+  showToast("Nota guardada.");
+}
+
+saveShared();
+saveCommercial();
+saveAgent5();
+saveOperational();
+saveAgent6();
+saveAgent1();
+render();

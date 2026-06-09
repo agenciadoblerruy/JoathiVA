@@ -1,0 +1,333 @@
+﻿{
+    "version":  2,
+    "generatedAt":  "2026-04-21T17:56:09.679748Z",
+    "updatedAt":  "2026-04-23T04:47:50.5993243Z",
+    "nextSequence":  1,
+    "intakes":  [
+                    {
+                        "id":  "ast-1776919664940-26befb",
+                        "sourceKind":  "provider",
+                        "providerKind":  "imap",
+                        "mailboxProfileId":  "",
+                        "mailboxFolder":  "",
+                        "externalId":  "test-1",
+                        "dedupeKey":  "provider|||test-1|a@b.com|Hola|2026-04-23T00:00:00Z",
+                        "from":  {
+                                     "raw":  "a@b.com",
+                                     "name":  "",
+                                     "address":  "a@b.com",
+                                     "domain":  "b.com"
+                                 },
+                        "subject":  "Hola",
+                        "date":  "2026-04-23T00:00:00Z",
+                        "bodyNormalized":  "correo de prueba",
+                        "taskHint":  {
+
+                                     },
+                        "operationHint":  {
+
+                                          },
+                        "customerId":  "",
+                        "customerMatch":  {
+                                              "found":  false,
+                                              "customerId":  "",
+                                              "label":  "",
+                                              "confidence":  0,
+                                              "reason":  "no se identifico cliente con confianza suficiente",
+                                              "matchKind":  "none",
+                                              "customer":  null,
+                                              "evidence":  {
+                                                               "identityScore":  0,
+                                                               "contextScore":  0,
+                                                               "score":  0,
+                                                               "runnerUpScore":  0,
+                                                               "candidateCount":  0,
+                                                               "messageReferences":  [
+
+                                                                                     ],
+                                                               "actorRole":  "unknown",
+                                                               "actorReason":  "sin evidencia suficiente para inferir rol"
+                                                           }
+                                          },
+                        "customerMatchKind":  "none",
+                        "customerMatchReason":  "no se identifico cliente con confianza suficiente",
+                        "customerMatchConfidence":  0,
+                        "customerMatchEvidence":  {
+                                                      "identityScore":  0,
+                                                      "contextScore":  0,
+                                                      "score":  0,
+                                                      "runnerUpScore":  0,
+                                                      "candidateCount":  0,
+                                                      "messageReferences":  [
+
+                                                                            ],
+                                                      "actorRole":  "unknown",
+                                                      "actorReason":  "sin evidencia suficiente para inferir rol"
+                                                  },
+                        "classification":  {
+                                               "caseType":  "informativo",
+                                               "workflowCategory":  "informativo",
+                                               "workflowStage":  "informativo",
+                                               "priority":  "Baja",
+                                               "requiresResponse":  false,
+                                               "requiresResponseExplicit":  false,
+                                               "requiresFollowUp":  false,
+                                               "requiresOperation":  false,
+                                               "requiresTask":  false,
+                                               "actorRole":  "unknown",
+                                               "actorReason":  "sin evidencia suficiente para inferir rol",
+                                               "workflowSignals":  [
+
+                                                                   ],
+                                               "signals":  [
+                                                               "informativo",
+                                                               "actor:unknown"
+                                                           ],
+                                               "confidence":  0.45
+                                           },
+                        "summary":  "informativo | Hola | correo de prueba",
+                        "draftReply":  "Hola,  Gracias por la informacion. Queda registrada para seguimiento interno.  Saludos,",
+                        "draftId":  "",
+                        "draftStatus":  "",
+                        "draftSourceEmailExternalId":  "test-1",
+                        "draftEligible":  false,
+                        "draftTrigger":  "",
+                        "draftReason":  "no requiere borrador automatico",
+                        "draftProviderOk":  false,
+                        "draftFallbackMode":  "skip",
+                        "draftError":  "",
+                        "planned":  {
+                                        "task":  {
+                                                     "action":  "skip",
+                                                     "canWrite":  false,
+                                                     "reason":  "no requiere tarea",
+                                                     "payload":  null,
+                                                     "existing":  null
+                                                 },
+                                        "operation":  {
+                                                          "action":  "skip",
+                                                          "canWrite":  false,
+                                                          "reason":  "no requiere operacion",
+                                                          "payload":  null,
+                                                          "existing":  null,
+                                                          "warnings":  [
+
+                                                                       ],
+                                                          "reconciliation":  {
+                                                                                 "matched":  false,
+                                                                                 "provisional":  false,
+                                                                                 "score":  0,
+                                                                                 "reasons":  [
+
+                                                                                             ],
+                                                                                 "changes":  [
+
+                                                                                             ]
+                                                                             }
+                                                      },
+                                        "draft":  {
+                                                      "action":  "skip",
+                                                      "canWrite":  false,
+                                                      "status":  "skipped",
+                                                      "providerMode":  "skip",
+                                                      "eligible":  false,
+                                                      "trigger":  "",
+                                                      "reason":  "no requiere borrador automatico",
+                                                      "mode":  "dry-run"
+                                                  },
+                                        "activity":  {
+                                                         "action":  "create",
+                                                         "canWrite":  false
+                                                     }
+                                    },
+                        "execution":  {
+                                          "executed":  false,
+                                          "status":  "dry-run",
+                                          "task":  null,
+                                          "operation":  null,
+                                          "draft":  null,
+                                          "activity":  null,
+                                          "operationReconciliation":  {
+                                                                          "matched":  false,
+                                                                          "provisional":  false,
+                                                                          "score":  0,
+                                                                          "reasons":  [
+
+                                                                                      ],
+                                                                          "changes":  [
+
+                                                                                      ]
+                                                                      },
+                                          "notes":  [
+
+                                                    ],
+                                          "mode":  "dry-run"
+                                      },
+                        "createdAt":  "2026-04-23T04:47:45.3130446Z",
+                        "updatedAt":  "2026-04-23T04:47:45.3130446Z"
+                    },
+                    {
+                        "id":  "ast-1776919670487-59b312",
+                        "sourceKind":  "provider",
+                        "providerKind":  "imap",
+                        "mailboxProfileId":  "",
+                        "mailboxFolder":  "",
+                        "externalId":  "test-1",
+                        "dedupeKey":  "provider|||test-1|a@b.com|Hola|2026-04-23T00:00:00Z",
+                        "from":  {
+                                     "raw":  "a@b.com",
+                                     "name":  "",
+                                     "address":  "a@b.com",
+                                     "domain":  "b.com"
+                                 },
+                        "subject":  "Hola",
+                        "date":  "2026-04-23T00:00:00Z",
+                        "bodyNormalized":  "correo de prueba",
+                        "taskHint":  {
+
+                                     },
+                        "operationHint":  {
+
+                                          },
+                        "customerId":  "",
+                        "customerMatch":  {
+                                              "found":  false,
+                                              "customerId":  "",
+                                              "label":  "",
+                                              "confidence":  0,
+                                              "reason":  "no se identifico cliente con confianza suficiente",
+                                              "matchKind":  "none",
+                                              "customer":  null,
+                                              "evidence":  {
+                                                               "identityScore":  0,
+                                                               "contextScore":  0,
+                                                               "score":  0,
+                                                               "runnerUpScore":  0,
+                                                               "candidateCount":  0,
+                                                               "messageReferences":  [
+
+                                                                                     ],
+                                                               "actorRole":  "unknown",
+                                                               "actorReason":  "sin evidencia suficiente para inferir rol"
+                                                           }
+                                          },
+                        "customerMatchKind":  "none",
+                        "customerMatchReason":  "no se identifico cliente con confianza suficiente",
+                        "customerMatchConfidence":  0,
+                        "customerMatchEvidence":  {
+                                                      "identityScore":  0,
+                                                      "contextScore":  0,
+                                                      "score":  0,
+                                                      "runnerUpScore":  0,
+                                                      "candidateCount":  0,
+                                                      "messageReferences":  [
+
+                                                                            ],
+                                                      "actorRole":  "unknown",
+                                                      "actorReason":  "sin evidencia suficiente para inferir rol"
+                                                  },
+                        "classification":  {
+                                               "caseType":  "informativo",
+                                               "workflowCategory":  "informativo",
+                                               "workflowStage":  "informativo",
+                                               "priority":  "Baja",
+                                               "requiresResponse":  false,
+                                               "requiresResponseExplicit":  false,
+                                               "requiresFollowUp":  false,
+                                               "requiresOperation":  false,
+                                               "requiresTask":  false,
+                                               "actorRole":  "unknown",
+                                               "actorReason":  "sin evidencia suficiente para inferir rol",
+                                               "workflowSignals":  [
+
+                                                                   ],
+                                               "signals":  [
+                                                               "informativo",
+                                                               "actor:unknown"
+                                                           ],
+                                               "confidence":  0.45
+                                           },
+                        "summary":  "informativo | Hola | correo de prueba",
+                        "draftReply":  "Hola,  Gracias por la informacion. Queda registrada para seguimiento interno.  Saludos,",
+                        "draftId":  "",
+                        "draftStatus":  "",
+                        "draftSourceEmailExternalId":  "test-1",
+                        "draftEligible":  false,
+                        "draftTrigger":  "",
+                        "draftReason":  "no requiere borrador automatico",
+                        "draftProviderOk":  false,
+                        "draftFallbackMode":  "skip",
+                        "draftError":  "",
+                        "planned":  {
+                                        "task":  {
+                                                     "action":  "skip",
+                                                     "canWrite":  false,
+                                                     "reason":  "no requiere tarea",
+                                                     "payload":  null,
+                                                     "existing":  null
+                                                 },
+                                        "operation":  {
+                                                          "action":  "skip",
+                                                          "canWrite":  false,
+                                                          "reason":  "no requiere operacion",
+                                                          "payload":  null,
+                                                          "existing":  null,
+                                                          "warnings":  [
+
+                                                                       ],
+                                                          "reconciliation":  {
+                                                                                 "matched":  false,
+                                                                                 "provisional":  false,
+                                                                                 "score":  0,
+                                                                                 "reasons":  [
+
+                                                                                             ],
+                                                                                 "changes":  [
+
+                                                                                             ]
+                                                                             }
+                                                      },
+                                        "draft":  {
+                                                      "action":  "skip",
+                                                      "canWrite":  false,
+                                                      "status":  "skipped",
+                                                      "providerMode":  "skip",
+                                                      "eligible":  false,
+                                                      "trigger":  "",
+                                                      "reason":  "no requiere borrador automatico",
+                                                      "mode":  "dry-run"
+                                                  },
+                                        "activity":  {
+                                                         "action":  "create",
+                                                         "canWrite":  false
+                                                     }
+                                    },
+                        "execution":  {
+                                          "executed":  false,
+                                          "status":  "dry-run",
+                                          "task":  null,
+                                          "operation":  null,
+                                          "draft":  null,
+                                          "activity":  null,
+                                          "operationReconciliation":  {
+                                                                          "matched":  false,
+                                                                          "provisional":  false,
+                                                                          "score":  0,
+                                                                          "reasons":  [
+
+                                                                                      ],
+                                                                          "changes":  [
+
+                                                                                      ]
+                                                                      },
+                                          "notes":  [
+
+                                                    ],
+                                          "mode":  "dry-run"
+                                      },
+                        "createdAt":  "2026-04-23T04:47:45.3130446Z",
+                        "updatedAt":  "2026-04-23T04:47:50.5778160Z"
+                    }
+                ],
+    "drafts": []
+}

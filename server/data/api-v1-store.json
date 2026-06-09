@@ -1,0 +1,17 @@
+﻿{
+  "version": 1,
+  "generatedAt": "2026-04-21T17:56:09.679748Z",
+  "updatedAt": "2026-04-21T17:56:09.679748Z",
+  "nextSequence": 1,
+  "entities": {
+    "customer": [],
+    "quote": [],
+    "task": [],
+    "activity": [],
+    "operation": [],
+    "provider": [],
+    "document": [],
+    "mailoutbox": []
+  },
+  "changes": []
+}

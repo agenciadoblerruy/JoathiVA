@@ -1,0 +1,39 @@
+{
+  "scenarioId": "no-operation-when-insufficient-signals",
+  "signals": {
+    "customerMailbox": "agencia.doblerruy@gmail.com",
+    "providerMailbox": "rhernand14@gmail.com",
+    "usage": "controlled-test-fixtures-only"
+  },
+  "customer": {
+    "nombre": "Proveedor de prueba",
+    "empresa": "Proveedor de prueba SA",
+    "contactoPrincipal": "Proveedor de prueba",
+    "telefono": "+598 92 000 222",
+    "email": "rhernand14@gmail.com",
+    "pais": "Uruguay",
+    "ciudad": "Montevideo",
+    "tipoCliente": "Cliente",
+    "etapa": "Prospecto",
+    "origenLead": "Fixture",
+    "ejecutivoResponsable": "Joathi",
+    "fechaSeguimiento": "2026-04-24",
+    "notas": "Fixture limpio para validar que no se cree una operacion sin señales suficientes"
+  },
+  "messages": [
+    {
+      "externalId": "fixture-nop-001",
+      "from": "Proveedor de prueba <rhernand14@gmail.com>",
+      "subject": "",
+      "date": "2026-04-21T10:00:00Z",
+      "bodyText": "Hola, ¿lo recibiste? Gracias."
+    }
+  ],
+  "expected": {
+    "sameOperation": false,
+    "operationCount": 0,
+    "taskExpected": true,
+    "activityExpected": true,
+    "draftExpected": true
+  }
+}

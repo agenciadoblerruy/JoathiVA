@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Proveedor</title>
+  <link rel="stylesheet" href="prototipos.css">
+</head>
+<body class="proto-page">
+  <div class="proto-shell">
+    <header class="proto-topbar">
+      <a class="proto-brand" href="index.html">
+        <img src="../logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Proveedor JoathiVA</span>
+        </div>
+      </a>
+      <div class="proto-toolbar">
+        <span class="proto-chip"><strong>Bienvenido,</strong> Proveedor</span>
+        <a class="proto-button ghost" href="index.html">Cerrar sesion</a>
+      </div>
+    </header>
+
+    <section class="proto-section proto-dashboard">
+      <aside class="proto-panel proto-sidebar">
+        <div class="proto-sidebar-item active"><span class="proto-sidebar-icon">MS</span><strong>Mis Servicios</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">OS</span><strong>Órdenes de Servicio</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">HV</span><strong>Historial de Viajes</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">AO</span><strong>Área de Operaciones</strong></div>
+      </aside>
+
+      <div class="proto-dashboard-main">
+        <section class="proto-panel">
+          <div class="proto-section-title">
+            <div>
+              <p class="proto-eyebrow">Órdenes de Servicio</p>
+              <h2>Órdenes de Servicio</h2>
+            </div>
+            <div class="proto-toolbar">
+              <span class="proto-chip">Filtro: Estado</span>
+              <span class="proto-chip">Tipo de Servicio</span>
+              <span class="proto-chip">Fecha</span>
+              <a class="proto-button soft" href="#">Buscar</a>
+            </div>
+          </div>
+          <div class="proto-table-wrap">
+            <table class="proto-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Despachante</th>
+                  <th>Tipo de Servicio</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>OS-3056</td><td>Empresa ABC</td><td>Martinez Aduanas</td><td>Transporte</td><td>Asignada</td><td>Ver Detalle | Actualizar</td></tr>
+                <tr><td>OS-3042</td><td>Global Imports</td><td>Rodriguez Despachos</td><td>Almacenaje</td><td>En Proceso</td><td>Ver Detalle | Subir Docs</td></tr>
+                <tr><td>OS-2987</td><td>Logistica Sol</td><td>Gomez Services</td><td>Seguro</td><td>Completada</td><td>Ver Detalle | Historial</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="proto-grid-2">
+          <article class="proto-panel">
+            <div class="proto-section-title">
+              <div>
+                <p class="proto-eyebrow">Comunicacion con Operaciones</p>
+                <h2>Comunicacion con Operaciones</h2>
+              </div>
+            </div>
+            <div class="proto-note" style="min-height:250px;">
+              <div class="proto-chip" style="margin-bottom:12px;">Chat Operativo</div>
+              <div class="proto-mini-card" style="margin-bottom:10px;">Operaciones: Necesitamos confirmar horario.</div>
+              <div class="proto-mini-card" style="margin-bottom:10px;">Tu: Horario confirmado para las 10 am</div>
+              <div class="proto-mini-card" style="margin-left:auto; max-width:260px;">Mensaje en espera...</div>
+              <div class="proto-toolbar" style="margin-top:16px;">
+                <input type="text" placeholder="Escribe una respuesta" style="flex:1; min-width:220px;">
+                <button class="proto-button primary" type="button">Enviar</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="proto-panel">
+            <div class="proto-section-title">
+              <div>
+                <p class="proto-eyebrow">Historial de Viajes</p>
+                <h2>Historial de Viajes</h2>
+              </div>
+            </div>
+            <div class="proto-kpi-grid">
+              <div class="proto-kpi-card"><strong>58</strong><span class="proto-eyebrow" style="margin:0;">Viajes Realizados</span></div>
+              <div class="proto-kpi-card"><strong>12,450 KM</strong><span class="proto-eyebrow" style="margin:0;">KM Recorridos</span></div>
+              <div class="proto-kpi-card"><strong>★★★★☆</strong><span class="proto-eyebrow" style="margin:0;">Calificacion Promedio</span></div>
+            </div>
+            <div style="text-align:center; margin-top:18px;">
+              <a class="proto-button soft" href="#">Ver Reportes</a>
+            </div>
+          </article>
+        </section>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

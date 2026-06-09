@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SERVER="server/joathiva-server.ps1"
+PORTAL="V/portal.js"
+GROWTH="V/growth-lab.js"
+
+fail() {
+  echo "[auth-boundary] FAIL: $*" >&2
+  exit 1
+}
+
+[ -f "$SERVER" ] || fail "missing $SERVER"
+[ -f "$PORTAL" ] || fail "missing $PORTAL"
+[ -f "$GROWTH" ] || fail "missing $GROWTH"
+
+grep -Eq 'function[[:space:]]+Write-AuthErrorResponse\b' "$SERVER" || fail "missing Write-AuthErrorResponse"
+grep -Eq 'function[[:space:]]+Assert-PortalAuthenticatedUser\b' "$SERVER" || fail "missing Assert-PortalAuthenticatedUser"
+grep -Eq 'function[[:space:]]+Assert-PortalRole\b' "$SERVER" || fail "missing Assert-PortalRole"
+
+awk '
+  /function[[:space:]]+Assert-PortalAuthenticatedUser\b/ { in_fn=1 }
+  in_fn && /function[[:space:]]+Assert-PortalRole\b/ { exit }
+  in_fn { print }
+' "$SERVER" | grep -q 'Get-PortalUserFromRequestBody' || fail "Assert-PortalAuthenticatedUser must use Get-PortalUserFromRequestBody"
+
+awk '
+  /function[[:space:]]+Assert-PortalRole\b/ { in_fn=1 }
+  in_fn && /^function[[:space:]]+/ && !/Assert-PortalRole/ { exit }
+  in_fn { print }
+' "$SERVER" | grep -Eq 'AllowedRoles|allowedRoles|\[string\[\]\]' || fail "Assert-PortalRole must validate allowed roles"
+
+for endpoint in '/api/tools/profiles' '/api/openai/settings' '/api/openai/respond'; do
+  grep -q "$endpoint" "$SERVER" || fail "missing endpoint $endpoint"
+done
+
+python3 - <<'PY'
+from pathlib import Path
+import sys
+
+text = Path("server/joathiva-server.ps1").read_text(encoding="utf-8", errors="replace")
+
+def window(route):
+    i = text.find(route)
+    if i < 0:
+        raise SystemExit(f"[auth-boundary] FAIL: missing endpoint {route}")
+    return text[i:i+3000]
+
+checks = [
+    ("/api/tools/profiles", ["Assert-PortalAuthenticatedUser"]),
+    ("/api/openai/settings", ["Assert-PortalAuthenticatedUser", "Assert-PortalRole", "master"]),
+    ("/api/openai/respond", ["Assert-PortalAuthenticatedUser", "Assert-PortalRole", "master"]),
+]
+
+for route, needles in checks:
+    w = window(route)
+    for needle in needles:
+        if needle not in w:
+            raise SystemExit(f"[auth-boundary] FAIL: {route} missing {needle}")
+
+for forbidden in [
+    "$Global:SessionStore",
+    "Authorization Bearer",
+]:
+    if forbidden.lower() in text.lower():
+        raise SystemExit(f"[auth-boundary] FAIL: forbidden pattern present: {forbidden}")
+
+for frontend in ["V/portal.js", "V/growth-lab.js"]:
+    ft = Path(frontend).read_text(encoding="utf-8", errors="replace")
+    if "user.password" in ft:
+        raise SystemExit(f"[auth-boundary] FAIL: frontend reintroduces user.password in {frontend}")
+
+print("[auth-boundary] PASS")
+PY

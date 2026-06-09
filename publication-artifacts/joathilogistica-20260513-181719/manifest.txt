@@ -1,0 +1,24 @@
+Proyecto: joathilogistica.com
+Fecha: 2026-05-13T21:17:20Z
+Fuente: /mnt/e/Joathi/JOATHIVA/V
+Bundle publico: /mnt/e/Joathi/JOATHIVA/publication-artifacts/joathilogistica-20260513-181719/joathilogistica-public-bundle.tar.gz
+Backup local: /mnt/e/Joathi/JOATHIVA/publication-artifacts/joathilogistica-20260513-181719/joathilogistica-backup.tar.gz
+
+Exclusiones de backup:
+- .env
+- *.log
+- *.bak*
+- node_modules/
+- assets/joathi-outlook-assistant/output/
+- assets/joathi-outlook-assistant/input/emails/
+- assets/joathi-outlook-assistant/config/assistant.local.env
+
+Exclusiones de bundle publico:
+- docs/
+- scripts/
+- prototipos/
+- v1/
+- tasks.config.json
+- assets/joathi-outlook-assistant/
+
+Nota: el bundle publico no incluye assets/joathi-outlook-assistant.

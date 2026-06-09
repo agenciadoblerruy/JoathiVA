@@ -1,0 +1,155 @@
+[
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100131B00000000",
+        "subject":  "FACTURA PINES LONG",
+        "from":  "administracion@joathilogistica.com \u003cadministracion@joathilogistica.com\u003e",
+        "receivedDateTime":  "2026-04-22T12:00:25.0000000",
+        "bodyPreview":  "Buenos días\r\nLes envío factura ref CT 4475//321PAR BOGG01693400 A2819\r\nSaludos",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C10100101B00000000",
+        "subject":  "RE: C102 VIRASORO",
+        "from":  "Sanchez,Maximiliano \u003cMSanchez@lasmarias.com.ar\u003e",
+        "receivedDateTime":  "2026-04-22T08:06:27.0000000",
+        "bodyPreview":  "Valeria.\r\n\r\nBuen día, estamos verificando fecha de disponibilidad.\r\n\r\n \r\n\r\n \r\n\r\nGracias.\r\n\r\n \r\n\r\n \r\n\r\nSaludos.\r\n\r\n \r\n\r\nDe: Valeria \u003cvaleria@joathilogistica.com\u003e \r\nEnviado el: martes, 21 de abril de 2026 17:48\r\nPara: Sanchez,Maximiliano \u003cMSanchez@lasmarias.com.ar\u003e\r\nCC: Gimenez,Claudio \u003cCGimenez@lasmarias.com.ar\u003e; gimena@joathilogistica.com; Rhernandez \u003crhernandez@joathilogistica.com\u003e; Ismael Carvallo Ossa \u003cicarvallo@blmdistribuidora.cl\u003e; Alexis Jose Gerardo Angulo Marquez \u003caangulo@blmdistribuidora.cl\u003e; Arturo Guzmán Valdes \u003caguzman@blmdistribuidora.cl\u003e\r\nAsunto: C102 VIRASORO\r\n\r\n \r\n\r\nATENCIÓN: Este correo fue enviado por un externo a Establecimiento Las Marías. No haga clic en links o adjuntos",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Revisar y clasificar manualmente."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C0000D9539C2261A6BB45B9DAB62C7081B3C101000F1B00000000",
+        "subject":  "Re: Cotización UY-PY-UY",
+        "from":  "Joaquín Rodríguez Leániz \u003cjoaquin@agrologistica.com.py\u003e",
+        "receivedDateTime":  "2026-04-22T07:43:05.0000000",
+        "bodyPreview":  "Buen dia,\r\n\r\nRodrigo como estas?\r\n\r\nNo sé si estoy entendiendo bien. \r\n\r\n¿Tu quieres que hagamos 3 fletes por 9210 uss? \r\n\r\nEso sería?\r\n\r\nLos fletes solicitados deben incluir: despacho de tránsito, anp, precinto electrónico, apertura, precinto py, emisión de crt y mic, flete terrestre?\r\n\r\n \u003chttps://ci3.googleusercontent.com/mail-sig/AIorK4xFlswgpE39BdO7PHryAHvBfXSAuSb3FErRzqoY2rcVdRyfggrRsAQwo1CX4nm9nP41xCd891ojPjXl\u003e \r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nEl mar, 21 abr 2026 a las 18:09, \u003crhernandez@joathilogistica.com \u003cmailto:rhernandez@joathilogistica.com\u003e \u003e escribió:\r\n\r\n\r\n\tJoaquín gracias por tu pronta respuesta. \r\n\tHoy en día con el cambio de precio acordado con el cliente es de  cada uno de los viajes entre 9",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B0350000",
+        "subject":  "Re: CT 4475 // 321PAR -- BOGG01693400 - terrestre",
+        "from":  "valeria@joathilogistica.com \u003cvaleria@joathilogistica.com\u003e",
+        "receivedDateTime":  "2026-04-21T16:22:20.0000000",
+        "bodyPreview":  "hola como estan \r\n\r\n\r\n\r\n\r\ninformo que la unidad salio ayer y ya se encuentra rumbo a Paraguay\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nSaludos\r\n\r\n \u003chttps://ci3.googleusercontent.com/meips/ADKq_NbNlms64eeWh9ndzmJIrl4al4J1kZNihL2DueuwkD64DM8LfugRIR_NPSZpNr_lq4RGPTYC58xZwx_U8ZmHHKqAcoee4O5Hy05T90-Mvc5cldtLQxlg64UKqWD5WVb5kyZnCcZP8f7W=s0-d-e1-ft#https://49211048.fs1.hubspotusercontent-na2.net/hubfs/49211048/logo-multicolor.png\u003e \tValeria Zugasti\t \r\nCEO \t \r\njoathilogistica.com \u003chttps://mysig.io/BM4pAy0M\u003e \t \r\nvaleria@joathilogistica.com \u003cmailto:valeria@joathilogistica.com\u003e \t \r\n+598 92498378 \u003ctel:+598%2092498378%20style=\u003e \t \r\n \u003chttps://d5pxck04.na2.hs-service-engage.com/Ctc/DR+23284/d5PxcK04/Jks2-6qcW69sMD-6lZ3mhW7-qDyj604df",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B04F0000",
+        "subject":  "Re: PY26000008 - CT 4480 // 324PAR - Terrestre",
+        "from":  "Daelly González \u003coperaciones3@rfmcapital.net.py\u003e",
+        "receivedDateTime":  "2026-04-20T14:37:39.0000000",
+        "bodyPreview":  "Buenas tardes,\r\n\r\nEn adjunto factura recibida para el proceso. OBS: no coincide con el peso declarado en BL.\r\n\r\n@Admin ULG \u003cmailto:administracion@ulglogistics.com.uy\u003e  Podrías compartirnos las facturas de flete marítimo y terrestre, por favor.\r\n\r\n\r\nSaludos.\r\n\r\nEl lun, 13 abr 2026 a la(s) 3:04 p.m., Rodrigo (rhernandez@joathilogistica.com \u003cmailto:rhernandez@joathilogistica.com\u003e ) escribió:\r\n\r\n\r\n\tSalvador, muchas gracias.\r\n\taguardamos la factura entonces.\r\n\r\n\tss\r\n\r\n\t \r\n\r\n\tDe: Salvador Perez [mailto:sperez@ulglogistics.com.uy \u003cmailto:sperez@ulglogistics.com.uy\u003e ] \r\n\tEnviado el: lunes, 13 de abril de 2026 13:06\r\n\tPara: valeria zugasti \u003cvaleria@joathilogistica.com \u003cmailto:valeria@joathilogistica.",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones",
+                                      "Joathi - Cliente ULG"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B0510000",
+        "subject":  "RE: EPUET2268 || **TRANSPORTE** xpd global Uruguay || COTMVD2290 || CLIENTE: NOROSEBE",
+        "from":  "Fernando Moya Ávila \u003cfernando.moya@xpdglobal.com\u003e",
+        "receivedDateTime":  "2026-04-20T14:26:02.0000000",
+        "bodyPreview":  "Hola Rodrigo, buenas tgardes\r\n\r\n \r\n\r\nComo estas?\r\n\r\n \r\n\r\nNovedades de la fecha de recolección?\r\n\r\n \r\n\r\nSaludos! Best Regards!\r\n\r\n \r\n\r\nFernando Moya Ávila\r\n\r\nDirector / A\u0026O Operations Leader Uruguay - Argentina\r\n\r\n \r\n\r\nmobile. (+598) 9432 8002     |     office. (+598) 2914 8083     |     @. fernando.moya@xpdglobal.com \u003cmailto:fernando.moya@xpdglobal.com\u003e \r\n\r\nMontevideo, Uruguay. \r\n\r\n \u003chttps://xpdglobal.com/en/the-fastest-logistics-experience/\u003e \r\n\r\nWCA ID: 134815 \r\n\r\nPlease note that for Invoices and consignor, please use our fiscal name EUROPARTNERS URUGUAY SRL\r\n\r\n \r\n\r\nDe: Fernando Moya Ávila \r\nEnviado el: jueves, 16 de abril de 2026 18:15\r\nPara: \u0027valeria@joathilogistica.com\u0027 \u003cvaleria@joathil",
+        "joathi":  {
+                       "priority":  "baja",
+                       "labels":  [
+
+                                  ],
+                       "suggestedFolder":  "00_PENDIENTE_TRIAGE",
+                       "suggestedAction":  "Revisar y clasificar manualmente."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B0340000",
+        "subject":  "BOGG02693500 -- CT 4484 // 329PAR // PY26000009 / PY26000010 - TERRESTRE",
+        "from":  "Salvador Perez \u003csperez@ulglogistics.com.uy\u003e",
+        "receivedDateTime":  "2026-04-20T12:22:53.0000000",
+        "bodyPreview":  "Estimados, \r\nbuenos dias. \r\n\r\n\r\nAdjunto aviso de salida + HBL.\r\nLa carga tiene previsto arribar el 09/05 al puerto de Montevideo, esta carga va en transito a PY. \r\n\r\nMuchas gracias.\r\n\r\nsaludos, \r\n\r\n \u003chttps://ci3.googleusercontent.com/mail-sig/AIorK4yzo4vnm4E07xVb89l2vu4rg7c9Z1ZEtbSUN_3ZC2DSoXmuQ4oHq7UYYhdXem2oT363Ge1r4wkMiUpg\u003e \r\n\r\n\r\nSalvador Perez\r\n\r\nOperations Dept.\r\n\r\nULG Logistics Uruguay\r\n\r\nArocena 1996 – Carrasco\r\n\r\nMontevideo – Uruguay\r\n\r\nTel      : 598 2 600 9320\r\n\r\nEmail : sperez@ulglogistics.com.uy \u003cmailto:sperez@ulglogistics.com.uy\u003e \r\n\r\n\r\nWeb  : www.ulglogistics.com.uy \u003chttp://www.ulglogistics.com.uy/\u003e \r\n\r\n \u003chttps://ci3.googleusercontent.com/mail-sig/AIorK4x_x7bLW14EPC8Gz5u-wXsFKek",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones",
+                                      "Joathi - Cliente ULG"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B0360000",
+        "subject":  "Re: CT 4475 // 321PAR -- BOGG01693400 - documentos",
+        "from":  "Maria Laura Aspiroz - Tradex Ltda. \u003cmaria.aspiroz@tradex.com.uy\u003e",
+        "receivedDateTime":  "2026-04-20T11:11:03.0000000",
+        "bodyPreview":  "Gracias Vale!\r\n\r\n\r\n\r\n\r\nAdjunto el MIC actualizado. \r\n\r\n\r\n\r\n\r\nBeso!\r\n\r\n\r\nTec. C.E. María Laura Aspiroz\r\n\r\n\r\nOperaciones\r\n\r\n\r\nE-mail: maria.aspiroz@tradex.com.uy \u003cmailto:maria.aspiroz@tradex.com.uy\u003e \r\nSkype: maspiroz\r\nCel: +598 95573687\r\n\r\n \u003chttps://www.mugatu.com.uy/firmas/tradex/logo-firma.jpg\u003e \r\n\r\nItuzaingó 1312 of. 405\r\nC.P. 11000 \r\nMontevideo | Uruguay\r\n\r\n\r\nTel: +598 29169297 | 29150924 | 29166490\r\nFax: +598 29153840\r\n\r\n\r\nE-mail: tradex@tradex.com.uy \u003cmailto:tradex@tradex.com.uy\u003e \r\nSkype: tradex.ltda\r\n\r\nwww.tradexla.com \u003chttps://www.tradexla.com/\u003e   \u003chttps://www.facebook.com/tradexla\u003e   \u003chttps://www.linkedin.com/company/tradex-international-logistics/\u003e \r\n\r\n \u003chttps://www.mugatu.com.uy/firm",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B0370000",
+        "subject":  "Re: CT 4475 // 321PAR -- BOGG01693400 - terrestre",
+        "from":  "Salvador Perez \u003csperez@ulglogistics.com.uy\u003e",
+        "receivedDateTime":  "2026-04-20T10:13:28.0000000",
+        "bodyPreview":  "Estimados, \r\nbuenos dias. \r\n\r\ndetallamos las nuevas unidades que serán devueltas en MURCHISON.\r\n\r\n\r\nBooking No.\tT/VVD\tCONSIGNATARIO / NOTIFY\tCONTENEDOR\tTIPO\tRECIBIR HASTA\t\r\n  BOGG01693400  \t  LE HAVRE EXPRESS ( LHTT2610S )   \t  ULG LOGISTICA-CIRINEY SA  \t  FFAU6780479  \t  40HC  \t  09/05/2026\t\r\n\r\n\r\nMuchas gracias.\r\n\r\nsaludos, \r\n\r\n \u003chttps://ci3.googleusercontent.com/mail-sig/AIorK4yzo4vnm4E07xVb89l2vu4rg7c9Z1ZEtbSUN_3ZC2DSoXmuQ4oHq7UYYhdXem2oT363Ge1r4wkMiUpg\u003e \r\n\r\n\r\nSalvador Perez\r\n\r\nOperations Dept.\r\n\r\nULG Logistics Uruguay\r\n\r\nArocena 1996 – Carrasco\r\n\r\nMontevideo – Uruguay\r\n\r\nTel      : 598 2 600 9320\r\n\r\nEmail : sperez@ulglogistics.com.uy \u003cmailto:sperez@ulglogistics.com.uy\u003e \r\n\r\n\r\nWeb  : www.u",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones",
+                                      "Joathi - Cliente ULG"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    },
+    {
+        "id":  "00000000FE2BA7073569F24A880CB00F07923A920700C3B68E10F77511CEB4CD00AA00BBB6E600000000000C00002C81A7A3EB856644AA95F416A485E14200000000B0380000",
+        "subject":  "Re: CT 4475 // 321PAR -- BOGG01693400 - documentos",
+        "from":  "valeria@joathilogistica.com \u003cvaleria@joathilogistica.com\u003e",
+        "receivedDateTime":  "2026-04-20T09:42:00.0000000",
+        "bodyPreview":  "Lau como estas\r\n\r\n\r\n\r\n\r\nVa DUA\r\n\r\n\r\n\r\n\r\nbeso\r\n\r\n \u003chttps://ci3.googleusercontent.com/meips/ADKq_NbNlms64eeWh9ndzmJIrl4al4J1kZNihL2DueuwkD64DM8LfugRIR_NPSZpNr_lq4RGPTYC58xZwx_U8ZmHHKqAcoee4O5Hy05T90-Mvc5cldtLQxlg64UKqWD5WVb5kyZnCcZP8f7W=s0-d-e1-ft#https://49211048.fs1.hubspotusercontent-na2.net/hubfs/49211048/logo-multicolor.png\u003e \tValeria Zugasti\t \r\nCEO \t \r\njoathilogistica.com \u003chttps://mysig.io/BM4pAy0M\u003e \t \r\nvaleria@joathilogistica.com \u003cmailto:valeria@joathilogistica.com\u003e \t \r\n+598 92498378 \u003ctel:+598%2092498378%20style=\u003e \t \r\n \u003chttps://d5pxck04.na2.hs-service-engage.com/Ctc/DR+23284/d5PxcK04/Jks2-6qcW69sMD-6lZ3mhW7-qDyj604dfCW7tzKnL8gXGjLW6_8V4d4lcxt4W4ztbxQ4Zs8bPW88b5_y7g_588W6qkF3L1VXLG7VyCms4",
+        "joathi":  {
+                       "priority":  "media",
+                       "labels":  [
+                                      "Joathi - Operaciones"
+                                  ],
+                       "suggestedFolder":  "03_OPERACIONES/01_ABIERTAS",
+                       "suggestedAction":  "Crear tarea operativa y dar seguimiento."
+                   }
+    }
+]

@@ -1,0 +1,789 @@
+﻿{
+    "users":  [
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  true,
+                      "notificationOrigin":  "Brasil",
+                      "notificationDestination":  "Uruguay",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "DNA-UY-4587",
+                      "customsJurisdiction":  "Montevideo y corredores regionales",
+                      "customsPrimaryOffice":  "Aduana de Montevideo",
+                      "customsSpecialties":  [
+                                                 "Importacion",
+                                                 "Exportacion",
+                                                 "Transito internacional"
+                                             ],
+                      "customsSystems":  [
+                                             "Sistema Lucia",
+                                             "VUCE",
+                                             "MIC / CRT"
+                                         ],
+                      "customsRegimes":  [
+                                             "General",
+                                             "Transito",
+                                             "Admision temporaria"
+                                         ],
+                      "customsRepresentationScope":  "Representacion ante Aduana y organismos publicos para cargas internacionales.",
+                      "customsLegalNotes":  "Control documental, clasificacion arancelaria y coordinacion de frontera.",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-broker",
+                      "username":  "despachante",
+                      "password":  "Despachante2026!",
+                      "displayName":  "Despachante Demo",
+                      "role":  "broker",
+                      "company":  "Estudio Aduanero Demo",
+                      "legalName":  "Estudio Aduanero Demo SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999880017",
+                      "email":  "aduana@despachante.com",
+                      "phone":  "+598 97 222 333",
+                      "termsAccepted":  true,
+                      "jobTitle":  "Despachante",
+                      "mainScreen":  "",
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  false,
+                                          "clientCrud":  false,
+                                          "providerCrud":  false,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  false,
+                                          "accountingDashboard":  false,
+                                          "billingDashboard":  false,
+                                          "collections":  false,
+                                          "payments":  false,
+                                          "deleteRecords":  false
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-master",
+                      "username":  "maestro",
+                      "password":  "Maestro2026!",
+                      "displayName":  "Administrador Maestro",
+                      "role":  "master",
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "rhernandez@joathilogistica.com",
+                      "phone":  "+59897971122",
+                      "termsAccepted":  true,
+                      "jobTitle":  "Direccion",
+                      "mainScreen":  "Indicadores",
+                      "permissions":  {
+                                          "marketing":  true,
+                                          "userAdmin":  true,
+                                          "clientCrud":  true,
+                                          "providerCrud":  true,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  true,
+                                          "accountingDashboard":  true,
+                                          "billingDashboard":  true,
+                                          "collections":  true,
+                                          "payments":  true,
+                                          "deleteRecords":  true
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-master-rodrigo",
+                      "username":  "rodrigo",
+                      "password":  "1899",
+                      "displayName":  "Rodrigo",
+                      "role":  "master",
+                      "mailboxAccess":  true,
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "rodrigo@joathilogistica.com",
+                      "phone":  "+59897971122",
+                      "termsAccepted":  true,
+                      "jobTitle":  "Direccion",
+                      "mainScreen":  "Indicadores",
+                      "permissions":  {
+                                          "marketing":  true,
+                                          "userAdmin":  true,
+                                          "clientCrud":  true,
+                                          "providerCrud":  true,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  true,
+                                          "accountingDashboard":  true,
+                                          "billingDashboard":  true,
+                                          "collections":  true,
+                                          "payments":  true,
+                                          "deleteRecords":  true
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-provider",
+                      "username":  "admin",
+                      "password":  "Joathi2026!",
+                      "displayName":  "Admin Maestro",
+                      "role":  "master",
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "admin@joathilogistica.com",
+                      "phone":  "+598 99 000 000",
+                      "termsAccepted":  true,
+                      "jobTitle":  "Direccion",
+                      "mainScreen":  "Indicadores",
+                      "permissions":  {
+                                          "marketing":  true,
+                                          "userAdmin":  true,
+                                          "clientCrud":  true,
+                                          "providerCrud":  true,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  true,
+                                          "accountingDashboard":  true,
+                                          "billingDashboard":  true,
+                                          "collections":  true,
+                                          "payments":  true,
+                                          "deleteRecords":  true
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-directora-valeria",
+                      "username":  "valeria@joathilogistica.com",
+                      "password":  "Valeria2026!",
+                      "displayName":  "Valeria Zugasti",
+                      "jobTitle":  "Directora",
+                      "mainScreen":  "Indicadores",
+                      "role":  "master",
+                      "mailboxAccess":  true,
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "valeria@joathilogistica.com",
+                      "phone":  "+598 99 000 001",
+                      "termsAccepted":  true,
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  true,
+                                          "clientCrud":  true,
+                                          "providerCrud":  true,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  true,
+                                          "accountingDashboard":  true,
+                                          "billingDashboard":  true,
+                                          "collections":  true,
+                                          "payments":  true,
+                                          "deleteRecords":  true
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-gimena",
+                      "username":  "gimena@joathilogistica.com",
+                      "password":  "Gimena2026!",
+                      "displayName":  "Gimena",
+                      "jobTitle":  "Administrativo, Operativo y Contable",
+                      "mainScreen":  "Indicadores de seguimiento, facturacion, cobro y pago",
+                      "role":  "ops_finance",
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "gimena@joathilogistica.com",
+                      "phone":  "+598 99 000 002",
+                      "termsAccepted":  true,
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  false,
+                                          "clientCrud":  false,
+                                          "providerCrud":  false,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  false,
+                                          "accountingDashboard":  true,
+                                          "billingDashboard":  true,
+                                          "collections":  true,
+                                          "payments":  true,
+                                          "deleteRecords":  false
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-andrea",
+                      "username":  "administracion@joathilogistica.com",
+                      "password":  "Andrea2026!",
+                      "displayName":  "Andrea",
+                      "jobTitle":  "Facturación / Administración",
+                      "mainScreen":  "Indicadores de facturacion pendiente y cobros",
+                      "role":  "billing_admin",
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "administracion@joathilogistica.com",
+                      "phone":  "+598 99 000 003",
+                      "termsAccepted":  true,
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  false,
+                                          "clientCrud":  false,
+                                          "providerCrud":  false,
+                                          "operativeCrud":  false,
+                                          "quoteCrud":  false,
+                                          "accountingDashboard":  true,
+                                          "billingDashboard":  true,
+                                          "collections":  true,
+                                          "payments":  true,
+                                          "deleteRecords":  false
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  true,
+                      "notificationOrigin":  "Brasil",
+                      "notificationDestination":  "Uruguay",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "JoathiVA Logistica SAS",
+                      "bankName":  "Banco Republica",
+                      "bankAccountType":  "Cuenta corriente USD",
+                      "bankAccountNumber":  "001234567890",
+                      "bankSwift":  "BROUUYMM",
+                      "id":  "usr-provider-ops",
+                      "username":  "proveedor",
+                      "password":  "Proveedor2026!",
+                      "displayName":  "Operaciones JoathiVA",
+                      "role":  "provider",
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "operaciones@joathi.com",
+                      "phone":  "+598 99 000 000",
+                      "termsAccepted":  true,
+                      "jobTitle":  "Proveedor operativo",
+                      "mainScreen":  "Portal proveedor",
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  false,
+                                          "clientCrud":  false,
+                                          "providerCrud":  false,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  true,
+                                          "accountingDashboard":  false,
+                                          "billingDashboard":  false,
+                                          "collections":  false,
+                                          "payments":  false,
+                                          "deleteRecords":  false
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-commercial-ops",
+                      "username":  "comercial.ops",
+                      "password":  "ComercialOps2026!",
+                      "displayName":  "Comercial Operativo",
+                      "jobTitle":  "Gestion comercial y seguimiento",
+                      "mainScreen":  "Gestion comercial + seguimiento + proveedores",
+                      "role":  "commercial_ops",
+                      "company":  "JoathiVA",
+                      "legalName":  "JoathiVA Logistica SAS",
+                      "documentType":  "rut",
+                      "documentNumber":  "219999990012",
+                      "email":  "comercial.ops@joathilogistica.com",
+                      "phone":  "+598 99 000 003",
+                      "termsAccepted":  true,
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  false,
+                                          "clientCrud":  true,
+                                          "providerCrud":  true,
+                                          "operativeCrud":  true,
+                                          "quoteCrud":  true,
+                                          "accountingDashboard":  false,
+                                          "billingDashboard":  false,
+                                          "collections":  false,
+                                          "payments":  false,
+                                          "deleteRecords":  false
+                                      }
+                  },
+                  {
+                      "authProvider":  "password",
+                      "googleSub":  "",
+                      "avatarUrl":  "",
+                      "notificationsEnabled":  false,
+                      "notificationOrigin":  "",
+                      "notificationDestination":  "",
+                      "favoriteRoutes":  [
+
+                                         ],
+                      "profileLocation":  {
+                                              "lat":  null,
+                                              "lng":  null,
+                                              "accuracy":  null,
+                                              "city":  "",
+                                              "country":  "",
+                                              "countryCode":  "",
+                                              "label":  "",
+                                              "capturedAt":  null
+                                          },
+                      "customsRegistryNumber":  "",
+                      "customsJurisdiction":  "",
+                      "customsPrimaryOffice":  "",
+                      "customsSpecialties":  [
+
+                                             ],
+                      "customsSystems":  [
+
+                                         ],
+                      "customsRegimes":  [
+
+                                         ],
+                      "customsRepresentationScope":  "",
+                      "customsLegalNotes":  "",
+                      "bankAccountHolder":  "",
+                      "bankName":  "",
+                      "bankAccountType":  "",
+                      "bankAccountNumber":  "",
+                      "bankSwift":  "",
+                      "id":  "usr-client",
+                      "username":  "cliente",
+                      "password":  "Cliente2026!",
+                      "displayName":  "Cliente Demo",
+                      "role":  "client",
+                      "company":  "Importadora Demo",
+                      "legalName":  "Importadora Demo SRL",
+                      "documentType":  "rut",
+                      "documentNumber":  "210000110019",
+                      "email":  "logistica@cliente.com",
+                      "phone":  "+598 98 111 111",
+                      "termsAccepted":  true,
+                      "jobTitle":  "Cliente",
+                      "mainScreen":  "",
+                      "permissions":  {
+                                          "marketing":  false,
+                                          "userAdmin":  false,
+                                          "clientCrud":  false,
+                                          "providerCrud":  false,
+                                          "operativeCrud":  false,
+                                          "quoteCrud":  false,
+                                          "accountingDashboard":  false,
+                                          "billingDashboard":  false,
+                                          "collections":  false,
+                                          "payments":  false,
+                                          "deleteRecords":  false
+                                      }
+                  }
+              ],
+    "drivers":  [
+                    {
+                        "id":  "drv-1",
+                        "name":  "Carlos Mendez",
+                        "company":  "JoathiVA",
+                        "phone":  "+598 99 123 456",
+                        "email":  "carlos@joathi.com",
+                        "originCity":  "Montevideo",
+                        "originCountry":  "Uruguay",
+                        "licenseNumber":  "UY-558841",
+                        "experience":  "8 anos en transporte internacional",
+                        "licenseImageName":  "libreta-carlos.jpg"
+                    }
+                ],
+    "vehicles":  [
+                     {
+                         "id":  "veh-1",
+                         "driverId":  "drv-1",
+                         "plate":  "SBT 1020",
+                         "brand":  "Scania",
+                         "model":  "R450",
+                         "type":  "Semi remolque",
+                         "year":  2022,
+                         "capacityM3":  86,
+                         "maxWeightKg":  28000,
+                         "ownershipDocName":  "libreta-propiedad.pdf",
+                         "insuranceDocName":  "seguro-vigente.pdf",
+                         "notes":  "Unidad habilitada para corredor Mercosur."
+                     }
+                 ],
+    "trips":  [
+                  {
+                      "trackingStatus":  "pending",
+                      "driverShareConsent":  false,
+                      "startedAt":  null,
+                      "endedAt":  null,
+                      "liveLocation":  null,
+                      "trackingHistory":  [
+
+                                          ],
+                      "operationTimeline":  {
+                                                "loadingStartedAt":  null,
+                                                "loadingStartedLocation":  null,
+                                                "tripStartedAt":  null,
+                                                "arrivalAt":  null,
+                                                "unloadingCompletedAt":  null,
+                                                "completedAt":  null
+                                            },
+                      "destinationGeo":  {
+                                             "lat":  null,
+                                             "lng":  null,
+                                             "city":  "",
+                                             "country":  "",
+                                             "countryCode":  "",
+                                             "label":  "",
+                                             "resolvedAt":  null
+                                         },
+                      "id":  "trp-1",
+                      "driverId":  "drv-1",
+                      "vehicleId":  "veh-1",
+                      "currentLocation":  "Sao Paulo",
+                      "originCountry":  "Brasil",
+                      "returnDestination":  "Montevideo",
+                      "destinationCountry":  "Uruguay",
+                      "availableDate":  "2026-04-18",
+                      "status":  "Disponible",
+                      "availableM3":  60,
+                      "availableWeightKg":  18000,
+                      "priceUsd":  2400,
+                      "cargoType":  "Carga general y palletizada",
+                      "notes":  "Incluye MIC y CRT."
+                  }
+              ],
+    "requests":  [
+
+                 ],
+    "documents":  [
+
+                  ],
+    "notifications":  [
+
+                      ],
+    "successCases":  [
+                         {
+                             "id":  "case-mo1nv2ge-t69h7",
+                             "userId":  "usr-client",
+                             "createdByUserId":  "usr-master-rodrigo",
+                             "createdByName":  "Rodrigo",
+                             "contactName":  "Cliente Demo",
+                             "contactRole":  "Gerente",
+                             "company":  "Importadora Demo",
+                             "industry":  "Automotriz",
+                             "serviceUsed":  "Importacion",
+                             "operationScope":  "asuncion / montevideo",
+                             "challenge":  "me demoraba mucho el trolo",
+                             "solution":  "Son 10 puntos",
+                             "results":  "cumple al 100%, muy eficientes y productivos",
+                             "metrics":  "100% cumple\n10 puntos la atención",
+                             "quote":  "Los recomiendo",
+                             "evidenceLink":  "https://joathilogistica.com/",
+                             "allowPublishName":  true,
+                             "allowPublishCompany":  true,
+                             "allowPublishLogo":  true,
+                             "status":  "aprobado",
+                             "createdAt":  "2026-04-16T15:55:33.038Z"
+                         }
+                     ]
+}

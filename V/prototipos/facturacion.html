@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoathiVA | Facturación</title>
+  <link rel="stylesheet" href="prototipos.css">
+</head>
+<body class="proto-page">
+  <div class="proto-shell">
+    <header class="proto-topbar">
+      <a class="proto-brand" href="index.html">
+        <img src="../logo.svg" alt="JoathiVA">
+        <div>
+          <strong>JoathiVA</strong>
+          <span>Facturación JoathiVA</span>
+        </div>
+      </a>
+      <div class="proto-toolbar">
+        <span class="proto-chip"><strong>Bienvenido,</strong> Facturación</span>
+        <a class="proto-button ghost" href="index.html">Cerrar sesion</a>
+      </div>
+    </header>
+
+    <section class="proto-section proto-dashboard">
+      <aside class="proto-panel proto-sidebar">
+        <div class="proto-sidebar-item active"><span class="proto-sidebar-icon">FE</span><strong>Facturas Emitidas</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">PP</span><strong>Pagos Pendientes</strong></div>
+        <div class="proto-sidebar-item"><span class="proto-sidebar-icon">RF</span><strong>Reportes Financieros</strong></div>
+      </aside>
+
+      <div class="proto-dashboard-main">
+        <section class="proto-kpi-grid">
+          <article class="proto-kpi-card">
+            <span class="proto-eyebrow" style="margin:0;">Facturas emitidas</span>
+            <strong>84</strong>
+            <small>Del mes en curso</small>
+          </article>
+          <article class="proto-kpi-card">
+            <span class="proto-eyebrow" style="margin:0;">Pagos pendientes</span>
+            <strong>16</strong>
+            <small>Clientes por regularizar</small>
+          </article>
+          <article class="proto-kpi-card">
+            <span class="proto-eyebrow" style="margin:0;">Monto facturado</span>
+            <strong>$320,000</strong>
+            <small>Reporte acumulado</small>
+          </article>
+        </section>
+
+        <section class="proto-panel">
+          <div class="proto-section-title">
+            <div>
+              <p class="proto-eyebrow">Gestión de Facturación</p>
+              <h2>Gestión de Facturación</h2>
+            </div>
+            <div class="proto-toolbar">
+              <button class="proto-button soft" type="button">Emitir factura</button>
+              <button class="proto-button soft" type="button">Registrar pago</button>
+              <button class="proto-button primary" type="button">Exportar reporte</button>
+            </div>
+          </div>
+          <div class="proto-table-wrap">
+            <table class="proto-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>FAC-1032</td><td>Importadora ABC</td><td>$24,500</td><td>Emitida</td><td>Ver | Descargar</td></tr>
+                <tr><td>FAC-1017</td><td>Global Imports</td><td>$18,200</td><td>Pendiente</td><td>Ver | Cobrar</td></tr>
+                <tr><td>FAC-1009</td><td>Logistica Sol</td><td>$31,400</td><td>Pagada</td><td>Ver | Exportar</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="proto-report-grid">
+          <article class="proto-report-card">
+            <strong>Facturas Emitidas</strong>
+            <p>Historial de documentos fiscales emitidos y validados.</p>
+            <div class="proto-badge-row">
+              <span class="proto-status approved">Listo</span>
+            </div>
+          </article>
+          <article class="proto-report-card">
+            <strong>Pagos Pendientes</strong>
+            <p>Casos que necesitan seguimiento de cobro o confirmación.</p>
+            <div class="proto-badge-row">
+              <span class="proto-status pending">En revisión</span>
+            </div>
+          </article>
+        </section>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
