@@ -64,3 +64,13 @@ credentials.json
 *.zip
 backup/
 .venv-logo/
+tools/lucia_export.7z
+tools/lucia_export/LuciaZCGenerator*.7z
+tools/lucia_export/LuciaZCGenerator.exe
+tools/lucia_export/build_new/
+tools/lucia_export/build_pyinstaller/
+tools/qa.7z
+tools/security.7z
+tools/windows-launchers.7z
+publication-artifacts/*.tgz
+publication-artifacts/*.tar.gz
