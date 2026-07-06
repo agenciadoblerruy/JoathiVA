@@ -1,0 +1,9 @@
+# JoathiVA API — hardening B17
+# Fecha: 2026-07-06
+# Motivo: bloquear script de mantenimiento expuesto por HTTP directo
+
+<Files "jva_fix_users.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
