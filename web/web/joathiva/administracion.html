@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Administración / Facturación | JoathiVA</title>
+  <meta name="description" content="Portal estático inicial de JoathiVA para perfiles operativos, comerciales y administrativos.">
+  <script src="/joathiva/sso_client.js"></script>
+  <script>
+    (function () {
+      var sso = window.JVASSO;
+      var session = null;
+      try {
+        session = sso && typeof sso.getSession === 'function' ? sso.getSession() : null;
+      } catch (_) {
+        session = null;
+      }
+
+      var role = String(session && (session.role || session.rol || '')).toLowerCase();
+      var allowedRoles = ['admin', 'administrador', 'sistemas'];
+      var hasAllowedRole = allowedRoles.includes(role);
+
+      if (!session || !hasAllowedRole) {
+        window.location.replace('/joathiva/joathiva.html?fresh=1');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="">
+  <header class="portal-header portal-header--single">
+    <a class="btn btn-light back-link" href="../">Regresar a Joathi Logística</a>
+  </header>
+  <main>
+    <section class="page-hero page-hero-layout">
+      <div class="page-hero-copy">
+      <span class="eyebrow">Dashboard Administración / Facturación</span>
+      <h1>Administración y Facturación</h1>
+      <p>Tablero visual de operación y control interno para supervisar seguridad, desarrollo y estado de entrega del portal.</p>
+      </div>
+      <figure class="page-hero-media">
+        <img src="assets/brand/bg_post_control_operativo.jpg" alt="Panel de control administrativo y financiero">
+        <figcaption>
+          <strong>Orden financiero</strong>
+          <span>Apoyo visual para facturación, pagos y conciliación.</span>
+        </figcaption>
+      </figure>
+    </section>
+    <section class="development-board">
+      <div class="section-heading">
+        <span class="eyebrow">Desarrollo</span>
+        <h2>Tablero de avance técnico</h2>
+        <p>Resumen visual para seguimiento de seguridad, portal y limpieza técnica antes de publicar cambios mayores.</p>
+      </div>
+      <div class="metric-grid development-metrics">
+        <article>
+          <span>Seguridad P0</span>
+          <strong>1</strong>
+        </article>
+        <article>
+          <span>SSO activo</span>
+          <strong>3</strong>
+        </article>
+        <article>
+          <span>Pendientes API</span>
+          <strong>4</strong>
+        </article>
+        <article>
+          <span>QA local</span>
+          <strong>En curso</strong>
+        </article>
+      </div>
+      <div class="panel-grid development-panels">
+        <article class="panel-card development-card">
+          <span class="card-badge card-badge--critical">Crítico</span>
+          <h3>Seguridad de acceso</h3>
+          <p>Guard SSO temprano aplicado en el panel admin. El siguiente paso es reforzar los módulos que aún dependen de decisiones de arquitectura.</p>
+        </article>
+        <article class="panel-card development-card">
+          <span class="card-badge card-badge--warn">En definición</span>
+          <h3>Facturación y comercial</h3>
+          <p>Se mantiene la decisión abierta entre integrar al SSO unificado o dejar módulos standalone documentados como legado operativo.</p>
+        </article>
+        <article class="panel-card development-card">
+          <span class="card-badge card-badge--ok">Estable</span>
+          <h3>B01 / B02</h3>
+          <p>Separación de fetch crítico/opcional y CORS restringido ya quedaron commiteados localmente en la rama de trabajo.</p>
+        </article>
+        <article class="panel-card development-card">
+          <span class="card-badge card-badge--info">Pendiente</span>
+          <h3>Limpieza de `/api/`</h3>
+          <p>No se encontraron aquí las herramientas de diagnóstico/deploy listadas por INDIO. Ese inventario requiere otra ruta o clon para aislarlas.</p>
+        </article>
+      </div>
+    </section>
+    <section class="metric-grid">
+      <article><span>Facturas emitidas</span><strong>12</strong></article>
+      <article><span>Pagos pendientes</span><strong>19</strong></article>
+      <article><span>Reportes financieros</span><strong>26</strong></article>
+      <article><span>Conciliación contable</span><strong>33</strong></article>
+    </section>
+    <section class="panel-grid">
+      <article class="panel-card"><h3>Facturas emitidas</h3><p>Vista estática inicial para validar estructura, navegación y jerarquía visual del perfil.</p></article>
+      <article class="panel-card"><h3>Pagos pendientes</h3><p>Vista estática inicial para validar estructura, navegación y jerarquía visual del perfil.</p></article>
+      <article class="panel-card"><h3>Reportes financieros</h3><p>Vista estática inicial para validar estructura, navegación y jerarquía visual del perfil.</p></article>
+      <article class="panel-card"><h3>Conciliación contable</h3><p>Vista estática inicial para validar estructura, navegación y jerarquía visual del perfil.</p></article>
+    </section>
+  </main>
+</body>
+</html>
