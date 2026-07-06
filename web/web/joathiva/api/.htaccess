@@ -1,0 +1,104 @@
+﻿# JoathiVA API — .htaccess v3 (con credenciales de BD por variable de entorno)
+# Subir a: /home/joathilo/public_html/joathiva/api/.htaccess
+# (reemplaza el .htaccess actual de esa carpeta — conserva la línea Authorization)
+#
+# SOLO SetEnv / SetEnvIfNoCase — sin RewriteEngine/RewriteRule (LiteSpeed).
+
+# (1) Necesaria para el login (ya estaba — NO borrar)
+SetEnvIfNoCase Authorization "(.+)" HTTP_AUTHORIZATION=$1
+
+# (2) Credenciales de la base de datos joathilo_va
+#     config.php lee estas variables con PRIORIDAD sobre la pass vieja hardcodeada.
+#     ⚠️ REEMPLAZAR los valores entre comillas por los REALES del hosting.
+#        - JVA_DB_PASS: la contraseña NUEVA (la que cambió).
+#        - JVA_DB_USER: el usuario MySQL de joathilo_va (cPanel → MySQL → Current Users).
+#                       Suele tener prefijo de cuenta, p.ej. joathilo_xxxxx.
+#        - JVA_DB_HOST: normalmente localhost (dejar así salvo que tu hosting indique otro).
+#        - JVA_DB_NAME: el nombre real de la base (suele ser joathilo_va).
+SetEnv JVA_DB_HOST "localhost"
+SetEnv JVA_DB_NAME "joathilo_va"
+SetEnv JVA_DB_USER "joathilo_va_user"
+SetEnv JVA_DB_PASS "1899.JBolso"
+
+# JoathiVA API hardening — B17
+# Fecha: 2026-07-06
+# Motivo: bloquear herramientas de diagnóstico/deploy expuestas por HTTP directo
+
+<Files "auth_admin_debug.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "insert_super_admin.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "jva_create_admin.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "jva_dbcheck.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "jva_dbg.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "jva_deploy_admin.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "jva_fix_users.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "jva_import_test.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "mvd_api_test.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "opcache_reset.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "reset_operator.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "test_me.php">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
+<Files "INSTRUCCIONES.md">
+    Order Deny,Allow
+    Deny from all
+    Require all denied
+</Files>
+
