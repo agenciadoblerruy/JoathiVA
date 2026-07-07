@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JoathiVA — Despachante | Centro de Red Aduanera MERCOSUR</title>
+<script src="../sso_client.js"></script>
+<!--
+  ════════════════════════════════════════════════════════════════════════
+  JoathiVA — Portal Despachante de Aduanas (Uruguay · LUCIA)
+  Red Aduanera MERCOSUR  ·  V.2.3  (rediseño · foco en inteligencia de red)
+  ────────────────────────────────────────────────────────────────────────
+  Concepto: la pantalla principal es el CENTRO DE RED — un radar por país
+  (UY/AR/PY/BR/CL) + feed de alertas MERCOSUR. Los expedientes propios se
+  vinculan a las alertas que los afectan. La red es la protagonista.
+  Backend: despachante_api.php (tablas: despachantes, expedientes,
+           expediente_docs, expediente_actividad, red_alertas,
+           red_alertas_lectura, red_operaciones)
+  Datos:   fetch() al API real; si falla, mock realista embebido.
+  Agente:  FELIPE/INDIO (Claude) · Editado en File_edit
+  ════════════════════════════════════════════════════════════════════════
+-->
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+:root{
+  --verde:#1a4d2e;--verde-m:#236b3f;--verde-l:#2d8a52;
+  --dorado:#f5a623;--dorado-d:#d4891a;
+  --bg:#0b0f14;--surface:#13191f;--surface-m:#1a212a;--surface-l:#222b35;
+  --border:#283039;--border-l:#3a444f;
+  --text:#e6edf3;--text-m:#8b97a3;--text-s:#677380;
+  --blue:#58a6ff;--blue-bg:rgba(88,166,255,.1);--blue-b:rgba(88,166,255,.3);
+  --green:#2fa35e;--green-bg:rgba(47,163,94,.14);--green-b:rgba(47,163,94,.4);
+  --warn:#f5a623;--warn-bg:rgba(245,166,35,.12);--warn-b:rgba(245,166,35,.35);
+  --danger:#f85149;--danger-bg:rgba(248,81,73,.12);--danger-b:rgba(248,81,73,.4);
+  --purple:#bc8cff;--purple-bg:rgba(188,140,255,.12);--purple-b:rgba(188,140,255,.3);
+  --rad:11px;
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;font-size:13px}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-l)}
+a{color:inherit;text-decoration:none}
+
+/* ══ RAIL (navegación compacta) ══ */
+.rail{width:72px;background:linear-gradient(180deg,#0e1318,#0b0f14);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding:12px 0;gap:4px;z-index:50}
+.rail-logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--verde),var(--verde-l));display:flex;align-items:center;justify-content:center;color:var(--dorado);font-weight:900;font-size:16px;border:1.5px solid rgba(245,166,35,.45);margin-bottom:10px;flex-shrink:0}
+.rail-i{width:48px;height:46px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--text-s);transition:all .14s;position:relative;user-select:none}
+.rail-i .ic{font-size:18px;line-height:1}
+.rail-i .lb{font-size:8px;font-weight:700;letter-spacing:.2px}
+.rail-i:hover{background:var(--surface-m);color:var(--text)}
+.rail-i.active{background:rgba(26,77,46,.4);color:var(--dorado)}
+.rail-i.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:24px;border-radius:2px;background:var(--dorado)}
+.rail-i .nb{position:absolute;top:5px;right:7px;background:var(--danger);color:#fff;border-radius:9px;font-size:8px;font-weight:800;min-width:15px;height:15px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:1.5px solid #0e1318}
+.rail-i .nb.warn{background:var(--warn);color:#0b0f14}
+.rail-sp{flex:1}
+.rail-av{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--verde),var(--verde-l));display:flex;align-items:center;justify-content:center;color:var(--dorado);font-weight:800;font-size:12px;cursor:pointer;border:1px solid rgba(245,166,35,.3)}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+
+/* topbar con LUCIA integrada */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding:0 18px;height:54px;flex-shrink:0}
+.tb-title{display:flex;flex-direction:column;flex-shrink:0;min-width:150px}
+.tb-title .t{font-size:14px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
+.tb-title .s{font-size:10px;color:var(--text-s);font-weight:600}
+.ver{font-size:9px;font-weight:800;background:linear-gradient(135deg,var(--verde),var(--verde-m));border:1px solid rgba(245,166,35,.4);color:var(--dorado);border-radius:5px;padding:1px 6px}
+.tb-lucia{flex:1;display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none;padding:0 4px;border-left:1px solid var(--border);border-right:1px solid var(--border);height:34px;margin:0 2px}
+.tb-lucia::-webkit-scrollbar{display:none}
+.lucia-tag{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-right:8px}
+.lucia-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);flex-shrink:0}
+.lucia-tag b{font-size:10px;font-weight:800;color:var(--dorado);letter-spacing:.3px}
+.lqa{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:7px;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.16);font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;transition:all .14s;flex-shrink:0}
+.lqa:hover{background:rgba(245,166,35,.16);border-color:var(--dorado-d)}
+.lqa .ic{font-size:12px}
+.lqa .bd{font-size:8px;font-weight:800;background:var(--danger);color:#fff;border-radius:7px;padding:0 4px}
+.lqa .bd.warn{background:var(--warn);color:#0b0f14}
+.tb-right{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.netpill{display:inline-flex;align-items:center;gap:5px;background:var(--green-bg);border:1px solid var(--green-b);color:var(--green);border-radius:7px;padding:4px 9px;font-size:10px;font-weight:700;white-space:nowrap}
+.netpill .pd{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.src-tag{font-size:9px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:5px;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-b)}
+.src-tag.live{background:var(--green-bg);color:var(--green);border-color:var(--green-b)}
+
+.page{flex:1;overflow-y:auto;padding:16px 20px;display:none}
+.page.active{display:block}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.pt{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.pt small{display:block;font-size:12px;font-weight:500;color:var(--text-m);letter-spacing:0;margin-top:2px}
+.sl{font-size:10px;font-weight:800;color:var(--text-m);text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.sl .ln{flex:1;height:1px;background:var(--border)}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad)}
+.card-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-t{font-weight:700;font-size:13px;display:flex;align-items:center;gap:7px}
+.card-bd{padding:14px 16px}
+
+/* ══ HOME · CENTRO DE RED ══ */
+.home-grid{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
+@media(max-width:1100px){.home-grid{grid-template-columns:1fr}}
+
+/* radar de países */
+.radar{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:14px}
+.rc{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);padding:12px 11px;position:relative;overflow:hidden;cursor:pointer;transition:all .15s}
+.rc:hover{border-color:var(--border-l);transform:translateY(-2px)}
+.rc .flag{font-size:22px;line-height:1}
+.rc .sis{font-size:12px;font-weight:800;letter-spacing:.3px;margin-top:6px}
+.rc .cty{font-size:9px;color:var(--text-s);font-weight:600}
+.rc .lvl{display:flex;align-items:center;gap:5px;margin-top:9px;font-size:10px;font-weight:700}
+.rc .lvl .bar{flex:1;height:4px;border-radius:3px;background:var(--border);overflow:hidden}
+.rc .lvl .bf{height:100%;border-radius:3px}
+.rc.l-alta{box-shadow:inset 0 0 0 1px var(--danger-b)}
+.rc.l-alta .lvl{color:var(--danger)}.rc.l-alta .bf{background:var(--danger)}
+.rc.l-media .lvl{color:var(--warn)}.rc.l-media .bf{background:var(--warn)}
+.rc.l-baja .lvl{color:var(--green)}.rc.l-baja .bf{background:var(--green)}
+.rc .gobtn{position:absolute;top:10px;right:10px;font-size:11px;color:var(--text-s);opacity:0;transition:opacity .15s}
+.rc:hover .gobtn{opacity:1;color:var(--dorado)}
+.rc .pulse{position:absolute;top:11px;right:11px;width:7px;height:7px;border-radius:50%;background:var(--danger)}
+.rc .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--danger);animation:pulse 1.8s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.8);opacity:0}}
+
+/* KPIs de red */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--rad);padding:11px 13px;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;right:-14px;top:-14px;width:50px;height:50px;border-radius:50%;opacity:.08}
+.kpi.k-blue::after{background:var(--blue)}.kpi.k-red::after{background:var(--danger)}
+.kpi.k-warn::after{background:var(--warn)}.kpi.k-green::after{background:var(--green)}
+.kpi .l{font-size:9.5px;font-weight:700;color:var(--text-m);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.kpi .v{font-size:23px;font-weight:800;line-height:1}
+.kpi .d{font-size:9.5px;color:var(--text-s);margin-top:6px}
+.k-blue .v{color:var(--blue)}.k-red .v{color:var(--danger)}.k-warn .v{color:var(--warn)}.k-green .v{color:var(--green)}
+
+/* feed de alertas */
+.feed{display:flex;flex-direction:column}
+.fa{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;position:relative}
+.fa:last-child{border-bottom:none}
+.fa:hover{background:var(--surface-m)}
+.fa.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.fa.u-critica::before{background:var(--danger)}.fa.u-warn::before{background:var(--warn)}.fa.u-info::before{background:var(--blue)}
+.fa-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.fa-ic.u-critica{background:var(--danger-bg);color:var(--danger)}.fa-ic.u-warn{background:var(--warn-bg);color:var(--warn)}.fa-ic.u-info{background:var(--blue-bg);color:var(--blue)}
+.fa-bd{flex:1;min-width:0}
+.fa-top{display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap}
+.fa-title{font-size:13px;font-weight:700}
+.fa-detail{font-size:12px;color:var(--text-m);line-height:1.45}
+.fa-meta{display:flex;align-items:center;gap:9px;margin-top:6px;font-size:10px;color:var(--text-s);flex-wrap:wrap}
+.fa-meta .mk{display:inline-flex;align-items:center;gap:3px}
+.fa-affect{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.affect-chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface-l);border:1px solid var(--border-l);border-radius:7px;padding:3px 8px;font-size:10px;font-weight:600;cursor:pointer;transition:all .12s}
+.affect-chip:hover{border-color:var(--dorado-d);color:var(--dorado)}
+.affect-chip .rf{font-family:'Cascadia Code',Consolas,monospace;color:var(--dorado);font-size:10px}
+.u-pill{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:1px 7px;border-radius:5px}
+.u-pill.u-critica{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-b)}
+.u-pill.u-warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-b)}
+.u-pill.u-info{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-b)}
+.ncm-chip{font-family:'Cascadia Code',Consolas,monospace;font-size:10px;background:var(--surface-l);border:1px solid var(--border-l);border-radius:5px;padding:1px 6px}
+
+/* panel lateral del home */
+.side-card{margin-bottom:14px}
+.urg-it{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.urg-it:last-child{border-bottom:none}
+.urg-it:hover .t-ref{text-decoration:underline}
+.urg-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.urg-cli{font-size:11px;color:var(--text-m);display:flex;align-items:center;gap:6px}
+.mini-link{font-size:11px;color:var(--blue);font-weight:600;cursor:pointer}
+.mini-link:hover{text-decoration:underline}
+
+/* tabla */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:left;padding:9px 13px;font-size:9.5px;font-weight:800;color:var(--text-m);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surface)}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr{transition:background .1s;cursor:pointer}
+tbody tr:hover{background:var(--surface-m)}
+tbody tr:last-child td{border-bottom:none}
+.t-ref{font-family:'Cascadia Code',Consolas,monospace;font-weight:700;color:var(--dorado);font-size:12px}
+.t-cli{font-weight:600}.t-cli small{display:block;color:var(--text-s);font-weight:400;font-size:10.5px}
+.t-venc.soon{color:var(--warn);font-weight:700}.t-venc.over{color:var(--danger);font-weight:700}
+
+/* badges */
+.tipo{border-radius:5px;padding:2px 7px;font-size:9.5px;font-weight:800;border:1px solid transparent}
+.tipo.IMP{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-b)}
+.tipo.EXP{background:var(--green-bg);color:var(--green);border-color:var(--green-b)}
+.tipo.TRA{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-b)}
+.tipo.ADT{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-b)}
+.canal{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;border:1px solid transparent}
+.canal .cd{width:7px;height:7px;border-radius:50%}
+.canal.Verde{background:var(--green-bg);color:var(--green);border-color:var(--green-b)}.canal.Verde .cd{background:var(--green)}
+.canal.Amarillo{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-b)}.canal.Amarillo .cd{background:var(--warn)}
+.canal.Rojo{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-b)}.canal.Rojo .cd{background:var(--danger)}
+.canal.Azul{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-b)}.canal.Azul .cd{background:var(--blue)}
+.canal.SinAsignar{background:rgba(139,151,163,.1);color:var(--text-m);border-color:rgba(139,151,163,.3)}.canal.SinAsignar .cd{background:var(--text-s)}
+.estado{display:inline-flex;align-items:center;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;border:1px solid transparent}
+.estado.Borrador{background:rgba(139,151,163,.1);color:var(--text-m);border-color:rgba(139,151,163,.3)}
+.estado.Presentado{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-b)}
+.estado.EnRevision{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-b)}
+.estado.Liberado{background:var(--green-bg);color:var(--green);border-color:var(--green-b)}
+.estado.Rechazado{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-b)}
+.estado.Retirado{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-b)}
+.doc-st{display:inline-flex;align-items:center;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;border:1px solid transparent}
+.doc-st.Pendiente{background:rgba(139,151,163,.1);color:var(--text-m);border-color:rgba(139,151,163,.3)}
+.doc-st.Validado{background:var(--green-bg);color:var(--green);border-color:var(--green-b)}
+.doc-st.Rechazado{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-b)}
+.doc-st.Vencido{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-b)}
+
+/* botones */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;border:none;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .14s;font-family:inherit;white-space:nowrap}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-sm{padding:5px 10px;font-size:11px;border-radius:6px}
+.btn-p{background:var(--dorado);color:#0b0f14}.btn-p:hover:not(:disabled){background:var(--dorado-d)}
+.btn-gh{background:transparent;color:var(--text-m);border:1px solid var(--border)}.btn-gh:hover{color:var(--text);border-color:var(--border-l);background:var(--surface-m)}
+.ico-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--surface-m);color:var(--text-m);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .12s}
+.ico-btn:hover{color:var(--dorado);border-color:var(--border-l)}
+
+/* filtros */
+.filters{display:flex;align-items:center;gap:8px;margin-bottom:13px;flex-wrap:wrap}
+.fl-input{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 11px;color:var(--text);font-size:12.5px;font-family:inherit;outline:none;transition:border-color .12s}
+.fl-input:focus{border-color:var(--dorado-d)}
+.fl-search{flex:1;min-width:190px;position:relative}
+.fl-search input{width:100%;padding-left:31px}
+.fl-search .si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-s);font-size:13px}
+select.fl-input{cursor:pointer;padding-right:26px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%238b97a3' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:15px;overflow-x:auto}
+.tab{padding:8px 14px;font-size:12px;font-weight:600;color:var(--text-m);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--dorado);border-bottom-color:var(--dorado)}
+.tab .c{font-size:9.5px;font-weight:800;background:var(--surface-l);border-radius:8px;padding:0 6px;color:var(--text-m)}
+.tabpane{display:none}.tabpane.active{display:block}
+
+/* detalle */
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.dl-cell{background:var(--surface);padding:10px 13px}
+.dl-k{font-size:9.5px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.dl-v{font-size:12.5px;font-weight:600}
+.dl-v.mono{font-family:'Cascadia Code',Consolas,monospace}
+.money{font-family:'Cascadia Code',Consolas,monospace;font-weight:700}
+.money.in{color:var(--green)}.money.out{color:var(--danger)}
+
+/* actividad */
+.act-log{display:flex;flex-direction:column;position:relative;padding-left:5px}
+.act-it{display:flex;gap:12px;padding:9px 0;position:relative}
+.act-dot{width:10px;height:10px;border-radius:50%;background:var(--dorado);margin-top:4px;flex-shrink:0;z-index:1;box-shadow:0 0 0 3px var(--surface)}
+.act-it.t-sistema .act-dot{background:var(--blue)}.act-it.t-alerta .act-dot{background:var(--danger)}
+.act-it.t-doc .act-dot{background:var(--purple)}.act-it.t-estado .act-dot{background:var(--green)}
+.act-line{position:absolute;left:9px;top:0;bottom:0;width:1px;background:var(--border)}
+.act-act{font-size:12px;font-weight:600}.act-detail{font-size:11.5px;color:var(--text-m);margin-top:2px}
+.act-meta{font-size:10px;color:var(--text-s);margin-top:3px;display:flex;gap:10px}
+
+/* forms */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.form-grid.c3{grid-template-columns:repeat(3,1fr)}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:10.5px;font-weight:700;color:var(--text-m);letter-spacing:.3px}
+.fg label .req{color:var(--danger)}
+.fg input,.fg select,.fg textarea{background:var(--surface-m);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--text);font-size:12.5px;font-family:inherit;outline:none;transition:border-color .12s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--dorado-d)}
+.fg textarea{resize:vertical;min-height:60px}
+.fg .hint{font-size:10px;color:var(--text-s)}
+.form-sec{margin-bottom:16px}
+.form-sec-t{font-size:10.5px;font-weight:800;color:var(--dorado);text-transform:uppercase;letter-spacing:.8px;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.form-sec-t .ln{flex:1;height:1px;background:var(--border)}
+.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:4px;padding-top:14px;border-top:1px solid var(--border)}
+.kpi-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
+.kpi-pill{background:var(--surface-m);border:1px solid var(--border);border-radius:9px;padding:9px 13px;flex:1;min-width:115px}
+.kpi-pill .l{font-size:9.5px;color:var(--text-m);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kpi-pill .v{font-size:17px;font-weight:800;margin-top:3px}
+
+/* misc */
+.empty{text-align:center;padding:40px 20px;color:var(--text-s)}
+.empty .ei{font-size:36px;opacity:.4;margin-bottom:9px}
+.empty .et{font-size:13px;font-weight:600;color:var(--text-m)}
+.empty .es{font-size:11.5px;margin-top:3px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-m);cursor:pointer;margin-bottom:11px;font-weight:600}
+.back-link:hover{color:var(--dorado)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--surface-l);border:1px solid var(--green-b);border-left:4px solid var(--green);border-radius:10px;padding:12px 17px;font-size:12.5px;box-shadow:0 12px 32px rgba(0,0,0,.55);z-index:999;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all .3s;max-width:360px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.err{border-color:var(--danger-b);border-left-color:var(--danger)}
+.sis-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.sis-card{background:var(--surface-m);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .15s;text-align:center}
+.sis-card:hover{border-color:var(--dorado-d);background:var(--surface-l);transform:translateY(-2px)}
+.sis-card .flag{font-size:24px}.sis-card .sis{font-size:12px;font-weight:800;margin-top:6px}
+.sis-card .cty{font-size:9.5px;color:var(--text-m);margin-top:2px}.sis-card .go{font-size:8.5px;color:var(--dorado);margin-top:6px;font-weight:700}
+.bars .row{margin-bottom:11px}
+.bars .lab{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px}
+.bars .track{height:7px;border-radius:4px;background:var(--border);overflow:hidden}
+.bars .fill{height:100%;border-radius:4px}
+
+/* ══ V.2.3 · ESTADO EN VIVO (traer datos de LUCIA al expediente) ══ */
+.live-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.live-tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--green)}
+.live-tag .pd{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);position:relative}
+.live-tag .pd::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--green);animation:pulse 1.8s ease-out infinite}
+.live-tag.stale{color:var(--text-s)}.live-tag.stale .pd{background:var(--text-s);box-shadow:none}.live-tag.stale .pd::after{display:none}
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.live-c{background:var(--surface-m);border:1px solid var(--border);border-radius:10px;padding:12px 13px;position:relative}
+.live-c .k{font-size:9.5px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.live-c .val{font-size:15px;font-weight:800;line-height:1.1}
+.live-c .sub{font-size:10px;color:var(--text-m);margin-top:4px}
+.live-c.hot{border-color:var(--danger-b);box-shadow:inset 0 0 0 1px var(--danger-b)}
+.live-c.warn{border-color:var(--warn-b)}
+.live-src{font-size:10px;color:var(--text-s);margin-top:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.live-src .dot{width:5px;height:5px;border-radius:50%;background:var(--text-s)}
+
+/* ══ V.2.3 · ACCESO LUCIA contextual (botón robusto: copia DUA + abre + guía) ══ */
+.lucia-action{background:linear-gradient(135deg,rgba(26,77,46,.35),rgba(13,42,26,.2));border:1px solid rgba(245,166,35,.25);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.la-top{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.la-info{display:flex;align-items:center;gap:11px;min-width:0}
+.la-ic{width:38px;height:38px;border-radius:11px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.la-tt{font-size:13px;font-weight:800}
+.la-ds{font-size:11px;color:var(--text-m);margin-top:1px}
+.la-btns{display:flex;gap:8px;flex-wrap:wrap}
+.la-steps{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap}
+.la-step{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-m)}
+.la-step .n{width:18px;height:18px;border-radius:50%;background:var(--surface-l);border:1px solid var(--border-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--dorado);flex-shrink:0}
+.la-step .arr{color:var(--text-s);font-size:11px}
+.copy-pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface-l);border:1px solid var(--border-l);border-radius:7px;padding:4px 9px;font-family:'Cascadia Code',Consolas,monospace;font-size:11px;font-weight:700;color:var(--dorado);cursor:pointer;transition:all .12s}
+.copy-pill:hover{border-color:var(--dorado-d)}
+.copy-pill .ci{font-size:11px;color:var(--text-m)}
+
+/* ══ V.2.3 · MINI-NAVEGADOR INTERNO (panel acoplado honesto, sin iframe) ══ */
+.ext-overlay{position:fixed;inset:0;background:rgba(5,8,11,.6);backdrop-filter:blur(2px);z-index:600;display:none;align-items:stretch;justify-content:flex-end}
+.ext-overlay.show{display:flex}
+.ext-panel{width:min(460px,92vw);background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;box-shadow:-14px 0 40px rgba(0,0,0,.5);animation:slidein .25s ease}
+@keyframes slidein{from{transform:translateX(40px);opacity:.6}to{transform:translateX(0);opacity:1}}
+.ext-hd{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ext-hd .tt{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.ext-bd{flex:1;overflow-y:auto;padding:16px}
+.ext-ctx{background:var(--surface-m);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.ext-note{font-size:11.5px;color:var(--text-m);line-height:1.55;background:var(--warn-bg);border:1px solid var(--warn-b);border-radius:9px;padding:11px 13px;margin-bottom:14px}
+.ext-note b{color:var(--warn)}
+.ext-win{border:1px dashed var(--border-l);border-radius:10px;padding:18px;text-align:center;color:var(--text-s);background:var(--bg)}
+.ext-win .big{font-size:30px;opacity:.5;margin-bottom:8px}
+.ext-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:7px;margin-top:10px}
+.ext-status.open{background:var(--green-bg);color:var(--green);border:1px solid var(--green-b)}
+.ext-status.closed{background:rgba(139,151,163,.1);color:var(--text-m);border:1px solid rgba(139,151,163,.3)}
+.ext-foot{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.btn-soon{background:transparent;color:var(--text-s);border:1px dashed var(--border-l);cursor:not-allowed;opacity:.85}
+.btn-soon:hover{color:var(--text-m)}
+.soon-tag{font-size:8.5px;font-weight:800;letter-spacing:.4px;background:var(--surface-l);border:1px solid var(--border-l);color:var(--text-s);border-radius:5px;padding:1px 6px;margin-left:5px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<!-- ════════ RAIL ════════ -->
+<aside class="rail">
+  <div class="rail-logo">JV</div>
+  <div class="rail-i active" data-view="home" onclick="navTo('home',this)"><span class="ic">🛰️</span><span class="lb">Red</span></div>
+  <div class="rail-i" data-view="expedientes" onclick="navTo('expedientes',this)"><span class="ic">≡</span><span class="lb">Exped.</span><span class="nb" id="nb-exp">0</span></div>
+  <div class="rail-i" data-view="nuevo" onclick="navTo('nuevo',this)"><span class="ic">＋</span><span class="lb">Nuevo</span></div>
+  <div class="rail-i" data-view="alertas" onclick="navTo('alertas',this)"><span class="ic">⚠️</span><span class="lb">Alertas</span><span class="nb warn" id="nb-alert">0</span></div>
+  <div class="rail-i" data-view="clientes" onclick="navTo('clientes',this)"><span class="ic">👥</span><span class="lb">Client.</span></div>
+  <div class="rail-i" data-view="liquidaciones" onclick="navTo('liquidaciones',this)"><span class="ic">💰</span><span class="lb">Liquid.</span></div>
+  <div class="rail-i" data-view="reportes" onclick="navTo('reportes',this)"><span class="ic">▦</span><span class="lb">Report.</span></div>
+  <div class="rail-sp"></div>
+  <div class="rail-i" data-view="config" onclick="navTo('config',this)"><span class="ic">◉</span><span class="lb">Config</span></div>
+  <div class="rail-av" id="rail-av" title="Perfil">RD</div>
+</aside>
+
+<!-- ════════ MAIN ════════ -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-title">
+      <div class="t">JoathiVA <span class="ver">V.2.3</span></div>
+      <div class="s">Despachante · LUCIA</div>
+    </div>
+    <div class="tb-lucia" id="tb-lucia">
+      <div class="lucia-tag"><span class="lucia-dot"></span><b>LUCIA</b></div>
+      <!-- accesos LUCIA: los rellena renderLuciaBar() con los módulos reales (?N) -->
+    </div>
+    <div class="tb-right">
+      <span class="netpill"><span class="pd"></span>Red · 5 países</span>
+      <span class="src-tag" id="data-src" title="Origen de datos">MOCK</span>
+    </div>
+  </div>
+
+  <section class="page active" id="page-home"></section>
+  <section class="page" id="page-expedientes"></section>
+  <section class="page" id="page-detalle"></section>
+  <section class="page" id="page-nuevo"></section>
+  <section class="page" id="page-clientes"></section>
+  <section class="page" id="page-liquidaciones"></section>
+  <section class="page" id="page-alertas"></section>
+  <section class="page" id="page-reportes"></section>
+  <section class="page" id="page-config"></section>
+</main>
+
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   JoathiVA · Portal Despachante · V.2.3 · Centro de Red Aduanera MERCOSUR
+   ════════════════════════════════════════════════════════════════════════ */
+const API_BASE='./api/despachante_api.php';
+const DESPACHANTE_ID='self';
+let DATA_SOURCE='mock';
+
+const SISTEMAS={
+  UY:{flag:'🇺🇾',sis:'LUCIA',pais:'Uruguay',url:'https://luciapub.aduanas.gub.uy/LuciapubX/Dat'},
+  AR:{flag:'🇦🇷',sis:'MALVINA',pais:'Argentina',url:'https://www.afip.gob.ar/aduana/'},
+  PY:{flag:'🇵🇾',sis:'SOFIA',pais:'Paraguay',url:'https://www.aduana.gov.py/'},
+  BR:{flag:'🇧🇷',sis:'SISCOMEX',pais:'Brasil',url:'https://www.gov.br/siscomex/'},
+  CL:{flag:'🇨🇱',sis:'SICEX',pais:'Chile',url:'https://www.aduana.cl/'}
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   MÓDULOS LUCIA (UY) — deep-links al sistema operativo logueado.
+   LUCIA navega por menú con ?N (NO deep-linkea a un DUA puntual por URL).
+   ➜ ÚNICO LUGAR PARA CONFIGURAR: reemplazar los `null` por el número real
+     que aparece en la barra al entrar a cada módulo
+     (…/LuciaXMenuNuevo/globales.menues.menunuevo.aspx?N).
+   Números ?N confirmados por Rodrigo desde LUCIA (2026-06-26):
+     Operaciones=1 · DUA=2 · Cargas=5 · Datos Básicos=16 · Mercosur=18 ·
+     DAS=26 · Documentación=28 (sin acceso p/usuario actual) · Precinto=29 · Análisis Riesgo=68
+     Garantías: pendiente (cae al menú hasta tener el número).
+   ════════════════════════════════════════════════════════════════════════ */
+const LUCIA_BASE='https://aplicaciones.aduanas.gub.uy/LuciaXMenuNuevo/globales.menues.menunuevo.aspx';
+const LUCIA_PUB='https://luciapub.aduanas.gub.uy/LuciapubX/globales.menues.menupublicoresponsive.aspx';
+const luciaUrl=n=>(n==null?LUCIA_PUB:`${LUCIA_BASE}?${n}`);
+const LUCIA_MODULOS=[
+  {key:'operaciones',  label:'Operaciones',   ic:'📑',n:1,   nota:'Menú operativo'},
+  {key:'dua',          label:'DUA',           ic:'📄',n:2,   nota:'Declaraciones'},
+  {key:'cargas',       label:'Cargas',        ic:'📦',n:5,   nota:'Estado de cargas'},
+  {key:'mercosur',     label:'Mercosur',      ic:'🌎',n:18,  nota:'Tránsitos regionales'},
+  {key:'precinto',     label:'Precinto Elec.',ic:'🔒',n:29,  nota:'Precintos / tránsito'},
+  {key:'riesgo',       label:'Análisis Riesgo',ic:'🎯',n:68, nota:'Canal / criterios'},
+  {key:'das',          label:'DAS',           ic:'⚡',n:26,  nota:'Despacho simplificado'},
+  {key:'documentacion',label:'Documentación', ic:'📚',n:28,  nota:'Documentación (según permiso)'},
+  {key:'garantias',    label:'Garantías',     ic:'🛡️',n:null,nota:'Garantías (pendiente ?N)'},
+  {key:'datos',        label:'Datos Básicos', ic:'🗂️',n:16,  nota:'Empresas / consultas'}
+];
+const luciaMod=k=>LUCIA_MODULOS.find(m=>m.key===k)||LUCIA_MODULOS[0];
+
+/* ════════════════════════════════════════════════════════════════════════
+   MOCK — estructura igual a las tablas BD (joathilo_va). Fallback si el API falla.
+   ════════════════════════════════════════════════════════════════════════ */
+const HOY=new Date();
+const dISO=d=>d.toISOString().slice(0,10);
+const offDays=n=>{const d=new Date(HOY);d.setDate(d.getDate()+n);return dISO(d);};
+const offHours=n=>{const d=new Date(HOY);d.setHours(d.getHours()+n);return d.toISOString();};
+
+const MOCK={
+  despachante:{nombre_completo:'Rodrigo Despachante',matricula:'D-2847',pais:'UY',sistema_pub:'LUCIA',iniciales:'RD'},
+  expedientes:[
+    {id:'e1',referencia:'EXP-2026-0312',cliente_nombre:'Importadora del Plata S.A.',cliente_rut:'215489760018',cliente_email:'compras@delplata.com.uy',cliente_tel:'+598 2908 4471',
+     tipo_op:'IMP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 788123',ncm:'8517.62.00',descripcion_ncm:'Aparatos de telecomunicación',
+     pais_origen:'CN',pais_destino:'UY',descripcion_merc:'Routers y switches de red — 18 pallets',cantidad:1800,unidad:'unid',peso_bruto:4200,
+     valor_fob_usd:142500,valor_cif_usd:151800,arancel_usd:9108,iva_usd:35364,otros_trib_usd:1820,honorarios_usd:2400,honorarios_pag:0,
+     canal:'Rojo',estado_aduana:'EnRevision',motivo_obs:'Verificación física — coincide con criterio NCM 8517 origen China',
+     fecha_presentacion:offDays(-2),fecha_liberacion:null,fecha_vencimiento:offDays(0),estado:'activo'},
+    {id:'e2',referencia:'EXP-2026-0311',cliente_nombre:'AgroExport Uruguay Ltda.',cliente_rut:'216738910014',cliente_email:'logistica@agroexport.uy',cliente_tel:'+598 4733 2210',
+     tipo_op:'EXP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 787904',ncm:'1005.90.10',descripcion_ncm:'Maíz en grano',
+     pais_origen:'UY',pais_destino:'BR',descripcion_merc:'Maíz a granel — 3 contenedores',cantidad:78000,unidad:'kg',peso_bruto:78500,
+     valor_fob_usd:23400,valor_cif_usd:24100,arancel_usd:0,iva_usd:0,otros_trib_usd:340,honorarios_usd:980,honorarios_pag:1,
+     canal:'Verde',estado_aduana:'Liberado',motivo_obs:null,
+     fecha_presentacion:offDays(-4),fecha_liberacion:offDays(-3),fecha_vencimiento:offDays(8),estado:'activo'},
+    {id:'e3',referencia:'EXP-2026-0310',cliente_nombre:'Farmacéutica Andina S.R.L.',cliente_rut:'214902330011',cliente_email:'import@farmandina.com',cliente_tel:'+598 2710 9982',
+     tipo_op:'IMP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 787612',ncm:'3004.90.99',descripcion_ncm:'Medicamentos dosificados',
+     pais_origen:'DE',pais_destino:'UY',descripcion_merc:'Lote de medicamentos refrigerados',cantidad:340,unidad:'unid',peso_bruto:1180,
+     valor_fob_usd:88900,valor_cif_usd:93200,arancel_usd:0,iva_usd:9320,otros_trib_usd:640,honorarios_usd:1850,honorarios_pag:0,
+     canal:'Amarillo',estado_aduana:'Presentado',motivo_obs:'Revisión documental — certificado fitosanitario pendiente',
+     fecha_presentacion:offDays(-1),fecha_liberacion:null,fecha_vencimiento:offDays(1),estado:'activo'},
+    {id:'e4',referencia:'EXP-2026-0309',cliente_nombre:'Textiles Riveros S.A.',cliente_rut:'213388470015',cliente_email:'aduana@textilesriveros.uy',cliente_tel:'+598 2622 1140',
+     tipo_op:'IMP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 787341',ncm:'5208.52.00',descripcion_ncm:'Tejidos de algodón estampados',
+     pais_origen:'IN',pais_destino:'UY',descripcion_merc:'Rollos de tela estampada — 240 bultos',cantidad:240,unidad:'unid',peso_bruto:6800,
+     valor_fob_usd:54200,valor_cif_usd:58900,arancel_usd:9897,iva_usd:14497,otros_trib_usd:710,honorarios_usd:1620,honorarios_pag:1,
+     canal:'Verde',estado_aduana:'Liberado',motivo_obs:null,
+     fecha_presentacion:offDays(-6),fecha_liberacion:offDays(-5),fecha_vencimiento:offDays(14),estado:'activo'},
+    {id:'e5',referencia:'EXP-2026-0308',cliente_nombre:'Maquinaria Pesada del Este',cliente_rut:'215001220017',cliente_email:'ops@mpeste.com.uy',cliente_tel:'+598 4422 8830',
+     tipo_op:'TRA',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 787100',ncm:'8429.52.00',descripcion_ncm:'Excavadoras hidráulicas',
+     pais_origen:'JP',pais_destino:'PY',descripcion_merc:'Tránsito de maquinaria pesada hacia Paraguay',cantidad:2,unidad:'unid',peso_bruto:42000,
+     valor_fob_usd:310000,valor_cif_usd:328000,arancel_usd:0,iva_usd:0,otros_trib_usd:1200,honorarios_usd:3200,honorarios_pag:0,
+     canal:'Amarillo',estado_aduana:'EnRevision',motivo_obs:'Tránsito MERCOSUR — control de precintos',
+     fecha_presentacion:offDays(-1),fecha_liberacion:null,fecha_vencimiento:offDays(2),estado:'activo'},
+    {id:'e6',referencia:'EXP-2026-0307',cliente_nombre:'Bebidas Premium Import',cliente_rut:'214550980013',cliente_email:'comex@bebidaspremium.uy',cliente_tel:'+598 2901 7766',
+     tipo_op:'IMP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 786988',ncm:'2204.21.00',descripcion_ncm:'Vinos en botella',
+     pais_origen:'AR',pais_destino:'UY',descripcion_merc:'Vino fraccionado — 600 cajas',cantidad:600,unidad:'unid',peso_bruto:9200,
+     valor_fob_usd:31200,valor_cif_usd:33800,arancel_usd:6760,iva_usd:8911,otros_trib_usd:2030,honorarios_usd:1180,honorarios_pag:1,
+     canal:'Rojo',estado_aduana:'Rechazado',motivo_obs:'Diferencia de valor declarado vs. referencia — ajuste tributario solicitado',
+     fecha_presentacion:offDays(-8),fecha_liberacion:null,fecha_vencimiento:offDays(-1),estado:'activo'},
+    {id:'e7',referencia:'EXP-2026-0306',cliente_nombre:'Electrónica del Sur S.A.',cliente_rut:'215677340019',cliente_email:'aduanas@electrosur.com.uy',cliente_tel:'+598 2487 3321',
+     tipo_op:'IMP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 786755',ncm:'8528.72.00',descripcion_ncm:'Aparatos receptores de TV',
+     pais_origen:'KR',pais_destino:'UY',descripcion_merc:'Televisores LED — 4 contenedores',cantidad:1200,unidad:'unid',peso_bruto:15600,
+     valor_fob_usd:198000,valor_cif_usd:209000,arancel_usd:33440,iva_usd:53251,otros_trib_usd:2510,honorarios_usd:2900,honorarios_pag:0,
+     canal:'Verde',estado_aduana:'Liberado',motivo_obs:null,
+     fecha_presentacion:offDays(-3),fecha_liberacion:offDays(-2),fecha_vencimiento:offDays(6),estado:'activo'},
+    {id:'e8',referencia:'EXP-2026-0305',cliente_nombre:'Frigorífico Nacional Ltda.',cliente_rut:'213900110016',cliente_email:'export@frignacional.uy',cliente_tel:'+598 4055 6612',
+     tipo_op:'EXP',pais:'UY',sistema:'LUCIA',num_declaracion:'DUA 786500',ncm:'0201.30.00',descripcion_ncm:'Carne bovina deshuesada',
+     pais_origen:'UY',pais_destino:'CL',descripcion_merc:'Carne refrigerada — contenedor reefer',cantidad:26000,unidad:'kg',peso_bruto:26400,
+     valor_fob_usd:156000,valor_cif_usd:159000,arancel_usd:0,iva_usd:0,otros_trib_usd:890,honorarios_usd:2100,honorarios_pag:0,
+     canal:'SinAsignar',estado_aduana:'Borrador',motivo_obs:null,
+     fecha_presentacion:null,fecha_liberacion:null,fecha_vencimiento:offDays(4),estado:'activo'}
+  ],
+  docs:{
+    e1:[{id:'d1',nombre:'Factura comercial 88123.pdf',tipo:'Factura comercial',estado:'Validado',subido_por:'Rodrigo',created_at:offHours(-50)},
+        {id:'d2',nombre:'Packing list 88123.pdf',tipo:'Packing list',estado:'Validado',subido_por:'Rodrigo',created_at:offHours(-50)},
+        {id:'d3',nombre:'BL MAEU-7741.pdf',tipo:'BL / AWB / CRT',estado:'Validado',subido_por:'Cliente',created_at:offHours(-49)},
+        {id:'d4',nombre:'Certificado origen China.pdf',tipo:'Certificado de origen',estado:'Rechazado',notas:'Falta apostilla — solicitar reemisión',subido_por:'Cliente',created_at:offHours(-30)},
+        {id:'d5',nombre:'Análisis técnico routers.pdf',tipo:'Análisis químico',estado:'Pendiente',subido_por:'—',created_at:offHours(-4)}],
+    e3:[{id:'d6',nombre:'Factura DE-44120.pdf',tipo:'Factura comercial',estado:'Validado',subido_por:'Rodrigo',created_at:offHours(-26)},
+        {id:'d7',nombre:'Certificado fitosanitario.pdf',tipo:'Fitosanitario',estado:'Pendiente',notas:'Requerido por canal amarillo',subido_por:'—',created_at:offHours(-20)},
+        {id:'d8',nombre:'Cadena de frío.pdf',tipo:'Certificado de calidad',estado:'Validado',subido_por:'Cliente',created_at:offHours(-24)}],
+    e6:[{id:'d9',nombre:'Factura AR-9981.pdf',tipo:'Factura comercial',estado:'Rechazado',notas:'Valor declarado bajo referencia DNA',subido_por:'Rodrigo',created_at:offHours(-180)},
+        {id:'d10',nombre:'Lista de precios proveedor.pdf',tipo:'Otro',estado:'Validado',subido_por:'Cliente',created_at:offHours(-170)}]
+  },
+  actividad:{
+    e1:[{actor:'LUCIA',accion:'Canal asignado: ROJO',detalle:'Verificación física requerida',tipo:'sistema',created_at:offHours(-48)},
+        {actor:'Red MERCOSUR',accion:'Alerta de red vinculada',detalle:'NCM 8517.62 origen CN observado en SOFIA (PY)',tipo:'alerta',created_at:offHours(-46)},
+        {actor:'Rodrigo',accion:'Documentos adjuntados',detalle:'Factura, packing y BL cargados',tipo:'doc',created_at:offHours(-50)},
+        {actor:'Aduana',accion:'Certificado de origen rechazado',detalle:'Falta apostilla',tipo:'doc',created_at:offHours(-30)},
+        {actor:'Rodrigo',accion:'Solicitud de reemisión al cliente',detalle:'Email a compras@delplata.com.uy',tipo:'usuario',created_at:offHours(-6)}],
+    e6:[{actor:'LUCIA',accion:'Canal asignado: ROJO',detalle:'Control de valor',tipo:'sistema',created_at:offHours(-190)},
+        {actor:'Aduana',accion:'DUA rechazada',detalle:'Ajuste tributario por diferencia de valor',tipo:'estado',created_at:offHours(-100)},
+        {actor:'Rodrigo',accion:'Expediente reabierto',detalle:'Preparando descargo con lista de precios',tipo:'usuario',created_at:offHours(-72)}]
+  },
+  alertas:[
+    {id:'a1',tipo:'ncm',urgencia:'critica',titulo:'Criterio reforzado: NCM 8517.62 origen China',
+     detalle:'SOFIA (PY) aplica verificación física sistemática en routers/switches de origen CN. MALVINA (AR) replicó el criterio hace 6 h. Anticipar documentación técnica antes de presentar.',
+     pais_emisor:'PY',ncm_ref:'8517.62.00',pais_origen_ref:'CN',leida:0,created_at:offHours(-46)},
+    {id:'a2',tipo:'frontera',urgencia:'warn',titulo:'Demoras en Paso Fray Bentos',
+     detalle:'Tráfico UY↔AR con demoras de 4-6 h por control reforzado de precintos en tránsitos MERCOSUR. Afecta operaciones TRA hacia Paraguay.',
+     pais_emisor:'AR',paso_ref:'Fray Bentos',leida:0,created_at:offHours(-12)},
+    {id:'a3',tipo:'origen',urgencia:'warn',titulo:'Vinos AR: control de valor activo',
+     detalle:'DNA (AR) y DGA (UY) cruzando valores de referencia en NCM 2204.21 origen Argentina. Documentar lista de precios del proveedor.',
+     pais_emisor:'UY',ncm_ref:'2204.21.00',pais_origen_ref:'AR',leida:0,created_at:offHours(-20)},
+    {id:'a4',tipo:'sistema',urgencia:'info',titulo:'SISCOMEX (BR): mantenimiento programado',
+     detalle:'Ventana de mantenimiento sábado 03:00–06:00. Las exportaciones a Brasil pueden requerir reintento.',
+     pais_emisor:'BR',leida:1,created_at:offHours(-30)},
+    {id:'a5',tipo:'criterio',urgencia:'info',titulo:'Medicamentos refrigerados: cadena de frío',
+     detalle:'Recordatorio: NCM 3004.90 con transporte refrigerado exige certificado de cadena de frío validado en origen.',
+     pais_emisor:'ADMIN',ncm_ref:'3004.90.99',leida:1,created_at:offHours(-40)}
+  ],
+  /* radar: nivel de actividad/atención por país en la red */
+  radar:{UY:{nivel:'media',pct:55,nota:'2 expedientes en revisión'},AR:{nivel:'alta',pct:85,nota:'Criterio NCM + demora frontera'},
+         PY:{nivel:'alta',pct:78,nota:'Verificación física CN'},BR:{nivel:'baja',pct:25,nota:'Mantenimiento programado'},CL:{nivel:'baja',pct:18,nota:'Sin novedades'}},
+  /* estado en vivo: lo que se TRAERÍA de LUCIA al expediente (evita salir a mirar) */
+  live:{
+    e1:{canal:'Rojo',estado:'En verificación',carga_retenida:true,escaneo:'Pendiente',ultima_sync:offHours(-1),
+        eventos:[{t:'Selectividad: canal ROJO',h:offHours(-48)},{t:'Aforo físico asignado — turno mañana',h:offHours(-3)}]},
+    e3:{canal:'Amarillo',estado:'Revisión documental',carga_retenida:false,escaneo:'No requiere',ultima_sync:offHours(-2),
+        eventos:[{t:'Canal AMARILLO',h:offHours(-24)},{t:'Solicitan certificado fitosanitario',h:offHours(-18)}]},
+    e5:{canal:'Amarillo',estado:'Control de precintos',carga_retenida:false,escaneo:'Pendiente',ultima_sync:offHours(-4),
+        eventos:[{t:'Tránsito MERCOSUR iniciado',h:offHours(-20)},{t:'Verificación de precinto en frontera',h:offHours(-2)}]},
+    e6:{canal:'Rojo',estado:'Rechazado — ajuste de valor',carga_retenida:false,escaneo:'No requiere',ultima_sync:offHours(-26),
+        eventos:[{t:'Canal ROJO — control de valor',h:offHours(-190)},{t:'DUA rechazada, ajuste solicitado',h:offHours(-100)}]}
+  }
+};
+
+/* ── estado + helpers ── */
+let STATE={expedientes:[],alertas:[],docs:{},actividad:{},radar:{},live:{},despachante:MOCK.despachante};
+let FILTERS={canal:'',estado:'',tipo:'',q:''};
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtUSD=n=>(n==null?'—':'$'+Number(n).toLocaleString('es-UY',{maximumFractionDigits:0}));
+const cls=s=>(s||'').replace(/\s+/g,'');
+const fmtDate=d=>{if(!d)return '—';const p=String(d).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d;};
+const fmtAgo=iso=>{if(!iso)return '';const s=(Date.now()-new Date(iso).getTime())/1000;return s<60?'ahora':s<3600?Math.floor(s/60)+' min':s<86400?Math.floor(s/3600)+' h':Math.floor(s/86400)+' d';};
+const vencClass=d=>{if(!d)return '';const t=(new Date(d.slice?d.slice(0,10):d)-new Date(dISO(HOY)))/86400000;return t<0?'over':t<=1?'soon':'';};
+const vencLabel=d=>{if(!d)return '—';const t=Math.round((new Date(d.slice?d.slice(0,10):d)-new Date(dISO(HOY)))/86400000);return t<0?`${fmtDate(d)} · vencido`:t===0?`${fmtDate(d)} · hoy`:t===1?`${fmtDate(d)} · mañana`:fmtDate(d);};
+const ICON_URG={critica:'🔴',warn:'🟡',info:'🔵'};
+const FLAG_ISO={CN:'🇨🇳',DE:'🇩🇪',IN:'🇮🇳',JP:'🇯🇵',KR:'🇰🇷',AR:'🇦🇷',BR:'🇧🇷',PY:'🇵🇾',CL:'🇨🇱',UY:'🇺🇾',US:'🇺🇸'};
+function toast(m,err){const t=$('#toast');$('#toast-msg').textContent=m;t.classList.toggle('err',!!err);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+/* ════════ CARGA DE DATOS (API real → fallback mock) ════════ */
+async function apiGet(action,params){
+  const qs=new URLSearchParams(Object.assign({action,despachante_id:DESPACHANTE_ID},params||{}));
+  const r=await fetch(`${API_BASE}?${qs}`,{headers:{'Accept':'application/json'},credentials:'include'});
+  if(!r.ok) throw new Error('HTTP '+r.status); return r.json();
+}
+async function loadData(){
+  try{
+    const [exps,alerts,perf]=await Promise.all([apiGet('expedientes'),apiGet('alertas'),apiGet('perfil').catch(()=>null)]);
+    STATE.expedientes=exps.expedientes||exps.data||exps||[];
+    STATE.alertas=alerts.alertas||alerts.data||alerts||[];
+    STATE.docs={};STATE.actividad={};STATE.radar=MOCK.radar;STATE.live=MOCK.live;
+    // Perfil real del despachante (si el API lo devuelve); si no, conserva mock
+    const p=perf&&(perf.perfil||perf.data||perf);
+    if(p&&(p.nombre_completo||p.matricula)){
+      STATE.despachante={
+        nombre_completo:p.nombre_completo||MOCK.despachante.nombre_completo,
+        matricula:p.matricula||MOCK.despachante.matricula,
+        pais:p.pais||'UY', sistema_pub:p.sistema_pub||'LUCIA',
+        iniciales:p.iniciales||iniDe(p.nombre_completo)
+      };
+    }
+    DATA_SOURCE='live';
+  }catch(e){
+    STATE.expedientes=JSON.parse(JSON.stringify(MOCK.expedientes));
+    STATE.alertas=JSON.parse(JSON.stringify(MOCK.alertas));
+    STATE.docs=JSON.parse(JSON.stringify(MOCK.docs));
+    STATE.actividad=JSON.parse(JSON.stringify(MOCK.actividad));
+    STATE.radar=JSON.parse(JSON.stringify(MOCK.radar));
+    STATE.live=JSON.parse(JSON.stringify(MOCK.live));
+    STATE.despachante=JSON.parse(JSON.stringify(MOCK.despachante));
+    DATA_SOURCE='mock';
+  }
+  const src=$('#data-src');
+  if(DATA_SOURCE==='live'){src.textContent='EN VIVO';src.classList.add('live');}else{src.textContent='MOCK';src.classList.remove('live');}
+}
+function iniDe(nombre){ if(!nombre) return 'DA'; return nombre.trim().split(/\s+/).slice(0,2).map(w=>w[0]?w[0].toUpperCase():'').join('')||'DA'; }
+async function loadDetalle(id){
+  const exp=STATE.expedientes.find(e=>e.id===id);
+  let docs=STATE.docs[id],act=STATE.actividad[id];
+  if(DATA_SOURCE==='live'){try{const r=await apiGet('detalle',{id});docs=r.docs||[];act=r.actividad||[];STATE.docs[id]=docs;STATE.actividad[id]=act;}catch(e){docs=docs||[];act=act||[];}}
+  return {exp,docs:docs||[],act:act||[]};
+}
+
+/* ════════ NAVEGACIÓN ════════ */
+const TITLES={home:'Centro de Red',expedientes:'Expedientes',detalle:'Expediente',nuevo:'Nuevo expediente',clientes:'Clientes',liquidaciones:'Liquidaciones',alertas:'Alertas de red',reportes:'Reportes',config:'Configuración'};
+let CURRENT='home';
+function navTo(view,el){
+  CURRENT=view;
+  $$('.page').forEach(p=>p.classList.remove('active'));
+  const pg=$('#page-'+view); if(pg) pg.classList.add('active');
+  $$('.rail-i').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active'); else {const m=$(`.rail-i[data-view="${view}"]`); if(m) m.classList.add('active');}
+  if(view==='home') renderHome();
+  if(view==='expedientes') renderExpedientes();
+  if(view==='nuevo') renderNuevo();
+  if(view==='clientes') renderClientes();
+  if(view==='liquidaciones') renderLiquidaciones();
+  if(view==='alertas') renderAlertas();
+  if(view==='reportes') renderReportes();
+  if(view==='config') renderConfig();
+  if(pg) pg.scrollTop=0;
+}
+
+/* ════════ FRAGMENTOS ════════ */
+function canalBadge(c){const k=cls(c||'SinAsignar');const lbl=(c==='SinAsignar'||!c)?'Sin asignar':c;return `<span class="canal ${k}"><span class="cd"></span>${esc(lbl)}</span>`;}
+function estadoBadge(e){const k=cls(e||'Borrador');const lbl={EnRevision:'En revisión'}[k]||e||'Borrador';return `<span class="estado ${k}">${esc(lbl)}</span>`;}
+function tipoBadge(t){return `<span class="tipo ${esc(t)}">${esc(t)}</span>`;}
+function emisorName(p){return (SISTEMAS[p]&&SISTEMAS[p].sis)||(p==='ADMIN'?'Red JoathiVA':p);}
+function expsAfectados(a){ // expedientes propios que la alerta afecta (por NCM o país origen)
+  return STATE.expedientes.filter(e=>{
+    if(a.ncm_ref && e.ncm && a.ncm_ref.slice(0,7)===e.ncm.slice(0,7)) return true;
+    if(a.pais_origen_ref && e.pais_origen===a.pais_origen_ref) return true;
+    if(a.paso_ref && e.tipo_op==='TRA') return true;
+    return false;
+  });
+}
+function alertCardHTML(a,withAffect){
+  const u='u-'+a.urgencia, meta=[];
+  if(a.ncm_ref) meta.push(`<span class="mk">NCM <span class="ncm-chip">${esc(a.ncm_ref)}</span></span>`);
+  if(a.pais_origen_ref) meta.push(`<span class="mk">${FLAG_ISO[a.pais_origen_ref]||''} origen ${esc(a.pais_origen_ref)}</span>`);
+  if(a.paso_ref) meta.push(`<span class="mk">🛂 ${esc(a.paso_ref)}</span>`);
+  meta.push(`<span class="mk">📡 ${esc(emisorName(a.pais_emisor))}</span>`);
+  meta.push(`<span class="mk">⏱ ${fmtAgo(a.created_at)}</span>`);
+  let affect='';
+  if(withAffect){const af=expsAfectados(a);
+    if(af.length) affect=`<div class="fa-affect"><span style="font-size:10px;color:var(--text-s);align-self:center">Afecta:</span>${af.slice(0,4).map(e=>`<span class="affect-chip" onclick="event.stopPropagation();openDetalle('${e.id}')"><span class="rf">${esc(e.referencia)}</span> ${esc(e.cliente_nombre.split(' ')[0])}</span>`).join('')}</div>`;
+  }
+  return `<div class="fa ${a.leida?'':'unread '+u}" onclick="markAlert('${a.id}')">
+    <div class="fa-ic ${u}">${ICON_URG[a.urgencia]||'🔔'}</div>
+    <div class="fa-bd">
+      <div class="fa-top"><span class="u-pill ${u}">${esc(a.urgencia)}</span><span class="fa-title">${esc(a.titulo)}</span></div>
+      <div class="fa-detail">${esc(a.detalle)}</div>
+      <div class="fa-meta">${meta.join('')}</div>
+      ${affect}
+    </div>
+  </div>`;
+}
+function markAlert(id){
+  const a=STATE.alertas.find(x=>x.id===id); if(!a||a.leida) return;
+  a.leida=1;
+  if(DATA_SOURCE==='live') fetch(`${API_BASE}?action=marcar_leida&id=${id}`,{method:'POST',credentials:'include'}).catch(()=>{});
+  updateBadges();
+  if(CURRENT==='home') renderHome();
+  if(CURRENT==='alertas') renderAlertas();
+}
+function sistemasCardsHTML(){
+  return Object.entries(SISTEMAS).map(([k,s])=>`<a class="sis-card" href="${s.url}" target="_blank" rel="noopener" title="Abrir ${s.sis} — ${s.pais}"><div class="flag">${s.flag}</div><div class="sis">${s.sis}</div><div class="cty">${s.pais}</div><div class="go">ABRIR ↗</div></a>`).join('');
+}
+function updateBadges(){
+  const activos=STATE.expedientes.filter(e=>e.estado!=='archivado').length;
+  const noLeidas=STATE.alertas.filter(a=>!a.leida).length;
+  $('#nb-exp').textContent=activos;
+  const na=$('#nb-alert'); na.textContent=noLeidas; na.style.display=noLeidas?'':'none';
+  $('#rail-av').textContent=STATE.despachante.iniciales||'RD';
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   VISTA · HOME = CENTRO DE INTELIGENCIA DE RED
+   ════════════════════════════════════════════════════════════════════════ */
+function renderHome(){
+  /* KPIs calculados en cliente sobre STATE (que en modo EN VIVO = datos reales del API).
+     Fuente única: no recalcular en server salvo que se adopte ?action=stats y se deje de usar esto. */
+  const E=STATE.expedientes, A=STATE.alertas, R=STATE.radar;
+  const noLeidas=A.filter(a=>!a.leida);
+  const criticas=A.filter(a=>a.urgencia==='critica');
+  const rojo=E.filter(e=>e.canal==='Rojo'&&!['Liberado','Retirado'].includes(e.estado_aduana));
+  const vencen=E.filter(e=>e.fecha_vencimiento&&vencClass(e.fecha_vencimiento)!==''&&e.estado_aduana!=='Liberado');
+  // expedientes propios bajo vigilancia (afectados por alguna alerta activa)
+  const vigilados=[...new Set(A.flatMap(a=>expsAfectados(a).map(e=>e.id)))].map(id=>E.find(e=>e.id===id));
+  const urgentes=E.filter(e=>(['Rojo','Amarillo'].includes(e.canal)&&!['Liberado','Retirado'].includes(e.estado_aduana))||(e.fecha_vencimiento&&vencClass(e.fecha_vencimiento)!==''))
+    .sort((a,b)=>(a.fecha_vencimiento||'9999').localeCompare(b.fecha_vencimiento||'9999')).slice(0,5);
+
+  $('#page-home').innerHTML=`
+  <div class="ph">
+    <div class="pt">🛰️ Centro de Red Aduanera<small>Inteligencia MERCOSUR en tiempo real · ${fmtDate(dISO(HOY))}</small></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-gh btn-sm" onclick="navTo('alertas')">Ver todas las alertas</button>
+      <button class="btn btn-p btn-sm" onclick="navTo('nuevo')">+ Nuevo expediente</button>
+    </div>
+  </div>
+
+  <!-- RADAR POR PAÍS -->
+  <div class="sl">Radar de la red <span class="ln"></span><span style="font-weight:600;color:var(--text-s);text-transform:none;letter-spacing:0">click para abrir el sistema del país</span></div>
+  <div class="radar">
+    ${Object.entries(SISTEMAS).map(([k,s])=>{const r=R[k]||{nivel:'baja',pct:10,nota:'—'};return `
+      <a class="rc l-${r.nivel}" href="${s.url}" target="_blank" rel="noopener" title="Abrir ${s.sis}">
+        ${r.nivel==='alta'?'<span class="pulse"></span>':''}
+        <span class="gobtn">↗</span>
+        <div class="flag">${s.flag}</div>
+        <div class="sis">${s.sis}</div>
+        <div class="cty">${s.pais}</div>
+        <div class="lvl"><span>${r.nivel.toUpperCase()}</span><span class="bar"><span class="bf" style="width:${r.pct}%"></span></span></div>
+        <div style="font-size:9px;color:var(--text-s);margin-top:6px;line-height:1.3">${esc(r.nota)}</div>
+      </a>`;}).join('')}
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi k-red"><div class="l">Alertas críticas</div><div class="v">${criticas.length}</div><div class="d">${noLeidas.length} sin leer en total</div></div>
+    <div class="kpi k-warn"><div class="l">Expedientes vigilados</div><div class="v">${vigilados.length}</div><div class="d">afectados por la red</div></div>
+    <div class="kpi k-blue"><div class="l">Canal rojo activo</div><div class="v">${rojo.length}</div><div class="d">requieren verificación</div></div>
+    <div class="kpi k-green"><div class="l">Vencen pronto</div><div class="v">${vencen.length}</div><div class="d">≤ hoy/mañana</div></div>
+  </div>
+
+  <!-- GRID: feed + panel lateral -->
+  <div class="home-grid">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-t">📡 Feed de alertas MERCOSUR ${noLeidas.length?`<span class="u-pill u-critica">${noLeidas.length} nuevas</span>`:''}</div>
+        <span class="mini-link" onclick="navTo('alertas')">Ver todas →</span>
+      </div>
+      <div class="feed">
+        ${A.slice(0,5).map(a=>alertCardHTML(a,true)).join('')||'<div class="empty"><div class="ei">✅</div><div class="et">Sin alertas activas en la red</div></div>'}
+      </div>
+    </div>
+
+    <div>
+      <div class="card side-card">
+        <div class="card-hdr"><div class="card-t">🔥 Expedientes urgentes</div><span class="mini-link" onclick="navTo('expedientes')">Todos →</span></div>
+        <div class="card-bd" style="padding-top:6px;padding-bottom:6px">
+          ${urgentes.map(e=>`<div class="urg-it" onclick="openDetalle('${e.id}')">
+            <div class="urg-top"><span class="t-ref">${esc(e.referencia)}</span>${canalBadge(e.canal)}</div>
+            <div class="urg-cli">${tipoBadge(e.tipo_op)} ${esc(e.cliente_nombre)}</div>
+            <div class="urg-cli t-venc ${vencClass(e.fecha_vencimiento)}">📅 ${vencLabel(e.fecha_vencimiento)}</div>
+          </div>`).join('')||'<div class="empty" style="padding:24px"><div class="et">Nada urgente 🎉</div></div>'}
+        </div>
+      </div>
+
+      <div class="card side-card">
+        <div class="card-hdr"><div class="card-t">🇺🇾 Módulos LUCIA</div><span style="font-size:10px;color:var(--text-s)">acceso directo</span></div>
+        <div class="card-bd">
+          <div style="display:flex;flex-direction:column;gap:7px">
+          ${LUCIA_MODULOS.filter(m=>['operaciones','dua','cargas','mercosur','precinto'].includes(m.key)).map(m=>`<a class="lqa" style="justify-content:space-between" onclick="abrirLucia('${m.key}')"><span>${m.ic} ${esc(m.label)}</span><span style="color:var(--dorado)">${m.n!=null?'directo ↗':'↗'}</span></a>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="card side-card">
+        <div class="card-hdr"><div class="card-t">🌎 MERCOSUR</div></div>
+        <div class="card-bd">
+          <div style="display:flex;flex-direction:column;gap:7px">
+          ${Object.entries(SISTEMAS).filter(([k])=>k!=='UY').map(([k,s])=>`<a class="lqa" style="justify-content:space-between" href="${s.url}" target="_blank" rel="noopener"><span>${s.flag} ${s.sis} · ${s.pais}</span><span style="color:var(--dorado)">↗</span></a>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
+  updateBadges();
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   VISTA · EXPEDIENTES
+   ════════════════════════════════════════════════════════════════════════ */
+function filteredExps(){
+  return STATE.expedientes.filter(e=>{
+    if(FILTERS.canal&&e.canal!==FILTERS.canal) return false;
+    if(FILTERS.estado&&e.estado_aduana!==FILTERS.estado) return false;
+    if(FILTERS.tipo&&e.tipo_op!==FILTERS.tipo) return false;
+    if(FILTERS.q){const q=FILTERS.q.toLowerCase();const hay=[e.referencia,e.cliente_nombre,e.cliente_rut,e.ncm,e.descripcion_ncm,e.num_declaracion].join(' ').toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+}
+function rowHTML(e){
+  return `<tr onclick="openDetalle('${e.id}')">
+    <td><span class="t-ref">${esc(e.referencia)}</span></td>
+    <td class="t-cli">${esc(e.cliente_nombre)}<small>${esc(e.cliente_rut||'')}</small></td>
+    <td><span class="ncm-chip">${esc(e.ncm||'—')}</span></td>
+    <td>${tipoBadge(e.tipo_op)}</td>
+    <td>${canalBadge(e.canal)}</td>
+    <td>${estadoBadge(e.estado_aduana)}</td>
+    <td class="t-venc ${vencClass(e.fecha_vencimiento)}">${vencLabel(e.fecha_vencimiento)}</td>
+    <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px;justify-content:flex-end">
+      <span class="ico-btn" title="Abrir" onclick="openDetalle('${e.id}')">👁</span>
+      <a class="ico-btn" title="Abrir en ${SISTEMAS[e.pais].sis}" href="${SISTEMAS[e.pais].url}" target="_blank" rel="noopener">↗</a>
+    </div></td>
+  </tr>`;
+}
+function renderExpedientes(){
+  const list=filteredExps();
+  $('#page-expedientes').innerHTML=`
+  <div class="ph"><div class="pt">Expedientes<small>Tu operativa aduanera privada — lo que LUCIA no guarda</small></div>
+    <button class="btn btn-p btn-sm" onclick="navTo('nuevo')">+ Nuevo expediente</button></div>
+  <div class="filters">
+    <div class="fl-search"><span class="si">🔍</span><input class="fl-input" id="f-q" placeholder="Buscar referencia, cliente, RUT, NCM, DUA…" value="${esc(FILTERS.q)}" oninput="onFilter('q',this.value)"></div>
+    <select class="fl-input" id="f-canal" onchange="onFilter('canal',this.value)"><option value="">Canal · todos</option><option value="Verde">🟢 Verde</option><option value="Amarillo">🟡 Amarillo</option><option value="Rojo">🔴 Rojo</option><option value="Azul">🔵 Azul</option><option value="SinAsignar">Sin asignar</option></select>
+    <select class="fl-input" id="f-estado" onchange="onFilter('estado',this.value)"><option value="">Estado · todos</option><option value="Borrador">Borrador</option><option value="Presentado">Presentado</option><option value="EnRevision">En revisión</option><option value="Liberado">Liberado</option><option value="Rechazado">Rechazado</option><option value="Retirado">Retirado</option></select>
+    <select class="fl-input" id="f-tipo" onchange="onFilter('tipo',this.value)"><option value="">Tipo · todos</option><option value="IMP">IMP</option><option value="EXP">EXP</option><option value="TRA">TRA</option><option value="ADT">ADT</option></select>
+    <button class="btn btn-gh btn-sm" onclick="clearFilters()">✕ Limpiar</button>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><div class="card-t">📋 <span id="exp-count">${list.length}</span> expediente${list.length!==1?'s':''}</div></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Referencia</th><th>Cliente</th><th>NCM</th><th>Tipo</th><th>Canal</th><th>Estado</th><th>Vencimiento</th><th style="text-align:right">Acciones</th></tr></thead>
+      <tbody id="exp-tbody">${list.map(rowHTML).join('')||`<tr><td colspan="8"><div class="empty"><div class="ei">📭</div><div class="et">Sin expedientes</div><div class="es">Ajustá los filtros o creá uno nuevo</div></div></td></tr>`}</tbody>
+    </table></div>
+  </div>`;
+  ['canal','estado','tipo'].forEach(k=>{const s=$('#f-'+k);if(s)s.value=FILTERS[k];});
+  updateBadges();
+}
+function onFilter(k,v){FILTERS[k]=v;if(k==='q'){const l=filteredExps();const tb=$('#exp-tbody');if(tb){tb.innerHTML=l.map(rowHTML).join('')||`<tr><td colspan="8"><div class="empty"><div class="et">Sin coincidencias</div></div></td></tr>`;$('#exp-count').textContent=l.length;}}else renderExpedientes();}
+function clearFilters(){FILTERS={canal:'',estado:'',tipo:'',q:''};renderExpedientes();}
+
+/* ════════════════════════════════════════════════════════════════════════
+   VISTA · DETALLE (tabs)
+   ════════════════════════════════════════════════════════════════════════ */
+let DETALLE_ID=null;
+async function openDetalle(id){
+  navTo('detalle');
+  DETALLE_ID=id;
+  const pg=$('#page-detalle');
+  pg.innerHTML=`<div class="empty"><div class="ei">⏳</div><div class="et">Cargando…</div></div>`;
+  const {exp,docs,act}=await loadDetalle(id);
+  if(!exp){pg.innerHTML=`<div class="empty"><div class="ei">⚠️</div><div class="et">Expediente no encontrado</div></div>`;return;}
+  const sis=SISTEMAS[exp.pais];
+  const alertasRel=STATE.alertas.filter(a=>(a.ncm_ref&&exp.ncm&&a.ncm_ref.slice(0,7)===exp.ncm.slice(0,7))||(a.pais_origen_ref&&exp.pais_origen===a.pais_origen_ref));
+  const hasLive=!!STATE.live[exp.id];
+  pg.innerHTML=`
+  <div class="back-link" onclick="navTo('expedientes')">← Volver a expedientes</div>
+  <div class="ph" style="margin-bottom:8px">
+    <div class="pt" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">${esc(exp.referencia)} ${canalBadge(exp.canal)} ${estadoBadge(exp.estado_aduana)}</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-gh btn-sm" onclick="abrirExtPanel('${exp.tipo_op==='TRA'?'mercosur':'dua'}', STATE.expedientes.find(e=>e.id==='${exp.id}'))">🪟 Abrir sin salir</button>
+      <button class="btn btn-p btn-sm" onclick="abrirLucia('${exp.tipo_op==='TRA'?'mercosur':'dua'}','${(exp.num_declaracion||'').replace(/\\D/g,'')}')">${sis.flag} ${sis.sis} ↗</button>
+    </div>
+  </div>
+  <div style="font-size:12px;color:var(--text-m);margin-bottom:14px">${esc(exp.cliente_nombre)} · ${tipoBadge(exp.tipo_op)} ${esc(sis.sis)} · DUA ${esc(exp.num_declaracion||'—')}</div>
+  <div class="tabs">
+    <div class="tab active" onclick="detTab(this,'live')">🛰️ En vivo${hasLive?' <span class="c" style="background:var(--green-bg);color:var(--green)">●</span>':''}</div>
+    <div class="tab" onclick="detTab(this,'resumen')">📑 Resumen</div>
+    <div class="tab" onclick="detTab(this,'docs')">📎 Documentos <span class="c">${docs.length}</span></div>
+    <div class="tab" onclick="detTab(this,'act')">🕑 Actividad <span class="c">${act.length}</span></div>
+    <div class="tab" onclick="detTab(this,'red')">⚠️ Red <span class="c">${alertasRel.length}</span></div>
+    <div class="tab" onclick="detTab(this,'sis')">🌎 Sistemas</div>
+  </div>
+
+  <div class="tabpane active" id="dt-live">${livePaneHTML(exp)}</div>
+
+  <div class="tabpane" id="dt-resumen">
+    <div class="sl">Cliente <span class="ln"></span></div>
+    <div class="dl-grid" style="margin-bottom:14px">
+      <div class="dl-cell"><div class="dl-k">Nombre / Razón social</div><div class="dl-v">${esc(exp.cliente_nombre)}</div></div>
+      <div class="dl-cell"><div class="dl-k">RUT / CUIT / RUC</div><div class="dl-v mono">${esc(exp.cliente_rut||'—')}</div></div>
+      <div class="dl-cell"><div class="dl-k">Email</div><div class="dl-v">${esc(exp.cliente_email||'—')}</div></div>
+      <div class="dl-cell"><div class="dl-k">Teléfono</div><div class="dl-v">${esc(exp.cliente_tel||'—')}</div></div>
+    </div>
+    <div class="sl">Operación <span class="ln"></span></div>
+    <div class="dl-grid" style="margin-bottom:14px">
+      <div class="dl-cell"><div class="dl-k">Tipo</div><div class="dl-v">${tipoBadge(exp.tipo_op)}</div></div>
+      <div class="dl-cell"><div class="dl-k">NCM</div><div class="dl-v mono">${esc(exp.ncm||'—')}</div></div>
+      <div class="dl-cell" style="grid-column:span 2"><div class="dl-k">Descripción NCM</div><div class="dl-v">${esc(exp.descripcion_ncm||'—')}</div></div>
+      <div class="dl-cell"><div class="dl-k">Origen</div><div class="dl-v">${FLAG_ISO[exp.pais_origen]||''} ${esc(exp.pais_origen||'—')}</div></div>
+      <div class="dl-cell"><div class="dl-k">Destino</div><div class="dl-v">${FLAG_ISO[exp.pais_destino]||''} ${esc(exp.pais_destino||'—')}</div></div>
+      <div class="dl-cell"><div class="dl-k">Cantidad</div><div class="dl-v">${exp.cantidad?Number(exp.cantidad).toLocaleString('es-UY'):'—'} ${esc(exp.unidad||'')}</div></div>
+      <div class="dl-cell"><div class="dl-k">Peso bruto</div><div class="dl-v">${exp.peso_bruto?Number(exp.peso_bruto).toLocaleString('es-UY')+' kg':'—'}</div></div>
+      <div class="dl-cell" style="grid-column:1/-1"><div class="dl-k">Mercadería</div><div class="dl-v">${esc(exp.descripcion_merc||'—')}</div></div>
+      ${exp.motivo_obs?`<div class="dl-cell" style="grid-column:1/-1"><div class="dl-k">Observación aduanera</div><div class="dl-v" style="color:var(--warn)">${esc(exp.motivo_obs)}</div></div>`:''}
+    </div>
+    <div class="sl">Valores y tributos <span class="ln"></span></div>
+    <div class="dl-grid" style="margin-bottom:14px">
+      <div class="dl-cell"><div class="dl-k">FOB</div><div class="dl-v money">${fmtUSD(exp.valor_fob_usd)}</div></div>
+      <div class="dl-cell"><div class="dl-k">CIF</div><div class="dl-v money">${fmtUSD(exp.valor_cif_usd)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Arancel</div><div class="dl-v money out">${fmtUSD(exp.arancel_usd)}</div></div>
+      <div class="dl-cell"><div class="dl-k">IVA</div><div class="dl-v money out">${fmtUSD(exp.iva_usd)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Otros</div><div class="dl-v money out">${fmtUSD(exp.otros_trib_usd)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Total tributos</div><div class="dl-v money out">${fmtUSD((+exp.arancel_usd||0)+(+exp.iva_usd||0)+(+exp.otros_trib_usd||0))}</div></div>
+      <div class="dl-cell"><div class="dl-k">Honorarios</div><div class="dl-v money in">${fmtUSD(exp.honorarios_usd)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Honorarios pag.</div><div class="dl-v">${exp.honorarios_pag?'<span class="doc-st Validado">✓ Pagado</span>':'<span class="doc-st Pendiente">Pendiente</span>'}</div></div>
+    </div>
+    <div class="sl">Fechas <span class="ln"></span></div>
+    <div class="dl-grid">
+      <div class="dl-cell"><div class="dl-k">Presentación</div><div class="dl-v">${fmtDate(exp.fecha_presentacion)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Liberación</div><div class="dl-v">${fmtDate(exp.fecha_liberacion)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Vencimiento</div><div class="dl-v t-venc ${vencClass(exp.fecha_vencimiento)}">${vencLabel(exp.fecha_vencimiento)}</div></div>
+      <div class="dl-cell"><div class="dl-k">Sistema</div><div class="dl-v">${esc(sis.sis)} (${esc(exp.pais)})</div></div>
+    </div>
+  </div>
+
+  <div class="tabpane" id="dt-docs">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:11px"><button class="btn btn-soon btn-sm" onclick="toast('Subida de archivos: pendiente de implementación (se conecta a add_doc en el despliegue)')" title="Pendiente de implementación">+ Adjuntar documento<span class="soon-tag">pronto</span></button></div>
+    <div class="card"><div class="tbl-wrap"><table>
+      <thead><tr><th>Documento</th><th>Tipo</th><th>Estado</th><th>Subido por</th><th>Fecha</th></tr></thead>
+      <tbody>${docs.map(d=>`<tr><td style="font-weight:600">📄 ${esc(d.nombre)}${d.notas?`<small style="display:block;color:var(--warn);font-weight:400">${esc(d.notas)}</small>`:''}</td><td style="color:var(--text-m)">${esc(d.tipo)}</td><td><span class="doc-st ${cls(d.estado)}">${esc(d.estado)}</span></td><td style="color:var(--text-m)">${esc(d.subido_por||'—')}</td><td style="color:var(--text-s)">${fmtAgo(d.created_at)}</td></tr>`).join('')||`<tr><td colspan="5"><div class="empty"><div class="ei">📎</div><div class="et">Sin documentos</div></div></td></tr>`}</tbody>
+    </table></div></div>
+  </div>
+
+  <div class="tabpane" id="dt-act">
+    <div class="card"><div class="card-bd"><div class="act-log"><div class="act-line"></div>
+      ${act.map(a=>`<div class="act-it t-${esc(a.tipo)}"><div class="act-dot"></div><div><div class="act-act">${esc(a.accion)}</div><div class="act-detail">${esc(a.detalle||'')}</div><div class="act-meta"><span>${esc(a.actor)}</span><span>${fmtAgo(a.created_at)}</span></div></div></div>`).join('')||'<div class="empty"><div class="ei">🕑</div><div class="et">Sin actividad</div></div>'}
+    </div></div></div>
+  </div>
+
+  <div class="tabpane" id="dt-red">
+    <div style="font-size:12px;color:var(--text-m);margin-bottom:12px">Alertas de la red MERCOSUR que coinciden con la partida <span class="ncm-chip">${esc(exp.ncm||'—')}</span> u origen ${FLAG_ISO[exp.pais_origen]||''} ${esc(exp.pais_origen||'—')} de este expediente.</div>
+    <div class="card"><div class="feed">${alertasRel.map(a=>alertCardHTML(a)).join('')||'<div class="empty"><div class="ei">✅</div><div class="et">Sin alertas relacionadas</div><div class="es">Ningún país reportó novedades para esta partida</div></div>'}</div></div>
+  </div>
+
+  <div class="tabpane" id="dt-sis">
+    <div class="sl">Módulos LUCIA <span class="ln"></span><span style="font-weight:600;color:var(--text-s);text-transform:none;letter-spacing:0">acceso directo al sistema operativo (UY)</span></div>
+    <div class="sis-grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr));margin-bottom:18px">
+      ${LUCIA_MODULOS.filter(m=>m.key!=='datos'&&m.key!=='operaciones'||m.n!=null).map(m=>`
+        <div class="sis-card" onclick="abrirLucia('${m.key}','${(exp.num_declaracion||'').replace(/\\D/g,'')}')" title="${m.n!=null?'Abre directo':'Abre el menú LUCIA'}">
+          <div class="flag">${m.ic}</div><div class="sis" style="font-size:11px">${esc(m.label)}</div>
+          <div class="cty">${esc(m.nota)}</div>
+          <div class="go">${m.n!=null?'DIRECTO ↗':'MENÚ ↗'}</div>
+        </div>`).join('')}
+    </div>
+    <div class="sl">Sistemas MERCOSUR <span class="ln"></span></div>
+    <div class="sis-grid">${sistemasCardsHTML()}</div>
+  </div>`;
+}
+function detTab(el,name){el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');$$('#page-detalle .tabpane').forEach(p=>p.classList.remove('active'));$('#dt-'+name).classList.add('active');}
+
+/* ════════════════════════════════════════════════════════════════════════
+   VISTA · NUEVO EXPEDIENTE
+   ════════════════════════════════════════════════════════════════════════ */
+function countryOpts(){const c={CN:'China',DE:'Alemania',IN:'India',JP:'Japón',KR:'Corea',US:'EE.UU.',AR:'Argentina',BR:'Brasil',PY:'Paraguay',CL:'Chile',UY:'Uruguay'};return Object.entries(c).map(([k,v])=>`<option value="${k}">${FLAG_ISO[k]||''} ${v}</option>`).join('');}
+function renderNuevo(){
+  $('#page-nuevo').innerHTML=`
+  <div class="ph"><div class="pt">Nuevo expediente<small>Registrá una operación aduanera completa</small></div></div>
+  <div class="card"><div class="card-bd"><form id="form-nuevo" onsubmit="submitNuevo(event)">
+    <div class="form-sec"><div class="form-sec-t">👤 Cliente <span class="ln"></span></div>
+      <div class="form-grid">
+        <div class="fg"><label>Nombre / Razón social <span class="req">*</span></label><input name="cliente_nombre" required placeholder="Importadora del Plata S.A."></div>
+        <div class="fg"><label>RUT / CUIT / RUC</label><input name="cliente_rut" placeholder="215489760018"></div>
+        <div class="fg"><label>Email</label><input name="cliente_email" type="email" placeholder="compras@cliente.com"></div>
+        <div class="fg"><label>Teléfono</label><input name="cliente_tel" placeholder="+598 2908 4471"></div>
+      </div></div>
+    <div class="form-sec"><div class="form-sec-t">📦 Operación <span class="ln"></span></div>
+      <div class="form-grid c3">
+        <div class="fg"><label>Tipo de operación <span class="req">*</span></label><select name="tipo_op" required><option value="IMP">IMP · Importación</option><option value="EXP">EXP · Exportación</option><option value="TRA">TRA · Tránsito</option><option value="ADT">ADT · Admisión temporaria</option><option value="DEP">DEP · Depósito</option><option value="ZFR">ZFR · Zona franca</option><option value="EXF">EXF · Exportación franca</option></select></div>
+        <div class="fg"><label>País origen</label><select name="pais_origen"><option value="">—</option>${countryOpts()}</select></div>
+        <div class="fg"><label>País destino</label><select name="pais_destino"><option value="UY" selected>🇺🇾 Uruguay</option>${countryOpts()}</select></div>
+        <div class="fg"><label>NCM</label><input name="ncm" placeholder="8517.62.00" pattern="[0-9.]*"></div>
+        <div class="fg" style="grid-column:span 2"><label>Descripción NCM</label><input name="descripcion_ncm" placeholder="Aparatos de telecomunicación"></div>
+        <div class="fg full"><label>Descripción de la mercadería</label><textarea name="descripcion_merc" placeholder="Detalle, bultos, pallets…"></textarea></div>
+        <div class="fg"><label>Cantidad</label><input name="cantidad" type="number" step="any" placeholder="1800"></div>
+        <div class="fg"><label>Unidad</label><input name="unidad" placeholder="unid / kg / m³"></div>
+        <div class="fg"><label>Peso bruto (kg)</label><input name="peso_bruto" type="number" step="any" placeholder="4200"></div>
+      </div></div>
+    <div class="form-sec"><div class="form-sec-t">💵 Valores y tributos <span class="ln"></span></div>
+      <div class="form-grid c3">
+        <div class="fg"><label>FOB (USD)</label><input name="valor_fob_usd" type="number" step="any" placeholder="142500"></div>
+        <div class="fg"><label>CIF (USD)</label><input name="valor_cif_usd" type="number" step="any" placeholder="151800"></div>
+        <div class="fg"><label>Honorarios (USD)</label><input name="honorarios_usd" type="number" step="any" placeholder="2400" oninput="calcTrib()"></div>
+        <div class="fg"><label>Arancel (USD)</label><input name="arancel_usd" type="number" step="any" placeholder="0" oninput="calcTrib()"></div>
+        <div class="fg"><label>IVA (USD)</label><input name="iva_usd" type="number" step="any" placeholder="0" oninput="calcTrib()"></div>
+        <div class="fg"><label>Otros tributos (USD)</label><input name="otros_trib_usd" type="number" step="any" placeholder="0" oninput="calcTrib()"></div>
+      </div>
+      <div class="kpi-row" style="margin-top:12px"><div class="kpi-pill"><div class="l">Total tributos</div><div class="v money out" id="kpi-trib">$0</div></div><div class="kpi-pill"><div class="l">Honorarios</div><div class="v money in" id="kpi-hon">$0</div></div></div>
+    </div>
+    <div class="form-sec"><div class="form-sec-t">📅 Plazos <span class="ln"></span></div>
+      <div class="form-grid c3">
+        <div class="fg"><label>Fecha presentación</label><input name="fecha_presentacion" type="date"></div>
+        <div class="fg"><label>Fecha vencimiento</label><input name="fecha_vencimiento" type="date"><div class="hint">Alerta automática 3 días antes</div></div>
+        <div class="fg"><label>Canal inicial</label><select name="canal"><option value="SinAsignar">Sin asignar</option><option value="Verde">🟢 Verde</option><option value="Amarillo">🟡 Amarillo</option><option value="Rojo">🔴 Rojo</option><option value="Azul">🔵 Azul</option></select></div>
+      </div></div>
+    <div class="form-actions"><button type="button" class="btn btn-gh" onclick="navTo('expedientes')">Cancelar</button><button type="submit" class="btn btn-p">✓ Crear expediente</button></div>
+  </form></div></div>`;
+  calcTrib();
+}
+function calcTrib(){const f=$('#form-nuevo');if(!f)return;const n=k=>{const el=f.elements[k];return el?parseFloat(el.value)||0:0;};const t=n('arancel_usd')+n('iva_usd')+n('otros_trib_usd');const kt=$('#kpi-trib'),kh=$('#kpi-hon');if(kt)kt.textContent=fmtUSD(t);if(kh)kh.textContent=fmtUSD(n('honorarios_usd'));}
+function submitNuevo(ev){
+  ev.preventDefault();
+  const f=ev.target,fd=new FormData(f),o={};fd.forEach((v,k)=>o[k]=v);
+  if(DATA_SOURCE==='live'){fetch(`${API_BASE}?action=crear`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(r=>r.json()).then(()=>{toast('✓ Expediente creado');loadData().then(()=>navTo('expedientes'));}).catch(()=>toast('Error al crear expediente',true));return;}
+  const seq=String(311+STATE.expedientes.length).padStart(4,'0');
+  const exp=Object.assign({id:'new'+Date.now(),referencia:'EXP-2026-0'+seq,pais:'UY',sistema:'LUCIA',estado_aduana:o.fecha_presentacion?'Presentado':'Borrador',estado:'activo',num_declaracion:null,fecha_liberacion:null,honorarios_pag:0},o);
+  ['cantidad','peso_bruto','valor_fob_usd','valor_cif_usd','arancel_usd','iva_usd','otros_trib_usd','honorarios_usd'].forEach(k=>exp[k]=parseFloat(o[k])||0);
+  STATE.expedientes.unshift(exp);
+  STATE.actividad[exp.id]=[{actor:STATE.despachante.nombre_completo,accion:'Expediente creado',detalle:`${exp.tipo_op} · ${exp.cliente_nombre}`,tipo:'estado',created_at:new Date().toISOString()}];
+  toast('✓ Expediente '+exp.referencia+' creado (mock)');
+  navTo('expedientes');
+}
+
+/* ════════ CLIENTES ════════ */
+function renderClientes(){
+  const map={};
+  STATE.expedientes.forEach(e=>{const k=e.cliente_rut||e.cliente_nombre;if(!map[k])map[k]={nombre:e.cliente_nombre,rut:e.cliente_rut,email:e.cliente_email,tel:e.cliente_tel,exps:0,activos:0,honPend:0};map[k].exps++;if(!['Liberado','Retirado'].includes(e.estado_aduana))map[k].activos++;if(!e.honorarios_pag)map[k].honPend+=(+e.honorarios_usd||0);});
+  const list=Object.values(map).sort((a,b)=>b.exps-a.exps);
+  $('#page-clientes').innerHTML=`
+  <div class="ph"><div class="pt">Clientes<small>${list.length} clientes con expedientes</small></div></div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>Cliente</th><th>RUT</th><th>Contacto</th><th>Expedientes</th><th>Activos</th><th style="text-align:right">Honorarios pend.</th></tr></thead>
+    <tbody>${list.map(c=>`<tr onclick="filterByClient('${esc(c.nombre).replace(/'/g,"\\'")}')"><td class="t-cli">${esc(c.nombre)}</td><td style="font-family:monospace;color:var(--text-m)">${esc(c.rut||'—')}</td><td style="color:var(--text-m);font-size:11.5px">${esc(c.email||'—')}<small style="display:block;color:var(--text-s)">${esc(c.tel||'')}</small></td><td><b>${c.exps}</b></td><td>${c.activos?`<span class="doc-st Validado">${c.activos}</span>`:'<span style="color:var(--text-s)">0</span>'}</td><td style="text-align:right" class="money ${c.honPend?'out':''}">${c.honPend?fmtUSD(c.honPend):'—'}</td></tr>`).join('')||`<tr><td colspan="6"><div class="empty"><div class="ei">👥</div><div class="et">Sin clientes</div></div></td></tr>`}</tbody>
+  </table></div></div>`;
+}
+function filterByClient(name){FILTERS={canal:'',estado:'',tipo:'',q:name};navTo('expedientes');}
+
+/* ════════ LIQUIDACIONES ════════ */
+function renderLiquidaciones(){
+  const E=STATE.expedientes;
+  const totTrib=E.reduce((s,e)=>s+(+e.arancel_usd||0)+(+e.iva_usd||0)+(+e.otros_trib_usd||0),0);
+  const totHon=E.reduce((s,e)=>s+(+e.honorarios_usd||0),0);
+  const honPag=E.filter(e=>e.honorarios_pag).reduce((s,e)=>s+(+e.honorarios_usd||0),0);
+  $('#page-liquidaciones').innerHTML=`
+  <div class="ph"><div class="pt">Liquidaciones<small>Tributos liquidados y honorarios profesionales</small></div></div>
+  <div class="kpis">
+    <div class="kpi k-red"><div class="l">Tributos liquidados</div><div class="v" style="font-size:18px">${fmtUSD(totTrib)}</div><div class="d">Arancel + IVA + otros</div></div>
+    <div class="kpi k-green"><div class="l">Honorarios cobrados</div><div class="v" style="font-size:18px">${fmtUSD(honPag)}</div><div class="d">${E.filter(e=>e.honorarios_pag).length} expedientes</div></div>
+    <div class="kpi k-warn"><div class="l">Honorarios pendientes</div><div class="v" style="font-size:18px">${fmtUSD(totHon-honPag)}</div><div class="d">${E.filter(e=>!e.honorarios_pag).length} por cobrar</div></div>
+    <div class="kpi k-blue"><div class="l">Total honorarios</div><div class="v" style="font-size:18px">${fmtUSD(totHon)}</div><div class="d">Facturación del período</div></div>
+  </div>
+  <div class="card"><div class="tbl-wrap"><table>
+    <thead><tr><th>Referencia</th><th>Cliente</th><th style="text-align:right">Arancel</th><th style="text-align:right">IVA</th><th style="text-align:right">Otros</th><th style="text-align:right">Total trib.</th><th style="text-align:right">Honorarios</th><th>Estado</th></tr></thead>
+    <tbody>${E.map(e=>{const tt=(+e.arancel_usd||0)+(+e.iva_usd||0)+(+e.otros_trib_usd||0);return `<tr onclick="openDetalle('${e.id}')"><td><span class="t-ref">${esc(e.referencia)}</span></td><td class="t-cli">${esc(e.cliente_nombre)}</td><td style="text-align:right" class="money">${fmtUSD(e.arancel_usd)}</td><td style="text-align:right" class="money">${fmtUSD(e.iva_usd)}</td><td style="text-align:right" class="money">${fmtUSD(e.otros_trib_usd)}</td><td style="text-align:right" class="money out">${fmtUSD(tt)}</td><td style="text-align:right" class="money in">${fmtUSD(e.honorarios_usd)}</td><td>${e.honorarios_pag?'<span class="doc-st Validado">✓ Pagado</span>':'<span class="doc-st Pendiente">Pendiente</span>'}</td></tr>`;}).join('')}</tbody>
+  </table></div></div>`;
+}
+
+/* ════════ ALERTAS (vista completa) ════════ */
+let ALERT_FILTER='';
+function renderAlertas(){
+  const list=STATE.alertas.filter(a=>!ALERT_FILTER||a.urgencia===ALERT_FILTER).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  const counts={critica:0,warn:0,info:0};STATE.alertas.forEach(a=>counts[a.urgencia]++);
+  const noLeidas=STATE.alertas.filter(a=>!a.leida).length;
+  $('#page-alertas').innerHTML=`
+  <div class="ph"><div class="pt">Alertas de red · MERCOSUR<small>Lo que pasa en otro país, antes de presentar tu declaración</small></div></div>
+  <div class="filters">
+    <button class="btn ${ALERT_FILTER===''?'btn-p':'btn-gh'} btn-sm" onclick="setAlertFilter('')">Todas · ${STATE.alertas.length}</button>
+    <button class="btn ${ALERT_FILTER==='critica'?'btn-p':'btn-gh'} btn-sm" onclick="setAlertFilter('critica')">🔴 Críticas · ${counts.critica}</button>
+    <button class="btn ${ALERT_FILTER==='warn'?'btn-p':'btn-gh'} btn-sm" onclick="setAlertFilter('warn')">🟡 Advertencias · ${counts.warn}</button>
+    <button class="btn ${ALERT_FILTER==='info'?'btn-p':'btn-gh'} btn-sm" onclick="setAlertFilter('info')">🔵 Info · ${counts.info}</button>
+    <div style="flex:1"></div>
+    ${noLeidas?`<button class="btn btn-gh btn-sm" onclick="markAllAlerts()">✓ Marcar todas leídas</button>`:''}
+  </div>
+  <div class="card"><div class="feed">${list.map(a=>alertCardHTML(a,true)).join('')||'<div class="empty"><div class="ei">✅</div><div class="et">Sin alertas en esta categoría</div></div>'}</div></div>`;
+  updateBadges();
+}
+function setAlertFilter(f){ALERT_FILTER=f;renderAlertas();}
+function markAllAlerts(){STATE.alertas.forEach(a=>a.leida=1);if(DATA_SOURCE==='live')fetch(`${API_BASE}?action=marcar_todas`,{method:'POST',credentials:'include'}).catch(()=>{});toast('✓ Todas marcadas como leídas');renderAlertas();}
+
+/* ════════ REPORTES ════════ */
+function renderReportes(){
+  const E=STATE.expedientes;
+  const byCanal={Verde:0,Amarillo:0,Rojo:0,Azul:0,SinAsignar:0};E.forEach(e=>byCanal[e.canal]=(byCanal[e.canal]||0)+1);
+  const byTipo={};E.forEach(e=>byTipo[e.tipo_op]=(byTipo[e.tipo_op]||0)+1);
+  const total=E.length||1;
+  const cCol={Rojo:'var(--danger)',Amarillo:'var(--warn)',Verde:'var(--green)',Azul:'var(--blue)',SinAsignar:'var(--text-s)'};
+  const tCol={IMP:'var(--blue)',EXP:'var(--green)',TRA:'var(--purple)',ADT:'var(--warn)'};
+  $('#page-reportes').innerHTML=`
+  <div class="ph"><div class="pt">Reportes<small>Indicadores de tu operativa aduanera</small></div></div>
+  <div class="home-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card"><div class="card-hdr"><div class="card-t">🚦 Distribución por canal</div></div><div class="card-bd bars">
+      ${Object.entries(byCanal).filter(([k,v])=>v>0).map(([k,v])=>`<div class="row"><div class="lab"><span>${canalBadge(k)}</span><b>${v}</b></div><div class="track"><div class="fill" style="width:${(v/total*100).toFixed(0)}%;background:${cCol[k]}"></div></div></div>`).join('')}
+    </div></div>
+    <div class="card"><div class="card-hdr"><div class="card-t">📦 Por tipo de operación</div></div><div class="card-bd bars">
+      ${Object.entries(byTipo).map(([k,v])=>`<div class="row"><div class="lab"><span>${tipoBadge(k)}</span><b>${v}</b></div><div class="track"><div class="fill" style="width:${(v/total*100).toFixed(0)}%;background:${tCol[k]||'var(--text-s)'}"></div></div></div>`).join('')}
+    </div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><div class="card-hdr"><div class="card-t">📊 Resumen del período</div><button class="btn btn-soon btn-sm" onclick="toast('Exportación: pendiente de implementación')" title="Pendiente de implementación">⬇ Exportar<span class="soon-tag">pronto</span></button></div><div class="card-bd">
+    <div class="kpi-row">
+      <div class="kpi-pill"><div class="l">Operaciones</div><div class="v">${E.length}</div></div>
+      <div class="kpi-pill"><div class="l">Liberadas</div><div class="v" style="color:var(--green)">${E.filter(e=>e.estado_aduana==='Liberado').length}</div></div>
+      <div class="kpi-pill"><div class="l">En revisión</div><div class="v" style="color:var(--warn)">${E.filter(e=>e.estado_aduana==='EnRevision').length}</div></div>
+      <div class="kpi-pill"><div class="l">Rechazadas</div><div class="v" style="color:var(--danger)">${E.filter(e=>e.estado_aduana==='Rechazado').length}</div></div>
+      <div class="kpi-pill"><div class="l">Valor CIF total</div><div class="v" style="font-size:14px">${fmtUSD(E.reduce((s,e)=>s+(+e.valor_cif_usd||0),0))}</div></div>
+    </div>
+  </div></div>`;
+}
+
+/* ════════ CONFIG ════════ */
+function renderConfig(){
+  const d=STATE.despachante;
+  $('#page-config').innerHTML=`
+  <div class="ph"><div class="pt">Configuración<small>Perfil del despachante y parámetros de la red</small></div></div>
+  <div class="home-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card"><div class="card-hdr"><div class="card-t">👤 Perfil del despachante</div></div><div class="card-bd">
+      <div class="dl-grid">
+        <div class="dl-cell"><div class="dl-k">Nombre completo</div><div class="dl-v">${esc(d.nombre_completo)}</div></div>
+        <div class="dl-cell"><div class="dl-k">Matrícula</div><div class="dl-v mono">${esc(d.matricula)}</div></div>
+        <div class="dl-cell"><div class="dl-k">País</div><div class="dl-v">${SISTEMAS[d.pais].flag} ${esc(SISTEMAS[d.pais].pais)}</div></div>
+        <div class="dl-cell"><div class="dl-k">Sistema</div><div class="dl-v">${esc(d.sistema_pub)}</div></div>
+      </div>
+    </div></div>
+    <div class="card"><div class="card-hdr"><div class="card-t">🔌 Estado de conexión</div></div><div class="card-bd">
+      <div class="kpi-row">
+        <div class="kpi-pill"><div class="l">Origen de datos</div><div class="v" style="font-size:13px">${DATA_SOURCE==='live'?'🟢 API en vivo':'🟡 Mock local'}</div></div>
+        <div class="kpi-pill"><div class="l">Versión</div><div class="v" style="font-size:13px">V.2.3</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--text-s);line-height:1.5">Endpoint: <span style="font-family:monospace">${esc(API_BASE)}</span>. Si no responde, opera con datos de ejemplo. Conectá el API para datos reales de <span style="font-family:monospace">joathilo_va</span>.</div>
+    </div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><div class="card-hdr"><div class="card-t">🌎 Red MERCOSUR</div></div><div class="card-bd">
+    <div style="font-size:12px;color:var(--text-m);margin-bottom:11px">Países conectados a la red de inteligencia aduanera:</div>
+    <div class="sis-grid">${sistemasCardsHTML()}</div>
+  </div></div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   V.2.3 · ACCESO LUCIA contextual (botón robusto)
+   Copia el N° de DUA al portapapeles + abre el módulo LUCIA + muestra guía.
+   Sirve haya o no deep-link: si el módulo tiene ?N va directo; si no, al menú.
+   ════════════════════════════════════════════════════════════════════════ */
+function copiar(txt,el){
+  const done=()=>{ if(el){const o=el.innerHTML;el.innerHTML='✓ copiado';setTimeout(()=>el.innerHTML=o,1400);} toast('📋 N° copiado: '+txt); };
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(()=>{fallbackCopy(txt);done();});}
+  else {fallbackCopy(txt);done();}
+}
+function fallbackCopy(txt){try{const t=document.createElement('textarea');t.value=txt;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}catch(e){}}
+function abrirLucia(modKey,numDua){
+  const m=luciaMod(modKey);
+  if(numDua) copiar(String(numDua).replace(/\D/g,''));
+  window.open(luciaUrl(m.n),'lucia_ext','noopener');
+  if(CURRENT==='detalle'){ // registrar en actividad local
+    const id=DETALLE_ID; if(id){ (STATE.actividad[id]=STATE.actividad[id]||[]).unshift({actor:'Despachante',accion:`Abrió ${m.label} en LUCIA`,detalle:numDua?`DUA ${numDua} copiado al portapapeles`:'',tipo:'sistema',created_at:new Date().toISOString()}); }
+  }
+}
+function luciaActionHTML(exp){
+  const dua=(exp.num_declaracion||'').replace(/\D/g,'');
+  const mod = exp.tipo_op==='TRA'?'mercosur' : 'dua';
+  const m=luciaMod(mod);
+  const hayDeep=m.n!=null;
+  return `<div class="lucia-action">
+    <div class="la-top">
+      <div class="la-info">
+        <div class="la-ic">🇺🇾</div>
+        <div><div class="la-tt">Gestionar en LUCIA</div>
+          <div class="la-ds">${hayDeep?`Abre directo el módulo ${esc(m.label)}`:'Abre LUCIA y copia el N° de DUA para pegarlo'}</div></div>
+      </div>
+      <div class="la-btns">
+        ${dua?`<span class="copy-pill" onclick="copiar('${dua}',this)" title="Copiar N° de DUA"><span class="ci">📋</span>${esc(dua)}</span>`:''}
+        <button class="btn btn-p btn-sm" onclick="abrirLucia('${mod}','${dua}')">${m.ic} Abrir ${esc(m.label)} ↗</button>
+      </div>
+    </div>
+    <div class="la-steps">
+      <span style="font-size:10px;color:var(--text-s);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Pasos:</span>
+      <span class="la-step"><span class="n">1</span>${dua?'N° ya copiado':'Entrá al módulo'}</span><span class="arr">→</span>
+      <span class="la-step"><span class="n">2</span>${hayDeep?'Pantalla del módulo':'Elegí '+esc(m.label)+' en el menú'}</span><span class="arr">→</span>
+      <span class="la-step"><span class="n">3</span>${dua?'Pegá (Ctrl+V) y buscá':'Consultá'}</span>
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   V.2.3 · PANEL "ESTADO EN VIVO" (datos de LUCIA dentro del expediente)
+   ════════════════════════════════════════════════════════════════════════ */
+function livePaneHTML(exp){
+  const L=STATE.live[exp.id];
+  if(!L) return `<div class="empty"><div class="ei">🔌</div><div class="et">Sin sincronización con LUCIA</div>
+    <div class="es">Este expediente aún no tiene datos en vivo. Sincronizá para traer canal, carga retenida y escaneo.</div>
+    <div style="margin-top:14px">${luciaActionHTML(exp)}</div></div>`;
+  const hot=L.carga_retenida||L.canal==='Rojo';
+  return `
+  <div class="live-hd">
+    <div class="live-tag"><span class="pd"></span>Estado en vivo · LUCIA</div>
+    <button class="btn btn-gh btn-sm" onclick="syncLucia('${exp.id}')">🔄 Sincronizar ahora</button>
+  </div>
+  ${luciaActionHTML(exp)}
+  <div class="live-grid">
+    <div class="live-c ${L.canal==='Rojo'?'hot':L.canal==='Amarillo'?'warn':''}"><div class="k">🚦 Canal</div><div class="val">${canalBadge(L.canal)}</div><div class="sub">${esc(L.estado)}</div></div>
+    <div class="live-c ${L.carga_retenida?'hot':''}"><div class="k">📦 Carga retenida</div><div class="val">${L.carga_retenida?'<span style="color:var(--danger)">Sí</span>':'<span style="color:var(--green)">No</span>'}</div><div class="sub">${L.carga_retenida?'Requiere gestión':'Sin retención'}</div></div>
+    <div class="live-c ${L.escaneo==='Pendiente'?'warn':''}"><div class="k">📡 Escaneo</div><div class="val" style="font-size:13px">${esc(L.escaneo)}</div></div>
+    <div class="live-c"><div class="k">⏱ Última sync</div><div class="val" style="font-size:13px">${fmtAgo(L.ultima_sync)}</div><div class="sub">hace ${fmtAgo(L.ultima_sync)}</div></div>
+  </div>
+  <div class="sl" style="margin-top:16px">Eventos LUCIA <span class="ln"></span></div>
+  <div class="act-log"><div class="act-line"></div>
+    ${L.eventos.map(e=>`<div class="act-it t-sistema"><div class="act-dot"></div><div><div class="act-act">${esc(e.t)}</div><div class="act-meta"><span>LUCIA</span><span>${fmtAgo(e.h)}</span></div></div></div>`).join('')}
+  </div>
+  <div class="live-src"><span class="dot"></span>Datos traídos del sistema LUCIA (DGA Uruguay). En producción se sincronizan vía el monitor que el despachante autorice. ${DATA_SOURCE==='mock'?'<b style="color:var(--warn)">· demo</b>':''}</div>`;
+}
+function syncLucia(id){
+  const L=STATE.live[id];
+  if(L){L.ultima_sync=new Date().toISOString();}
+  toast('🔄 Sincronizado con LUCIA');
+  const pane=$('#dt-live'); if(pane){const exp=STATE.expedientes.find(e=>e.id===id);pane.innerHTML=livePaneHTML(exp);}
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   V.2.3 · MINI-NAVEGADOR INTERNO (panel acoplado honesto, sin iframe)
+   No embebe el portal gubernamental (lo bloquean). Abre ventana hija
+   controlada y mantiene el contexto JoathiVA visible al lado.
+   ════════════════════════════════════════════════════════════════════════ */
+let EXT_WIN=null;
+function abrirExtPanel(modKey,exp){
+  const m=luciaMod(modKey||'operaciones');
+  const dua=exp?(exp.num_declaracion||'').replace(/\D/g,''):'';
+  let ov=$('#ext-overlay');
+  if(!ov){ov=document.createElement('div');ov.id='ext-overlay';ov.className='ext-overlay';ov.onclick=e=>{if(e.target===ov)cerrarExtPanel();};document.body.appendChild(ov);}
+  ov.innerHTML=`
+  <div class="ext-panel">
+    <div class="ext-hd">
+      <div class="tt">🛰️ Sistema externo · ${esc(m.label)}</div>
+      <span class="ico-btn" onclick="cerrarExtPanel()" title="Cerrar">✕</span>
+    </div>
+    <div class="ext-bd">
+      ${exp?`<div class="ext-ctx"><div style="font-size:10px;color:var(--text-s);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Expediente en contexto</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="t-ref">${esc(exp.referencia)}</span>${canalBadge(exp.canal)}</div>
+        <div style="font-size:12px;color:var(--text-m);margin-top:6px">${esc(exp.cliente_nombre)} · DUA ${esc(exp.num_declaracion||'—')}</div>
+        ${dua?`<div style="margin-top:9px"><span class="copy-pill" onclick="copiar('${dua}',this)"><span class="ci">📋</span>${esc(dua)}</span> <span style="font-size:10px;color:var(--text-s)">← copiá para pegar en LUCIA</span></div>`:''}
+      </div>`:''}
+      <div class="ext-note">⚠️ <b>Por seguridad, los sistemas de aduana no se pueden incrustar dentro de otra web</b> (lo bloquean ellos, no JoathiVA). Por eso ${esc(m.label)} se abre en una ventana propia, manteniendo este panel de contexto al costado. Así no perdés de vista tu expediente.</div>
+      <div class="ext-win">
+        <div class="big">🖥️</div>
+        <div style="font-size:12px;color:var(--text-m)">${m.n!=null?`Se abre directo el módulo <b style="color:var(--dorado)">${esc(m.label)}</b> de LUCIA.`:`Se abre LUCIA${dua?' con el N° ya copiado':''}.`}</div>
+        <div class="ext-status closed" id="ext-status">○ Ventana no abierta</div>
+      </div>
+    </div>
+    <div class="ext-foot">
+      <button class="btn btn-gh btn-sm" style="flex:1" onclick="cerrarExtPanel()">Cerrar</button>
+      <button class="btn btn-p btn-sm" style="flex:2" onclick="extOpenWin('${modKey||'operaciones'}','${dua}')">${m.ic} Abrir ${esc(m.label)} en LUCIA ↗</button>
+    </div>
+  </div>`;
+  ov.classList.add('show');
+}
+function extOpenWin(modKey,dua){
+  const m=luciaMod(modKey);
+  if(dua) copiar(String(dua).replace(/\D/g,''));
+  EXT_WIN=window.open(luciaUrl(m.n),'lucia_ext');
+  const st=$('#ext-status'); if(st){st.className='ext-status open';st.textContent='● Sesión externa activa';}
+}
+function cerrarExtPanel(){const ov=$('#ext-overlay');if(ov)ov.classList.remove('show');}
+
+/* Barra LUCIA del topbar — módulos reales (deep-link ?N) + consulta pública */
+function renderLuciaBar(){
+  const bar=$('#tb-lucia'); if(!bar) return;
+  const items=LUCIA_MODULOS.filter(m=>['operaciones','dua','cargas','mercosur','precinto'].includes(m.key));
+  const html=items.map(m=>`<a class="lqa" onclick="abrirLucia('${m.key}')" title="${esc(m.label)} — ${m.n!=null?'acceso directo':'menú LUCIA'}"><span class="ic">${m.ic}</span>${esc(m.label)}${m.n!=null?'':'<span class="bd warn" title="aún sin deep-link">~</span>'}</a>`).join('');
+  bar.innerHTML=`<div class="lucia-tag"><span class="lucia-dot"></span><b>LUCIA</b></div>${html}
+    <a class="lqa" href="${LUCIA_PUB}" target="_blank" rel="noopener" title="Consultas públicas (sin login)"><span class="ic">🔎</span>Públicas</a>`;
+}
+
+/* ════════ BOOT ════════ */
+function hasValidLocalSession(){
+  try{
+    if(window.JVASSO && typeof window.JVASSO.getSession === 'function'){
+      var sess = window.JVASSO.getSession();
+      if(sess && sess.token) return true;
+    }
+  }catch(e){}
+  try{
+    var raw = localStorage.getItem('jva_session');
+    if(raw){
+      var s = JSON.parse(raw);
+      if(s && s.token) return true;
+    }
+  }catch(e){}
+  try{
+    var rawLegacy = localStorage.getItem('userSession');
+    if(rawLegacy){
+      var legacy = JSON.parse(rawLegacy);
+      if(legacy && (legacy.token || legacy.roleKey)) return true;
+    }
+  }catch(e){}
+  return false;
+}
+
+if(!hasValidLocalSession()){
+  location.href='../joathiva.html?fresh=1';
+} else {
+  (async function init(){await loadData();renderLuciaBar();updateBadges();renderHome();})();
+}
+</script>
+
+<script>
+/* ── SSO homologado: exige sesión o va al selector ── */
+function jvaLogout(){
+  try{ if(window.JVASSO) window.JVASSO.clearSession(); }catch(e){}
+  location.href='../joathiva.html?fresh=1';
+}
+</script>
+</body>
+</html>
