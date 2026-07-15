@@ -6,6 +6,45 @@
   <title>Joathi Logística | Control operativo y trazabilidad</title>
   <meta name="description" content="Joathi Logística acompaña operaciones con trazabilidad, control operativo y respuesta comercial ágil.">
   <link rel="stylesheet" href="./styles.css">
+  <style>
+    .mobile-joathiva-access {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .site-header .header-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mobile-joathiva-access {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #0E3B2E;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 1.15;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+        box-shadow: 0 8px 20px rgba(14, 59, 46, .18);
+        position: relative;
+        z-index: 5;
+      }
+
+      .mobile-joathiva-access:focus-visible {
+        outline: 3px solid #F2B200;
+        outline-offset: 3px;
+      }
+    }
+  </style>
 </head>
 <body class="home-page">
   <header class="site-header">
@@ -13,6 +52,7 @@
       <a class="brand" href="/" aria-label="Joathi Logística">
         <img class="logo-publico brand-logo" src="assets/logo_joathi.png" alt="Joathi Logística">
       </a>
+      <a class="mobile-joathiva-access" href="/joathiva/" aria-label="Acceder a la plataforma JoathiVA">Acceso JoathiVA</a>
       <nav class="main-nav" aria-label="Navegación principal">
         <a href="/">Inicio</a><a href="/quienes-somos.html">Sobre Nosotros</a><a href="/servicios.html">Servicios</a><a href="/contacto.html">Contacto</a>
       </nav>
